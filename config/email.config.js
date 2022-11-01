@@ -34,8 +34,8 @@ exports.sendTemplatedEmail = async (template, to, data) => {
       locals : data,
     },
     // uncomment below to send emails in development/test env:
-    send: send || true,
-    preview : preview || false,
+    send: send,
+    preview : preview,
     transport: transporter,
   });
 
