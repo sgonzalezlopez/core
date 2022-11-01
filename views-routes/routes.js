@@ -6,7 +6,7 @@ const apps = require('../controllers/apps.controller')
 const public = require('./public.route')
 const admin = require('./admin.route');
 const i18n = require('../i18n/i18n.config');
-const { config } = require('../config/config');
+const { getFeature } = require('../config/config');
 const { db } = require('../models/config.model');
 
 router.use('/admin', authorization.isAdmin, admin)
@@ -26,7 +26,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     if (!data || data == null) data = {actions : null};
     data.user = req.user;
 
-    if (await config.app.getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
+    if (await getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
     else data.apps = req.session.apps || await apps.getApplications(req.user)
     req.session.apps = data.apps
 

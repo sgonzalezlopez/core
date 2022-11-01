@@ -3,7 +3,7 @@ const {Users} = require('../models')
 const passport = require('passport');
 const {authentication, verifySignUp} = require('../middlewares/middlewares')
 const apps = require('../controllers/apps.controller');
-const { config } = require('../config/config');
+const { getFeature } = require('../config/config');
 
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.get('/login', function(req, res) {
 });
 
 router.get('/register', async function(req, res) {
-  twoSteps = await config.app.getFeature('TWO_STEPS_REGISTRY')
+  twoSteps = await getFeature('TWO_STEPS_REGISTRY')
   res.render('register', {layout: false, twoSteps:twoSteps});
 });
 

@@ -21,9 +21,9 @@ exports.register = async (req, res) => {
     }  
   });
   console.log(req);
-  to = await (config.app.ENV == 'development' ? (await config.app.getConfig('ADMIN_EMAIL')) : user.email)
+  to = await (config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
   Email.sendTemplatedEmail('registration', to, {user:user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt})
-  Email.sendTemplatedEmail('new-registration', (await config.app.getConfig('ADMIN_EMAIL')), {user:user})
+  Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), {user:user})
   res.send({message : 'OK'})
 };
 
@@ -43,9 +43,9 @@ exports.signup = async (req, res) => {
         return;
       }  
     });
-    to = await (config.app.ENV == 'development' ? (await config.app.getConfig('ADMIN_EMAIL')) : user.email)
+    to = await (config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
     Email.sendTemplatedEmail('registration-confirmation', to, {user:user, link: req.protocol + '://' + req.get('host')})
-    Email.sendTemplatedEmail('new-registration', (await config.app.getConfig('ADMIN_EMAIL')), {user:user})
+    Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), {user:user})
     res.send({message : 'OK'})
 };
 

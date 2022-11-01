@@ -1,7 +1,5 @@
 // importing modules
 const mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
 
 // creating user schema
 const ConfigSchema = mongoose.Schema({

@@ -12,12 +12,12 @@ var LokiStore = require('connect-loki')(session);
 const LocalStrategy = require('passport-local').Strategy;
 const expressLayouts = require('express-ejs-layouts')
 const passport = require('passport');
-const { doesNotThrow } = require("assert");
-const initialize = require("./config/initialize");
 
+module.exports.setupDB = async function () {
+}
 
-module.exports.setup = function() {
-    config.db.connectDB()
+module.exports.setup = async function() {
+  await config.db.connectDB()
 
 // configure passport.js to use the local strategy
 passport.use(new LocalStrategy(

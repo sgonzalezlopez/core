@@ -1,4 +1,4 @@
-const {config} = require('../config/config')
+const {getFeature} = require('../config/config')
 
 exports.checkConfig = function checkConfig (parameter) {
   return function (req, res, next) {
@@ -11,7 +11,7 @@ exports.checkConfig = function checkConfig (parameter) {
 exports.checkFeature = function checkFeature (key) {
   return function (req, res, next) {
 
-    if (config.app.getFeature(key)) return next()
+    if (getFeature(key)) return next()
     
     return res.send({message : res.__('Feature is disabled')})
   }

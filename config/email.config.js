@@ -1,5 +1,8 @@
 const path = require('path');
 const nodemailer = require('nodemailer');
+const Email = require('email-templates');
+const { existsSync } = require('fs');
+const { getConfig } = require('./config');
 
 
 const transporter = nodemailer.createTransport({
@@ -10,11 +13,13 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-transporter.verify().then(console.log).catch(console.error);
+transporter.verify().then(console.log('Conectado a email server')).catch(console.error);
 
-const Email = require('email-templates')
 
-exports.sendTemplatedEmail = (template, to, data) => {
+exports.sendTemplatedEmail = async (template, to, data) => {
+  var send = await getConfig('ENABLE_EMAIL_SEND')
+  var preview = await getConfig('ENABLE_EMAIL_PREVIEW')
+
   const email = new Email({
     template : template,
     message: {
@@ -22,15 +27,15 @@ exports.sendTemplatedEmail = (template, to, data) => {
       to : to
     },
     views : {
-      root : path.resolve('core/templates'),
+      root : existsSync(path.resolve('templates/'+ template)) ? path.resolve('templates') : path.resolve('core/templates'),
       options : {
         extension : 'ejs'
       },
       locals : data,
     },
     // uncomment below to send emails in development/test env:
-    send: true,
-    preview : false,
+    send: send || true,
+    preview : preview || false,
     transport: transporter,
   });
 

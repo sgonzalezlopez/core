@@ -14,12 +14,12 @@ module.exports.CONFIGS = {...BASE_CONFIG, ...LOCAL_CONFIG};
 
 
 
-module.exports.connectDB = function() {
+module.exports.connectDB = async function() {
     console.log(this.CONFIGS.MONGODB_URI);
-mongoose.connect(this.CONFIGS.MONGODB_URI, {useNewUrlParser : true, useUnifiedTopology: true}, function(err) {
+    await mongoose.connect(this.CONFIGS.MONGODB_URI, {useNewUrlParser : true, useUnifiedTopology: true}, function(err) {
     var admin = new mongoose.mongo.Admin(mongoose.connection.db);
     admin.buildInfo(function (err, info) {
-       console.log(info.version);
+       console.log('DB version:', info.version);
     });
   });
   
