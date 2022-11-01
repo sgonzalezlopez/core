@@ -1,0 +1,24 @@
+        <div class="container-fluid">
+          <div class="row">
+            <% var styles = ['bg-cyan', 'bg-success', 'bg-warning', 'bg-info', 'bg-danger'];
+                var index = 0;
+            %>
+            <% mainApps.forEach(function(app) { %>
+              <div class="col-md-6 col-lg-2 col-xlg-3">
+                  <a href="<%= app.link %>">
+                  <div class="card card-hover">
+                    <div class="box <%=styles[index++]%> text-center">
+                      <h1 class="font-light text-white">
+                        <i class="<%= app.icon %>"></i>
+                      </h1>
+                      <h6 class="text-white"><%= __('APP_' + app.name) %></h6>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            <% if (index >= styles.length) index = 0 %>
+            <% }); %>
+          </div>
+        </div>
+
+
