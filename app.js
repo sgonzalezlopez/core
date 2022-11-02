@@ -59,41 +59,41 @@ const app = express();
 if (config.app.ENV === 'production') app.use(forceSSL);
 
 app.use(cors());
+
 // parse requests of content-type - application/json
 app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-  
+
 app.use(localeMiddleware({"priority" : ["accept-language", "default"], "default" : "es_ES"}))
-  
+enableMultipleViewFolders(express);  
 app.use(expressLayouts)
 app.set('layout', 'layouts/full');
 app.set('layout extractScripts', true)
 app.set('layout extractStyles', true)
-app.set('views', path.join(__dirname, 'views'));
+// app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(i18n.init)
 
 app.use(session({
-    genid: (req) => {
-        return uuidv4() // use UUIDs for session IDs
-    },
-    store: (config.app.ENV=='development' ? new LokiStore({path :path.join(__dirname, '../sessions/session-store.db')}) : ''),
-    secret: config.app.COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: true
+  genid: (req) => {
+    return uuidv4() // use UUIDs for session IDs
+  },
+  store: (config.app.ENV=='development' ? new LokiStore({path :path.join(__dirname, '../sessions/session-store.db')}) : ''),
+  secret: config.app.COOKIE_SECRET,
+  resave: false,
+  saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 return app;
 }
 
 module.exports.configureRoutes = (app) => {
-  
-  app.use(passport.initialize());
-  app.use(passport.session());
   
   app.use('/api', require('./api/routes'))
   app.use('/', require('./views-routes/routes'));
@@ -102,6 +102,17 @@ module.exports.configureRoutes = (app) => {
 }
 
 
-
+function enableMultipleViewFolders(express) {
+  var renderProxy = express.response.render;
+  express.render = function(){
+      app.set('views', 'path/to/custom/views');
+      try {
+          return renderProxy.apply(this, arguments);
+      }
+      catch (e) {}
+      app.set('views', 'path/to/default/views');       
+      return renderProxy.apply(this, arguments);
+  };
+}
 
 
