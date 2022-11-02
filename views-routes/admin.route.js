@@ -1,10 +1,4 @@
 const express = require('express');
-const {Users} = require('../models')
-const passport = require('passport');
-const authentication = require('../middlewares/authentication');
-const { model } = require('mongoose');
-
-
 const router = express.Router();
 const viewRoute = 'admin/';
 

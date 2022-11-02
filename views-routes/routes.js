@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router();
 const authentication = require('../middlewares/authentication')
 const authorization = require('../middlewares/authorization')
-const apps = require('../controllers/apps.controller')
+const apps = require('../controllers/app.controller')
 const public = require('./public.route')
 const admin = require('./admin.route');
 const i18n = require('../i18n/i18n.config');
@@ -38,7 +38,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.mainApps = data.apps.filter(a => a.type.includes('main'))
 
     try {
-        var model_path = fs.existsSync(`../models/${modelName}.model.js`) ? `../models/${modelName}.model` : `../../models/${modelName}.model`
+        var model_path = fs.existsSync(`./models/${modelName}.model.js`) ? `../../models/${modelName}.model` : `../models/${modelName}.model`
         var model = await require(model_path)
         var props = Object.keys(model.schema.paths)
         

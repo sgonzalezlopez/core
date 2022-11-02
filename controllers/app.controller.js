@@ -1,4 +1,4 @@
-const {Apps} = require("../models");
+const Apps = require("../models/app.model");
 
 const applications = [
     {name: "Admin", title : 'APP_Admin', link: '/admin', roles: ['admin'], icon:'fas fa-bullseye'},

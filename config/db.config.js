@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Users } = require('../models');
+const Users = require('../models/user.model');
 
 const BASE_CONFIG = {MONGODB_URI : process.env.MONGODB_URI};
 

@@ -1,8 +1,8 @@
 const express = require('express');
-const {Users} = require('../models')
+const Users = require('../models/user.model')
 const passport = require('passport');
 const {authentication, verifySignUp} = require('../middlewares/middlewares')
-const apps = require('../controllers/apps.controller');
+const apps = require('../controllers/app.controller');
 const { getFeature } = require('../config/config');
 
 

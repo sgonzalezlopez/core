@@ -1,4 +1,5 @@
-const { Users, Apps } = require("../models");
+const Users = require("../models/user.model");
+const Apps = require("../models/app.model");
 const { initializeDB } = require("./db.config");
 
 const applications = [

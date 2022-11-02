@@ -1,6 +1,5 @@
-const {config} = require("../config/config");
-const { sendTestEmail, sendTemplatedEmail } = require("../config/email.config");
-const {Users} = require("../models");
+const { sendTemplatedEmail } = require("../config/email.config");
+const Users = require("../models/user.model");
 
 exports.getAll = (req, res) => {
     Users.find().select('-salt -hash')

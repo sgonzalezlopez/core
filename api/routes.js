@@ -4,11 +4,11 @@ const authentication = require('../middlewares/authentication')
 const authorization = require('../middlewares/authorization')
 
 const auth = require('./auth.route')
-const users = require('./users.route')
-const apps = require('./apps.route')
+const users = require('./user.route')
+const apps = require('./app.route')
 const config = require('./config.route')
-const features = require('./features.route')
-const values = require('./values.route')
+const features = require('./feature.route')
+const values = require('./value.route')
 
 router.use(function(req, res, next) {
     res.header(
@@ -18,12 +18,13 @@ router.use(function(req, res, next) {
     next();
   });
 
+// Routes
 router.use('/auth', auth)
-router.use('/users', [authentication.isAuthenticated], users)
-router.use('/apps', [authentication.isAuthenticated], apps)
+router.use('/user', [authentication.isAuthenticated], users)
+router.use('/app', [authentication.isAuthenticated], apps)
 router.use('/config', [authentication.isAuthenticated, authorization.isAdmin], config)
-router.use('/features', [authentication.isAuthenticated, authorization.isAdmin], features)
-router.use('/values', [authentication.isAuthenticated, authorization.isAdmin], values)
+router.use('/feature', [authentication.isAuthenticated, authorization.isAdmin], features)
+router.use('/value', [authentication.isAuthenticated, authorization.isAdmin], values)
 
 module.exports = router;
 
