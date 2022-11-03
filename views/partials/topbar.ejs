@@ -96,14 +96,18 @@
                   <img src="/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="31"/>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="javascript:void(0)"><i class="mdi mdi-account me-1 ms-1"></i> <%= user.username %></a>
+                  <a class="dropdown-item" href="javascript:void(0)"><i class="mdi mdi-account me-1 ms-1"></i> <%= locals.user ? user.username : __('GUEST') %></a>
                   <% if (locals.actionApps) { %>
                     <% userApps.forEach(element => { %>
                       <a class="dropdown-item" href="<%=element.link%>"><i class="<%=element.icon%> me-1 ms-1"></i> <%= __('APP' + element.name) %></a>
                   <% }) %>
                 <% } %>                  
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="/logout"><i class="fa fa-power-off me-1 ms-1"></i> Logout</a>
+                  <% if (locals.user) { %>
+                    <a class="dropdown-item" href="/logout"><i class="fa fa-power-off me-1 ms-1"></i> Logout</a>
+                  <% } else  { %>
+                    <a class="dropdown-item" href="/login"><i class="fa fa-power-on me-1 ms-1"></i> Login</a> 
+                  <% } %>
                 </ul>
               </li>
               <!-- ============================================================== -->
