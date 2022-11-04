@@ -2,9 +2,8 @@ const express = require('express');
 const Users = require('../models/user.model')
 const passport = require('passport');
 const {authentication, verifySignUp} = require('../middlewares/middlewares')
-const apps = require('../controllers/app.controller');
 const { getFeature } = require('../config/config');
-const routes = require('./routes')
+const actions = require('./actions')
 
 
 const router = express.Router();
@@ -67,7 +66,7 @@ router.get('/logout', function(req, res, next) {
   });
 
 router.get('/', function (req, res, next) {
-    require('./routes').renderWithApps(req, res, next, viewRoute + 'index')
+    actions.renderWithApps(req, res, next, viewRoute + 'index')
 });
 
 router.get('/:page', function (req, res, next) {

@@ -36,6 +36,19 @@ exports.create = (req, res) => {
     });
 }
 
+exports.updateProfile = (req, res) => {
+    if (req.user._id != req.params.id) return res.status(400).send({message : res.__('INVALID_OPERATION')})
+    Users.findById(req.params.id).select('-salt -hash')
+    .then(async user => {
+        if (req.body.email) user.email = req.body.email
+
+        newuser = await user.save();
+        delete newuser.salt;
+        delete newuser.hash;
+        res.send(newuser)
+    })
+}
+
 exports.update = (req, res) => {
     Users.findById(req.params.id).select('-salt -hash')
     .then(async user => {

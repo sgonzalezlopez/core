@@ -1,0 +1,73 @@
+<html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="/assets/libs/select2/dist/css/select2.min.css" />
+            <link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"/>        
+        </head>
+    <body>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form id="profileForm" class="form-horizontal">
+                        <div class="card-body">
+                            <h4 class="card-title"><%= __('USER_PROFILE') %></h4>
+                            <div class="form-group row">
+                                <label for="type" class="col-sm-3 text-end control-label col-form-label"><%= __('MODEL_user_username') %></label>
+                                <div class="col-sm-9"><input type="text" class="form-control" id="username" name="username" placeholder=""  value="<%= locals.user.username%>" disabled /></div>
+                            </div> 
+                            <div class="form-group row">
+                                <label for="value" class="col-sm-3 text-end control-label col-form-label"><%= __('MODEL_user_email') %></label>
+                                <div class="col-sm-9"><input type="text" class="form-control" id="email" name="email" placeholder=""  value="<%= locals.user.email%>"/></div>
+                            </div> 
+                            <div class="border-top">
+                                <div class="card-body">
+                                    <button id="profileForm_submit_btn" type="button" class="btn btn-primary"><%= __('SAVE') %></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+<script src="/assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+<script src="/dist/js/pages/mask/mask.init.js"></script>
+<script src="/assets/libs/select2/dist/js/select2.full.min.js"></script>
+<script src="/assets/libs/select2/dist/js/select2.min.js"></script>
+<script src="/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
+<script>
+    //***********************************//
+    // For select 2
+    //***********************************//
+    $(".select2").select2();
+    
+    /*datwpicker*/
+    jQuery(".mydatepicker").datepicker({
+        language: '<%=__("LANGUAGE")%>',
+        todayHighlight: true,
+    });
+    jQuery("#datepicker-autoclose").datepicker({
+        language: '<%=__("LANGUAGE")%>',
+        autoclose: true,
+        todayHighlight: true,
+    });
+
+    jQuery('#profileForm_submit_btn').click(() => {
+        var data = $('#profileForm').serialize();
+        $.ajax({
+            type: 'PUT',
+            url: '/api/user/profile/<%= locals.user._id%>',
+            data: data,
+            dataType: 'json',
+            success: function(data) {
+                toastr.success("<%= __('SAVE_SUCCESS') %>", "<%= __('APP_NAME') %>")
+            },
+            error: function(error) {
+                console.error(error);
+                toastr.error("<%= __('SAVE_ERROR') %>", "<%= __('APP_NAME') %>")
+            },
+        });
+    })
+</script>
+</body>
+</html>

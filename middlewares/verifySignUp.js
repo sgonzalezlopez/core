@@ -47,12 +47,16 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
 };
 
 validateNewPassword = (req, res, next) => {
-  if (req.body.newPassword != req.body.newPasswordVerify) return res.status(400).send({message : res.__('Password does not match.')})
-  Users.findById(req.params.id)
-  .then(user => {
-    if (!user || user == null) return res.status(400).send({message : res.__('Invalid user.')})
-    if (!user.validPassword(req.body.oldPassword)) return res.status(400).send({message : res.__('Old password is not valid.')})
-  })
+  if (req.user.id != req.body.id) next(new Error(res.__('Invalid operation')))
+  else if (req.body.newPassword != req.body.newPasswordVerify) next(new Error(res.__('Password does not match')))
+  else {
+    Users.findById(req.user.id)
+    .then(user => {
+      if (!user || user == null) next(new Error(res.__('Invalid user')))
+      else if (user.validPassword(req.body.oldPassword)) next()
+      else next(new Error(res.__('Old password is not valid')))
+    })
+  }
 }
 
 const verifySignUp = {
