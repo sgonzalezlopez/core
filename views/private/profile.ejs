@@ -60,7 +60,6 @@
             data: data,
             dataType: 'json',
             success: function(data) {
-                toastr.options.timeOut = 0;
                 toastr.success("<%= __('SAVE_SUCCESS') %>", "<%= __('APP_NAME') %>")
             },
             error: function(error) {
