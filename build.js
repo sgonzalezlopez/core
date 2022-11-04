@@ -266,7 +266,9 @@ function getFullForm(modelName, params) {
     text += `
     <div class="border-top">
     <div class="card-body">
+        <% if (locals.permissions.includes('U')) { %>
         <button id="${formName}_submit_btn" type="button" class="btn btn-primary"><%= __('SAVE') %></button>
+        <% } %>
         <button id="${formName}_list_btn" type="button" class="btn btn-info"><%= __('LIST') %></button>
     </div>
 </div>

@@ -71,12 +71,12 @@ router.get('/', function (req, res, next) {
 
 router.get('/:page', function (req, res, next) {
   var page = req.params.page;
-  require('./routes').renderWithApps(req, res, next, viewRoute + page, {title : req.params.page})
+  actions.renderWithApps(req, res, next, viewRoute + page, {title : req.params.page})
 });
 
 router.get('/:page/:id', function (req, res, next) {
   var page = req.params.page;
-  require('./routes').renderWithApps(req, res, next, viewRoute + page, null, req.params.id)
+  actions.renderWithApps(req, res, next, viewRoute + page, null, req.params.id)
 });
 
 module.exports = router;
