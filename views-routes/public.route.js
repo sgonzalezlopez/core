@@ -4,6 +4,7 @@ const passport = require('passport');
 const {authentication, verifySignUp} = require('../middlewares/middlewares')
 const apps = require('../controllers/app.controller');
 const { getFeature } = require('../config/config');
+const routes = require('./routes')
 
 
 const router = express.Router();
@@ -66,13 +67,17 @@ router.get('/logout', function(req, res, next) {
   });
 
 router.get('/', function (req, res, next) {
-    if (!req.isAuthenticated()) return res.redirect("/login")
     require('./routes').renderWithApps(req, res, next, viewRoute + 'index')
 });
 
 router.get('/:page', function (req, res, next) {
   var page = req.params.page;
   require('./routes').renderWithApps(req, res, next, viewRoute + page, {title : req.params.page})
+});
+
+router.get('/:page/:id', function (req, res, next) {
+  var page = req.params.page;
+  require('./routes').renderWithApps(req, res, next, viewRoute + page, null, req.params.id)
 });
 
 module.exports = router;

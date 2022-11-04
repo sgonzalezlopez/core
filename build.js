@@ -84,16 +84,16 @@ function addRoute(model) {
     routes.splice(i+1, 0, `router.use('/${model}', require('./${model}.route'))`)
 }
 
-function generateListFile(basedir, model, view) {
+function generateListFile(basedir, model, param) {
     console.log('   Generando UI_LIST para', model);
-    fs.writeFile(`${basedir}/views/${params.view}/${model}-list.ejs`, getList(view, model), (err) => {
+    fs.writeFile(`${basedir}/views/${params.view}/${model}-list.ejs`, getList(param.view, model), (err) => {
 
         if (err) throw err;
     })
 }
 function generateFormFile(basedir, model, params) {
     console.log('   Generando UI_FORM para', model);
-    fs.writeFile(`${basedir}/views/${params.view}/${model}.ejs`, params.generateFullForm ? getFullForm(model) : getForm(model), (err) => {
+    fs.writeFile(`${basedir}/views/${params.view}/${model}.ejs`, params.generateFullForm ? getFullForm(model, params) : getForm(model), (err) => {
         if (err) throw err;
     })
 }
@@ -105,8 +105,8 @@ function generateRouteFile(basedir, model) {
     })
 }
 
-function generateControllerFile(basedir, params) {
-    model = params.view
+function generateControllerFile(basedir, model) {
+    // model = params.view
     console.log('   Generando CONTROLLER para', model);
     fs.writeFile(`${basedir}/controllers/${model}.controller.js`, getController(model), (err) => {
         if (err) throw err;
@@ -131,10 +131,12 @@ function getList(view, modelName) {
                     <tr>`
     Object.keys(model.schema.paths).forEach(element => { var path = model.schema.paths[element]
         if (!path.options.hideInForm) {
-            text += `                <th data-field="${path.path}"><%= __('COL_${path.path}') %></th>`
+            text += `
+                        <th data-field="${path.path}"><%= __('COL_${path.path}') %></th>`
         }
     })
-    text += `                        <th data-field="id" data-formatter="actionFormatter" data-events="actionEvents"><%= __('COL_actions') %></th>
+    text += `
+                        <th data-field="id" data-formatter="actionFormatter" data-events="actionEvents"><%= __('COL_actions') %></th>
                     </tr>
                 </thead>
             </table>
@@ -148,7 +150,7 @@ function getList(view, modelName) {
     <script>
     function actionFormatter(value, row, index) {
       return [
-        '<a class="view" href="/${view}/${modelName}' + row._id + '" title="">',
+        '<a class="view" href="/${view == '' ? '' : view + '/'}${modelName}/' + row._id + '" title="">',
         '<i class="fa fa-eye"></i>',
         '</a> ',
         '<a class="delete" href="javascript:void(0)" title="">',
@@ -186,7 +188,7 @@ function getForm(model) {
 </div>`
 }
 
-function getFullForm(modelName) {
+function getFullForm(modelName, params) {
     const model = require(basedir + "models/" + modelName + '.model')
     model.schema.paths.createdAt.options.readOnly = true;
     model.schema.paths.updatedAt.options.readOnly = true;
@@ -312,7 +314,7 @@ function getFullForm(modelName) {
     })
 
     $('#${formName}_list_btn').click(() => {
-        window.location.replace('/${modelName}-list')
+        window.location.replace('/${params.view != '' ? params.view + '/' : ''}${modelName}-list')
     })
 </script>
 </body>
@@ -329,11 +331,11 @@ function getRoute(model) {
     const authentication = require('../core/middlewares/authentication')
     const authorization = require('../core/middlewares/authorization')
     
-    router.get("/", controller.getAll);
-    router.get("/:id", controller.get);
-    router.put("/:id", controller.update);
-    router.post("/", controller.create);
-    router.delete("/:id", controller.delete);
+    router.get("/", authorization.checkPermision('${model}', 'R'), controller.getAll);
+    router.get("/:id", authorization.checkPermision('${model}', 'R'), controller.get);
+    router.put("/:id", authorization.checkPermision('${model}', 'U'), controller.update);
+    router.post("/", authorization.checkPermision('${model}', 'C'), controller.create);
+    router.delete("/:id", authorization.checkPermision('${model}', 'D'), controller.delete);
     
     router.post('/:id', (req, res) => { res.status(404).send({ message : 'Operation not supported'})})
     router.put('/', (req, res) => { res.status(404).send({ message : 'Operation not supported'})})

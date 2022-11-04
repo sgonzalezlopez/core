@@ -43,6 +43,7 @@
               <!-- ============================================================== -->
               <!-- create new -->
               <!-- ============================================================== -->
+              <% if (locals.detail || locals.list) { %>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <span class="d-none d-md-block"><%= __('MENU_ACTIONS') %> <i class="fa fa-angle-down"></i></span>
@@ -57,6 +58,7 @@
                   <% } %>
                 </ul>
               </li>
+              <% } %>
               <% level0 = locals.actionApps.filter(f => f.parent == null || f.parent == '') %>
               <% level0.forEach(element => { %>
                 <% level1 = locals.actionApps.filter(f => f.parent == element._id)%>
@@ -97,7 +99,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="javascript:void(0)"><i class="mdi mdi-account me-1 ms-1"></i> <%= locals.user ? user.username : __('GUEST') %></a>
-                  <% if (locals.actionApps) { %>
+                  <% if (locals.userApps) { %>
                     <% userApps.forEach(element => { %>
                       <a class="dropdown-item" href="<%=element.link%>"><i class="<%=element.icon%> me-1 ms-1"></i> <%= __('APP' + element.name) %></a>
                   <% }) %>

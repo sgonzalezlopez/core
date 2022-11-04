@@ -19,6 +19,7 @@ router.use(function(req, res, next) {
   });
 
 // Routes
+router.use('/permission', [authentication.isAuthenticated, authorization.isAdmin], require('./permission.route'))
 router.use('/auth', auth)
 router.use('/user', [authentication.isAuthenticated], users)
 router.use('/app', [authentication.isAuthenticated], apps)

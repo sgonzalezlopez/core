@@ -51,9 +51,10 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
             })
 
 
+            data.permissions = await authorization.getPermissionsForEntity(model, data.user)
             data.model = model
             data.list = viewBase + '-list'
-            data.detail = viewBase
+            data.detail = data.permissions.includes('C') ? viewBase : null
         }
 
         if (id) data.object = await model.findById(id)
