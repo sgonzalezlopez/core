@@ -199,9 +199,7 @@ function getFullForm(modelName, params) {
 
     var text =""
     text += `<html>
-        <head>
-            <link rel="stylesheet" type="text/css" href="/assets/libs/select2/dist/css/select2.min.css" />
-            <link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"/>        
+        <head>     
         </head>
     <body>
         <div class="row">

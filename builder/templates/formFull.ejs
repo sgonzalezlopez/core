@@ -1,0 +1,114 @@
+<% if (!locals.formName) {formName = 'form'} %>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/assets/libs/select2/dist/css/select2.min.css" />
+        <link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"/>        
+    </head>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <form id="<%=model.modelName%>Form" class="form-horizontal">
+                    <div class="card-body">
+                        <h4 class="card-title"><%%= __('MODEL_<%=model.modelName%>') %%></h4>
+                        <% model.schema.paths.createdAt.options.readOnly = true; %>
+                        <% model.schema.paths.updatedAt.options.readOnly = true; %>
+                        <% model.schema.paths._id.options.hideInForm = true; %>
+                        <% model.schema.paths.__v.options.hideInForm = true; %>
+                        <% Object.keys(model.schema.paths).forEach(element => { path = model.schema.paths[element] %>
+                            <% if (!path.options.hideInForm) { %>
+                                <div class="form-group row">
+                                    <label for="<%= path.path %>" class="col-sm-3 text-end control-label col-form-label"><%%= __('MODEL_<%=model.modelName%>_<%=path.path%>')%%></label>
+                                    <div class="col-sm-9">
+                                    <% if (path.options.combo && path.options.combo.multiple) { %>
+
+                                        <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" multiple="multiple" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%> >
+                                        <%% model.schema.paths['<%=path.path%>'].options.combo.values.forEach(v => { %%>
+                                            <option <%%= locals.object && object["<%=path.path%>"].includes(v.value) ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
+                                        <%% }) %%>
+                                        </select>
+                                    <% } else if (path.options.combo) { %>
+                                        <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%> >
+                                            <option value=""></option>
+                                        <%% model.schema.paths['<%=path.path%>'].options.combo.values.forEach(v => { %%>
+                                            <option <%%= locals.object && object["<%=path.path%>"] == v.value ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
+                                        <%% }) %%>
+                                        </select>
+                                    <% } else if (path.options.type.name == 'Boolean') { %>
+                                        <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%>>
+                                            <option <%%= locals.object && object["<%=path.path%>"] ? 'selected' : '' %%> value="true"><%%= __('BOOLEAN_true') %%></option>
+                                            <option <%%= locals.object && !object["<%=path.path%>"] ? 'selected' : '' %%> value="false"><%%= __('BOOLEAN_false') %%></option>
+                                        </select> 
+                                    <% } else if (path.options.type.name == 'Date') { %>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control mydatepicker" placeholder="<%%=__('DATE_FORMAT')%>" id="<%= path.path %>" name="<%= path.path%>" <%= path.options.readOnly ? 'disabled' : ''%> value="<%%= locals.object ? object['<%=path.path%>'] : '' %%>" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+                                            </div>
+                                        </div>
+
+                                    <% } else if (path.options.type.name == 'Number') { %>
+                                        <input type="number" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value='<%%= locals.object ? object['<%=path.path%>'] : '' %%>'/>
+                                    <% } else if (path.options.password) { %>
+                                        <input type="password" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value="<%%= locals.object ? object['<%=path.path%>'] : '' %%>"/>
+                                    <% } else if (path.options.fileUpload) { %>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="<%= path.path %>" name="<%= path.path%>" required />
+                                        </div>
+                                    <% } else { %>
+                                        <input type="text" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value="<%%= locals.object ? object['<%=path.path%>'] : '' %%>"/>
+                                    <% } %>
+                                    </div>
+                                </div>               
+                            <% } %>
+                        <% }) %>
+                        <div class="border-top">
+                            <div class="card-body">
+                                <%% if (locals.permissions.includes('U')) { %>
+                                    <button id="<%=model.modelName%>Form_submit_btn" type="button" class="btn btn-primary"><%%= __('SAVE') %></button>
+                                <%% } %>
+                                <button id="<%=model.modelName%>Form_list_btn" type="button" class="btn btn-info"><%%= __('LIST') %></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <script>
+                    //***********************************//
+                    // For select 2
+                    //***********************************//
+                    $(".select2").select2();
+                    
+                    /*datwpicker*/
+                    jQuery(".mydatepicker").datepicker({
+                        language: '<%%=__("LANGUAGE")%>',
+                        todayHighlight: true,
+                    });
+                    jQuery("#datepicker-autoclose").datepicker({
+                        language: '<%%=__("LANGUAGE")%>',
+                        autoclose: true,
+                        todayHighlight: true,
+                    });
+                    jQuery('#<%=model.modelName%>Form_submit_btn').click(() => {
+                var data = $('#<%=model.modelName%>Form').serialize();
+                $.ajax({
+                    type: '<%%= locals.object ? "PUT" : "POST" %>',
+                    url: '/api/<%=model.modelName.toLowerCase()%><%%=(locals.object ? `/${object._id}` : ``) %>',
+                    data: data,
+                    dataType: 'json',
+                    success: function(data) {
+                        toastr.success("<%%= __('SAVE_SUCCESS') %>", "<%%= __('APP_NAME') %>")
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        toastr.error("<%%= __('SAVE_ERROR') %>", "<%%= __('APP_NAME') %>")
+                    },
+                });
+            })
+
+            $('#<%=model.modelName%>Form_list_btn').click(() => {
+                window.location.replace('/<%%=list%>')
+            })
+        </script>
+</body>
+</html>                                    
+                
