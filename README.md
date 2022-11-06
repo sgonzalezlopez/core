@@ -106,12 +106,24 @@ module.exports.configs = {
 module.exports.features = {
 }
 ```
-12. Inciar la base de datos y lanzar la apliación
+12. Inciar la base de datos y lanzar la aplicación
+13. Configurar applicaciones y valores custom creando el fichero ./config/initialize.js con el contenido
+```
+const applications = [
+    {name: 'app1', type: ['user', 'side'], roles:['user', 'reader'], level:1, link:'/app-link', icon:'icon-class'},
+    {name: 'app2', type: ['action'], roles:['public', 'user', 'reader'], level:2, link:'/app-link2', icon:'icon-class'},
+]
+
+const values = [
+    {type: 'test-category', value: 'sample1', text: 'sample1_text', order : 0},
+    {type: 'test-category', value: 'sample2', text: 'sample2_text', order : 1},
+]
+
+module.exports.applications = applications
+module.exports.values = values
 
 
 
-Añadir referencia a proyecto core:
-git submodule add https://github.com/sgonzalezlopez/core.git
 
 
 Icon set Material Design
