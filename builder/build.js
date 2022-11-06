@@ -79,6 +79,8 @@ function processEntity(entityName) {
 
     params = {...default_params, ...params}
 
+    if (argv.fullForm) params.generateFullForm = argv.fullForm
+
     console.log('   Parametros de entidad:', JSON.stringify(params));
 
     if (!apis.includes(`${entityName}.route.js`) || argv.force) generateRouteFile(model, params)
@@ -112,8 +114,8 @@ async function generateFormFile(model, params) {
     console.log('   Generando UI_FORM para', model.modelName);
     model.schema.paths._id.options.hideInForm = true;
     model.schema.paths.__v.options.hideInForm = true;
-    model.schema.paths.createdAt.options.readOnly = true;
-    model.schema.paths.updatedAt.options.readOnly = true;
+    if (model.schema.paths.createdAt) model.schema.paths.createdAt.options.readOnly = true;
+    if (model.schema.paths.updatedAt) model.schema.paths.updatedAt.options.readOnly = true;
 
     var text = await ejs.renderFile(params.generateFullForm ? './core/builder/templates/formFull.ejs' : './core/builder/templates/form.ejs', {model:model, params:params})
     fs.writeFile(`${basedir}/views/${params.view}/${model.modelName.toLowerCase()}.ejs`, cleanText(text), (err) => {if (err) throw err;})
@@ -123,8 +125,8 @@ async function generateListFile(model, params) {
     console.log('   Generando UI_LIST para', model.modelName);
     model.schema.paths._id.options.hideInForm = true;
     model.schema.paths.__v.options.hideInForm = true;
-    model.schema.paths.createdAt.options.hideInForm = true;
-    model.schema.paths.updatedAt.options.hideInForm = true;
+    if (model.schema.paths.createdAt) model.schema.paths.createdAt.options.hideInForm = true;
+    if (model.schema.paths.updatedAt) model.schema.paths.updatedAt.options.hideInForm = true;
 
     var text = await ejs.renderFile('./core/builder/templates/list.ejs', {model:model, params:params})
     fs.writeFile(`${basedir}/views/${params.view}/${model.modelName.toLowerCase()}-list.ejs`, cleanText(text), (err) => {if (err) throw err;})
@@ -148,8 +150,8 @@ async function generateSearchFile(model, params) {
     console.log('   Generando SEARCH para', model.modelName);
     model.schema.paths._id.options.hideInForm = true;
     model.schema.paths.__v.options.hideInForm = true;
-    model.schema.paths.createdAt.options.hideInForm = true;
-    model.schema.paths.updatedAt.options.hideInForm = true;
+    if (model.schema.paths.createdAt) model.schema.paths.createdAt.options.hideInForm = true;
+    if (model.schema.paths.updatedAt) model.schema.paths.updatedAt.options.hideInForm = true;
     try {
         for (const key in model.schema.paths) {
             if (Object.hasOwnProperty.call(model.schema.paths, key)) {
