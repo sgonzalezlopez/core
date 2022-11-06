@@ -40,7 +40,7 @@ node_modules
 sessions
 dev.config.js
 ```
-6. Incluir la dependencia a CORE en el fichero package.json
+6. Incluir la dependencia a CORE en el fichero ```./package.json```
 ```
 {
   "name": "app_name",
@@ -61,7 +61,7 @@ dev.config.js
 ```
 npm install
 ```
-8. Crear el archivo ./app.js en la carpeta ROOT con el contenido siguiente
+8. Crear el archivo ```./app.js``` en la carpeta ROOT con el contenido siguiente
 ```
 // Carga de valores de entorno locales.
 try {
@@ -101,8 +101,21 @@ async function run() {
 run()
 ```
 9. Copiar y renombrar el fichero ```./core/dev.config.template.js``` a ```./dev.config.js```
-10. Actualizar el contenido del fichero ./dev.config.js con la información correcta
-11. Actualizar el contenido del fichero ./config/app.config.js
+10. Actualizar el contenido del fichero `./dev.config.js` con la información correcta
+```
+module.exports.initLocals = () => {
+    process.env.MONGODB_URI = ''
+    process.env.ADMIN_EMAIL =''
+    process.env.EMAIL_ACCOUNT =''
+    process.env.EMAIL_PASS = ''
+    process.env.JWT_SECRET = ''   
+    process.env.COOKIE_SECRET = '' 
+    process.env.COOKIE_NAME = ''
+    process.env.ENABLE_EMAIL_SEND = false
+    process.env.ENABLE_EMAIL_PREVIEW = true
+}
+```
+12. Actualizar el contenido del fichero `./config/app.config.js`
 ```
 module.exports.configs = {
 }
