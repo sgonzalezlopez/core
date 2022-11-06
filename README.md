@@ -1,4 +1,8 @@
-# core
+# Componentes CORE para aplicaciones con nodejs y express
+## Qué son los componentes de CORE
+Los componentes CORE son un conjunto de desarrollos que permiten crear de manera rápida y sencilla una aplicación web basada en NodeJS, express y MongoDB.
+
+## Como utilizar los componentes core en una nueva aplicación?
 Pasos para la configuración de un nuevo proyecto basado en CORE
 1. Crear la carpeta del proyecto con la siguient estructura interna
 ```
@@ -121,10 +125,10 @@ const values = [
 
 module.exports.applications = applications
 module.exports.values = values
+```
 
 
 
+## Referencias externas y librerías utilizadas
 
-
-Icon set Material Design
-https://zavoloklom.github.io/material-design-iconic-font/icons.html
+- [Icon set Material Design](https://zavoloklom.github.io/material-design-iconic-font/icons.html)
