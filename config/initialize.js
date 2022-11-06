@@ -7,12 +7,15 @@ const applications = [
     {name: 'users', type: ['action'], roles:['admin'], level:-1, link:'/admin/user-list', icon:'fas fa-users'},
     {name: 'configs', type: ['action'], roles:['admin'], level:-1, link:'/admin/config-list', icon:'fas fa-users'},
     {name: 'features', type: ['action'], roles:['admin'], level:-1, link:'/admin/feature-list', icon:'fas fa-users'},
+    {name: 'values', type: ['action'], roles:['admin'], level:-1, link:'/admin/value-list', icon:'fas fa-users'},
 ]
 
 
 
 module.exports =  function initalize () {
     initializeDB()
+
+
 
     applications.forEach(a => {
         Apps.findOne({name : a.name})

@@ -1,8 +1,8 @@
 const express = require('express')
     const router = express.Router();
     const controller = require("../controllers/value.controller");
-    const authentication = require('../core/middlewares/authentication')
-    const authorization = require('../core/middlewares/authorization')
+    const authentication = require('../middlewares/authentication')
+    const authorization = require('../middlewares/authorization')
     
     router.get("/", authorization.checkPermision('value', 'R'), controller.getAll);
     router.get("/:id", authorization.checkPermision('value', 'R'), controller.get);

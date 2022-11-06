@@ -8,6 +8,6 @@ module.exports.initLocals = () => {
     process.env.JWT_SECRET = ''   
     process.env.COOKIE_SECRET = '' 
     process.env.COOKIE_NAME = ''
-    provess.env.ENABLE_EMAIL_SEND = false
-    provess.env.ENABLE_EMAIL_PREVIEW = true
+    process.env.ENABLE_EMAIL_SEND = false
+    process.env.ENABLE_EMAIL_PREVIEW = true
 }
