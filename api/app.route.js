@@ -6,6 +6,7 @@ const authorization = require('../middlewares/authorization')
 
 router.get("/", controller.getAll);
 router.get("/:id", [authorization.isAdmin], controller.get);
+router.post("/find", [authorization.isAdmin], controller.find);
 router.put("/:id", [authorization.isAdmin], controller.update);
 router.delete("/:id", [authorization.isAdmin], controller.delete);
 router.post("/", [authorization.isAdmin], controller.create)

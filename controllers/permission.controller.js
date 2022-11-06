@@ -31,7 +31,19 @@ const Model = require("../models/permission.model");
     
     exports.delete = (req, res) => {
         Model.deleteOne({_id:req.params.id})
-        .then(users => {
+        .then(item => {
             res.send({message : 'OK'})
+        })
+    }
+
+    exports.find = (req, res) => {
+        for (const key in req.body) {
+            if (Object.hasOwnProperty.call(req.body, key)) {
+                if (req.body[key] == '') delete req.body[key]                
+            }
+        }
+        Model.find(req.body)
+        .then(items => {
+            res.send(items)
         })
     }

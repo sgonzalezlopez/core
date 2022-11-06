@@ -12,8 +12,8 @@ module.exports.renderWithApps = function (req, res, next, view, data) {
 }
 
 module.exports.renderWithApps = async function renderWithApps(req, res, next, view, data, id) {
-    var modelName = view.split('/').pop().replace('-list', '')
-    var viewBase = view.replace('-list', '')
+    var modelName = view.split('/').pop().split('-')[0]
+    var viewBase = view.split('-')[0]
 
 
     if (!data || data == null) data = {actions : null};

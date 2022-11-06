@@ -1,4 +1,4 @@
-// importing modules
+// {"view" : "admin"}
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');

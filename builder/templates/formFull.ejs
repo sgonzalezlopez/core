@@ -11,10 +11,6 @@
                 <form id="<%=model.modelName%>Form" class="form-horizontal">
                     <div class="card-body">
                         <h4 class="card-title"><%%= __('MODEL_<%=model.modelName%>') %%></h4>
-                        <% model.schema.paths.createdAt.options.readOnly = true; %>
-                        <% model.schema.paths.updatedAt.options.readOnly = true; %>
-                        <% model.schema.paths._id.options.hideInForm = true; %>
-                        <% model.schema.paths.__v.options.hideInForm = true; %>
                         <% Object.keys(model.schema.paths).forEach(element => { path = model.schema.paths[element] %>
                             <% if (!path.options.hideInForm) { %>
                                 <div class="form-group row">
@@ -72,6 +68,8 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
                 <script>
                     //***********************************//
                     // For select 2

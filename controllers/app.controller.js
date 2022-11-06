@@ -53,6 +53,18 @@ exports.delete = (req, res) => {
     })
 }
 
+exports.find = (req, res) => {
+    for (const key in req.body) {
+        if (Object.hasOwnProperty.call(req.body, key)) {
+            if (req.body[key] == '') delete req.body[key]                
+        }
+    }
+    Apps.find(req.body)
+    .then(items => {
+        res.send(items)
+    })
+}
+
 
 exports.getApplications = (user) => {
     console.log('Recuperando aplicaciones de BD');

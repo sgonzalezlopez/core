@@ -7,6 +7,7 @@ var routes = null
 const default_params = {
     generateForm : true,
     generateList : true,
+    generateSearch : true,
     view : "",
 }
 
@@ -96,6 +97,10 @@ function processEntity(entityName) {
         if (!fs.existsSync(`${basedir}/views/${params.view}/${entityName}-list.ejs`) || argv.force || argv.forceUI || argv.forceList) generateListFile(model, params)
     }  
 
+    if (params.generateSearch) {
+        if (!fs.existsSync(`${basedir}/views/${params.view}/${entityName}-search.ejs`) || argv.force || argv.forceUI || argv.forceSearch) generateSearchFile(model, params)
+    }  
+
 }
 
 function addRoute(model) {
@@ -105,6 +110,10 @@ function addRoute(model) {
 
 async function generateFormFile(model, params) {
     console.log('   Generando UI_FORM para', model.modelName);
+    model.schema.paths._id.options.hideInForm = true;
+    model.schema.paths.__v.options.hideInForm = true;
+    model.schema.paths.createdAt.options.readOnly = true;
+    model.schema.paths.updatedAt.options.readOnly = true;
 
     var text = await ejs.renderFile(params.generateFullForm ? './core/builder/templates/formFull.ejs' : './core/builder/templates/form.ejs', {model:model, params:params})
     fs.writeFile(`${basedir}/views/${params.view}/${model.modelName.toLowerCase()}.ejs`, cleanText(text), (err) => {if (err) throw err;})
@@ -112,6 +121,10 @@ async function generateFormFile(model, params) {
 
 async function generateListFile(model, params) {
     console.log('   Generando UI_LIST para', model.modelName);
+    model.schema.paths._id.options.hideInForm = true;
+    model.schema.paths.__v.options.hideInForm = true;
+    model.schema.paths.createdAt.options.hideInForm = true;
+    model.schema.paths.updatedAt.options.hideInForm = true;
 
     var text = await ejs.renderFile('./core/builder/templates/list.ejs', {model:model, params:params})
     fs.writeFile(`${basedir}/views/${params.view}/${model.modelName.toLowerCase()}-list.ejs`, cleanText(text), (err) => {if (err) throw err;})
@@ -129,6 +142,27 @@ async function generateControllerFile(model, params) {
 
     var text = await ejs.renderFile('./core/builder/templates/controller.js', {model:model, params:params})
     fs.writeFile(`${basedir}/controllers/${model.modelName.toLowerCase()}.controller.js`, text, (err) => {if (err) throw err;})
+}
+
+async function generateSearchFile(model, params) {
+    console.log('   Generando SEARCH para', model.modelName);
+    model.schema.paths._id.options.hideInForm = true;
+    model.schema.paths.__v.options.hideInForm = true;
+    model.schema.paths.createdAt.options.hideInForm = true;
+    model.schema.paths.updatedAt.options.hideInForm = true;
+    try {
+        for (const key in model.schema.paths) {
+            if (Object.hasOwnProperty.call(model.schema.paths, key)) {
+                const element = model.schema.paths[key];
+                if (element.options.hideInForm) delete model.schema.paths[key]
+            }
+        }
+        var text = await ejs.renderFile('./core/builder/templates/search.ejs', {model:model, params:params})
+        fs.writeFile(`${basedir}/views/${params.view}/${model.modelName.toLowerCase()}-search.ejs`, cleanText(text), (err) => {if (err) throw err;})
+    }
+    catch (err) {
+        console.error(err);
+    }
 }
 
 function cleanText(text) {

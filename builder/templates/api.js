@@ -6,6 +6,7 @@ const express = require('express')
     
     router.get("/", authorization.checkPermision('<%=model.modelName.toLowerCase()%>', 'R'), controller.getAll);
     router.get("/:id", authorization.checkPermision('<%=model.modelName.toLowerCase()%>', 'R'), controller.get);
+    router.post("/find", authorization.checkPermision('<%=model.modelName.toLowerCase()%>', 'R'), controller.find);
     router.put("/:id", authorization.checkPermision('<%=model.modelName.toLowerCase()%>', 'U'), controller.update);
     router.post("/", authorization.checkPermision('<%=model.modelName.toLowerCase()%>', 'C'), controller.create);
     router.delete("/:id", authorization.checkPermision('<%=model.modelName.toLowerCase()%>', 'D'), controller.delete);

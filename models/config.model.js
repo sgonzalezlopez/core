@@ -1,4 +1,4 @@
-// importing modules
+// {"view" : "admin"}
 const mongoose = require('mongoose');
 
 // creating user schema
