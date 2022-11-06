@@ -7,6 +7,7 @@ const defaults_config = {
 const defaults_features = {
     SELF_REGISTER : process.env.SELF_REGISTER || true,
     TWO_STEPS_REGISTRY : process.env.TWO_STEPS_REGISTRY || true,
+    ALWAYS_REFRESH_MENU : false,
 }
 
 var local_config = {}

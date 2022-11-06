@@ -34,13 +34,13 @@ git push -u origin master
 ```
 git submodule add https://github.com/sgonzalezlopez/core.git
 ```
-5. Crear el fichero .gitignore con el siguiente contenido
+5. Crear el fichero `./.gitignore` con el siguiente contenido
 ```
 node_modules
 sessions
 dev.config.js
 ```
-6. Incluir la dependencia a CORE en el fichero ```./package.json```
+6. Incluir la dependencia a CORE en el fichero `./package.json`
 ```
 {
   "name": "app_name",
@@ -61,7 +61,7 @@ dev.config.js
 ```
 npm install
 ```
-8. Crear el archivo ```./app.js``` en la carpeta ROOT con el contenido siguiente
+8. Crear el archivo `./app.js` en la carpeta ROOT con el contenido siguiente
 ```
 // Carga de valores de entorno locales.
 try {
@@ -100,7 +100,7 @@ async function run() {
 
 run()
 ```
-9. Copiar y renombrar el fichero ```./core/dev.config.template.js``` a ```./dev.config.js```
+9. Copiar y renombrar el fichero `./core/dev.config.template.js` a `./dev.config.js`
 10. Actualizar el contenido del fichero `./dev.config.js` con la información correcta
 ```
 module.exports.initLocals = () => {
@@ -141,7 +141,6 @@ module.exports.values = values
 ```
 
 
-
 ## Referencias externas y librerías utilizadas
-
+- [Wrappixel Dashboard](https://demos.wrappixel.com/free-admin-templates/bootstrap/matrix-bootstrap-free/html/index.html)
 - [Icon set Material Design](https://zavoloklom.github.io/material-design-iconic-font/icons.html)

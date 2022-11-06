@@ -2,6 +2,9 @@ const Users = require("../models/user.model");
 const Apps = require("../models/app.model");
 const { initializeDB } = require("./db.config");
 const valueModel = require("../models/value.model");
+const appConfigs = require("../config/app.config");
+const featureModel = require("../models/feature.model");
+const configModel = require("../models/config.model");
 
 const core_applications = [
     {name: 'home', type: ['side'], roles:['admin', 'user', 'public'], level:-1, link:'/', icon:'mdi mdi-home', parent:'admin'},
@@ -22,16 +25,26 @@ const core_values = [
     {type: 'role', value: 'public', text: 'public', order : 3},
 ]
 
+const core_features = appConfigs.FEATURES
+const core_configs = appConfigs.CONFIGS
+
 var local_apps = []
 var local_values = []
+var local_features = []
+var local_configs = []
 try {
-    local_apps = require('../../config/initialize').applications || []
-    local_values = require('../../config/initialize').values || []
+    const local_config = require('../../config/initialize')
+    local_apps = local_config.applications || []
+    local_values = local_config.values || []
+    local_features = local_config.features || []
+    local_configs = local_config.configs || []
 }
 catch {}
 
 const applications = [...core_applications, ...local_apps]
 const values = [...core_values, ...local_values]
+const features = {...core_features, ...local_features}
+const configs = {...core_configs, ...local_configs}
 
 module.exports =  async function initalize () {
     initializeDB()
@@ -62,4 +75,26 @@ module.exports =  async function initalize () {
             }
         } )
     })
+
+    // Features
+    for (const key in features) {
+        if (Object.hasOwnProperty.call(features, key)) {
+            const element = features[key];
+            featureModel.findOne({key : key})
+            .then(item => {
+                if (!item) featureModel.create({key:key, active:element})
+            })
+        }
+    }
+
+    // Configs
+    for (const key in configs) {
+        if (Object.hasOwnProperty.call(configs, key)) {
+            const element = configs[key];
+            configModel.findOne({key : key})
+            .then(item => {
+                if (!item) configModel.create({key:key, value:element})
+            })
+        }
+    }
 }
