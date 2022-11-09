@@ -30,7 +30,11 @@
                                         <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%> >
                                             <option value=""></option>
                                         <% path.options.combo.values.forEach(v => { %>
+                                            <% if (path.options.type.name == 'ObjectId') { %>
+                                            <option <%= locals.object && object[element]._id.toString() == v.value ? 'selected' : '' %> value="<%=v.value%>"><%=v.text%></option>
+                                            <% } else { %>
                                             <option <%= locals.object && object[element] == v.value ? 'selected' : '' %> value="<%=v.value%>"><%=v.text%></option>
+                                            <% } %>
                                         <% }) %>
                                         </select>
                                     <% } else if (path.options.type.name == 'Boolean') { %>

@@ -27,7 +27,11 @@
                                         <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%> >
                                             <option value=""></option>
                                         <%% model.schema.paths['<%=path.path%>'].options.combo.values.forEach(v => { %%>
-                                            <option <%%= locals.object && object["<%=path.path%>"] == v.value ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
+                                            <% if (path.options.type.name == 'ObjectId') { %>
+                                                <option <%%= locals.object && object["<%=path.path%>"]._id.toString() == v.value ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
+                                            <% } else { %>
+                                                <option <%%= locals.object && object["<%=path.path%>"] == v.value ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
+                                                <% } %>
                                         <%% }) %%>
                                         </select>
                                     <% } else if (path.options.type.name == 'Boolean') { %>

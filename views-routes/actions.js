@@ -5,7 +5,9 @@ const authorization = require('../middlewares/authorization')
 const apps = require('../controllers/app.controller')
 const { getFeature } = require('../config/config');
 const { db } = require('../models/config.model');
-const fs = require('fs')
+const i18n = require('../i18n/i18n.config')
+const fs = require('fs');
+const configs = require('../../config/app.config');
 
 module.exports.renderWithApps = function (req, res, next, view, data) {
     this.renderWithApps(req, res, next, view, data, id)
@@ -18,6 +20,8 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 
     if (!data || data == null) data = {actions : null};
     data.user = req.user;
+
+    data.config = configs
 
     if (await getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
     else data.apps = req.session.apps || await apps.getApplications(req.user)
@@ -72,6 +76,9 @@ async function getValues(name, text) {
 
 async function getType(type) {
     val = await db.model('Value').find({type:type}).sort('order');
+    val.map(v => {
+        if (!v.text) v.text = i18n.__(`VAL_${v.value}`)
+    })
     return val
 
 }
