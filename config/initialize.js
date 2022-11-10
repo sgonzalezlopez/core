@@ -47,34 +47,10 @@ const features = {...core_features, ...local_features}
 const configs = {...core_configs, ...local_configs}
 
 module.exports =  async function initalize () {
-    initializeDB()
+    await initializeDB()
 
-    // Inicializar aplicaciones
-    var admin = await Apps.findOne({name : 'admin'})
-    if (!admin) {
-        admin = await Apps.create({name:'admin', type:['action'], roles:['admin'], level:-1, link:'/admin', icon:'mdi mdi-hexagon-multiple'})
-    }
-    
-    applications.forEach(a => {
-        Apps.findOne({name : a.name})
-        .then(async app => {
-            if (!app) {
-                if (a.parent && a.parent == 'admin') a.parent = admin._id
-                await Apps.create(a)
-            }
-        })
-    })
+    await loadDefaultValues()
 
-
-    // Inicializar valores
-    values.forEach(v => {
-        valueModel.findOne(v)
-        .then(async value =>{
-            if(!value) {
-                await valueModel.create(v)
-            }
-        } )
-    })
 
     // Features
     for (const key in features) {
@@ -97,4 +73,33 @@ module.exports =  async function initalize () {
             })
         }
     }
+}
+
+async function loadDefaultValues() {
+        // Inicializar aplicaciones
+        var admin = await Apps.findOne({name : 'admin'})
+        if (!admin) {
+            admin = await Apps.create({name:'admin', type:['action'], roles:['admin'], level:-1, link:'/admin', icon:'mdi mdi-hexagon-multiple'})
+        }
+        
+        applications.forEach(a => {
+            Apps.findOne({name : a.name})
+            .then(async app => {
+                if (!app) {
+                    if (a.parent && a.parent == 'admin') a.parent = admin._id
+                    await Apps.create(a)
+                }
+            })
+        })
+    
+    
+        // Inicializar valores
+        values.forEach(v => {
+            valueModel.findOne(v)
+            .then(async value =>{
+                if(!value) {
+                    await valueModel.create(v)
+                }
+            } )
+        })
 }
