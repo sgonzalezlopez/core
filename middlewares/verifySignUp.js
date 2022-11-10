@@ -4,7 +4,7 @@ const Users = require("../models/user.model");
 
 checkInputData = (req, res, next) => {
   if (!req.body.username || !req.body.email) return res.status(400).send({ message: res.__('Missing username or email') });
-  if (req.body.password && !String(req.body.password).toLowerCase().match(
+  if (req.body.email && !String(req.body.email).toLowerCase().match(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )) return res.status(400).send({ message: res.__('Invalid email address') });
   if (req.body.password && req.body.passwordVerify && req.body.password != req.body.passwordVerify) return res.status(400).send({ message: res.__('Passwords don\'t match') });
