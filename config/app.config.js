@@ -2,6 +2,7 @@ const defaults_config = {
     ADMIN_EMAIL : process.env.ADMIN_EMAIL,
     EMAIL_ACCOUNT : process.env.EMAIL_ACCOUNT,
     EMAIL_PASS : process.env.EMAIL_PASS,
+    ENABLE_EMAIL_SEND : process.env.ENABLE_EMAIL_SEND,
 }
 
 const defaults_features = {

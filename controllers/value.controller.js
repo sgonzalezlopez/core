@@ -47,3 +47,15 @@ const Model = require("../models/value.model");
             res.send(items)
         })
     }
+
+    exports.getValues = (key) => {
+        return Model.find({type : key})
+        .then(items => {
+            if(!items) items = []
+            return items
+        })
+        .catch(e => {
+            console.error(e);
+            return []
+        })
+    }

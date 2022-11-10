@@ -100,20 +100,19 @@ async function run() {
 
 run()
 ```
-9. Copiar y renombrar el fichero `./core/dev.config.template.js` a `./dev.config.js`
-10. Actualizar el contenido del fichero `./dev.config.js` con la información correcta
+9. Copiar y renombrar el fichero `./core/template.env` a `./.env`
+10. Actualizar el contenido del fichero `./env` con la información correcta y añadir otras variables de entorno que puedan ser necesarias
 ```
-module.exports.initLocals = () => {
-    process.env.MONGODB_URI = ''
-    process.env.ADMIN_EMAIL =''
-    process.env.EMAIL_ACCOUNT =''
-    process.env.EMAIL_PASS = ''
-    process.env.JWT_SECRET = ''   
-    process.env.COOKIE_SECRET = '' 
-    process.env.COOKIE_NAME = ''
-    process.env.ENABLE_EMAIL_SEND = false
-    process.env.ENABLE_EMAIL_PREVIEW = true
-}
+  NODE_ENV='development'
+  MONGODB_URI=''
+  ADMIN_EMAIL =''
+  EMAIL_ACCOUNT =''
+  EMAIL_PASS=''
+  JWT_SECRET=''   
+  COOKIE_SECRET='' 
+  COOKIE_NAME=''
+  ENABLE_EMAIL_SEND=false
+  ENABLE_EMAIL_PREVIEW=true
 ```
 12. Actualizar el contenido del fichero `./config/app.config.js`
 ```

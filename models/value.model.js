@@ -24,4 +24,4 @@ const ValueSchema = mongoose.Schema({
 
 
 // exporting module to allow it to be imported in other files
-const Value = module.exports = mongoose.model('Value', ValueSchema);
+module.exports = mongoose.model('Value', ValueSchema);
