@@ -11,8 +11,7 @@ const ConfigSchema = mongoose.Schema({
         type : String
     },
     value : {
-        type : String,
-        required : true
+        type : String
     },
 },{ timestamps: true });
 
