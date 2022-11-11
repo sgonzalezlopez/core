@@ -25,32 +25,16 @@
     </div>
     <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
     <script>
-    function actionFormatter(value, row, index) {
-      return [
-        '<a class="view" href="/admin/value/' + row._id + '" title="">',
-        '<i class="fa fa-eye"></i>',
-        '</a> ',
-        '<a class="delete" href="javascript:void(0)" title="">',
-            '<i class="fa fa-trash"></i>',
-            '</a> ',        
-      ].join('');
-    }
-    window.actionEvents = {    
-      'click .delete' : function (e, value, row, index) {
-        e.stopPropagation()
-        $.ajax({
-                type: 'DELETE',
-                url: `/api/Value/${row._id}`,
-                dataType: 'json',
-                success: function(data) {
-                    toastr.success("<%= __('APP_NAME') %>", "<%= __('DELETE_SUCCESS') %>")
-                    $('#table').bootstrapTable('refresh')
-                },
-                error: function(error) {
-                    console.log('error');
-                    console.error(error);
-                },
-            });
-      },
-    }
+    pagesCore.setOptions({api : '/api/value'}) 
+
+function actionFormatter(value, row, index) {
+  return [
+    '<a class="view" href="/admin/value/' + row._id + '" title="">',
+    '<i class="fa fa-eye"></i>',
+    '</a> ',
+    '<a class="delete" href="javascript:void(0)" title="">',
+        '<i class="fa fa-trash"></i>',
+        '</a> ',        
+  ].join('');
+}
     </script>

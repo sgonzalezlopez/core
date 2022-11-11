@@ -65,6 +65,8 @@
 </div>
 <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
 <script>
+    pagesCore.setOptions({api : '/api/app'}) 
+
 function actionFormatter(value, row, index) {
   return [
     '<a class="view" href="/admin/value/' + row._id + '" title="">',
@@ -74,24 +76,6 @@ function actionFormatter(value, row, index) {
         '<i class="fa fa-trash"></i>',
         '</a> ',        
   ].join('');
-}
-window.actionEvents = {    
-  'click .delete' : function (e, value, row, index) {
-    e.stopPropagation()
-    $.ajax({
-            type: 'DELETE',
-            url: `/api/Value/${row._id}`,
-            dataType: 'json',
-            success: function(data) {
-                toastr.success("<%= __('APP_NAME') %>", "<%= __('DELETE_SUCCESS') %>")
-                $('#table').bootstrapTable('refresh')
-            },
-            error: function(error) {
-                console.log('error');
-                console.error(error);
-            },
-        });
-  },
 }
 jQuery('#ValueForm_search_btn').click(() => {
     var data = $('#ValueForm').serialize();

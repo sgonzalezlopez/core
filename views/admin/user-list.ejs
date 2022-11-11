@@ -22,40 +22,16 @@
 <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
 
 <script>
+    pagesCore.setOptions({api : '/api/user'}) 
+
 function actionFormatter(value, row, index) {
   return [
     '<a class="view" href="/admin/user/' + row._id + '" title="">',
     '<i class="fa fa-eye"></i>',
     '</a> ',
-    '<a class="edit" href="javascript:void(0)" title="">',
-      '<i class="fa fa-pen-alt"></i>',
-      '</a> ',
-      '<a class="delete" href="javascript:void(0)" title="">',
+    '<a class="delete" href="javascript:void(0)" title="">',
         '<i class="fa fa-trash"></i>',
         '</a> ',        
   ].join('');
-}
-
-window.actionEvents = {    
-  'click .edit' : function (e, value, row, index) {
-    e.stopPropagation()
-    //loadTournament(row._id);
-  },
-  'click .delete' : function (e, value, row, index) {
-    e.stopPropagation()
-    $.ajax({
-            type: 'DELETE',
-            url: `/api/user/${row._id}`,
-            dataType: 'json',
-            success: function(data) {
-                toastr.success("<%= __('APP_NAME') %>", "<%= __('DELETE_SUCCESS') %>")
-                $('#table').bootstrapTable('refresh')
-            },
-            error: function(error) {
-                console.log('error');
-                console.error(error);
-            },
-        });
-  },
 }
 </script>

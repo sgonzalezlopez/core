@@ -38,7 +38,7 @@
                                         </select> 
                                     <% } else if (path.options.type.name == 'Date') { %>
                                         <div class="input-group">
-                                            <input type="text" class="form-control mydatepicker" placeholder="<%=__('DATE_FORMAT')%>" id="<%= path.path %>" name="<%= path.path%>" <%= path.options.readOnly ? 'disabled' : ''%> value="<%= locals.object ? object[element] : '' %>" />
+                                            <input type="text" class="form-control mydatepicker" placeholder="<%=__('DATE_FORMAT')%>" id="<%= path.path %>" name="<%= path.path%>" <%= path.options.readOnly ? 'disabled' : ''%> date-value="<%= locals.object ? object[element] : '' %>" />
                                             <div class="input-group-append">
                                                 <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
                                             </div>
