@@ -129,7 +129,7 @@
             });
     
             console.log(element.attr('date-value'));
-            element.datepicker('setDate', element.attr('date-value'))
+            element.datepicker('setDate', new Date(element.attr('date-value')))
         })
 
         $(".select2").select2();
