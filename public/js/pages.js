@@ -127,9 +127,8 @@
                 format : getText('DATE_FORMAT'),
                 todayHighlight: true,
             });
-    
-            console.log(element.attr('date-value'));
-            element.datepicker('setDate', new Date(element.attr('date-value')))
+            
+            element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
         })
 
         $(".select2").select2();
@@ -202,7 +201,7 @@
     }
 
     exports.dateFormatter = function (value, row, index) {
-        return moment(value).locale(options.locale).format(options.dateFormat)
+        return moment.utc(value).locale(options.locale).format(options.dateFormat)
     }
 
 
