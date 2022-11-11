@@ -167,6 +167,31 @@
         return exports;
     }
 
+    exports.deleteElement = function (id, callback) {
+        bootbox.confirm({
+            message :  getText('DELETE_CONFIRM_MESSAGE'), 
+            title : options.appName,
+            closeButton : false,
+            callback : function(result){
+                if (!result) return;
+                $.ajax({
+                    type: 'DELETE',
+                    url: `${options.api}/${id}`,
+                    dataType: 'json',
+                    success: function(data) {
+                        toastr.success(options.appName, getText('DELETE_SUCCESS_MESSAGE'))
+                        if (callback) return callback()
+                    },
+                    error: function(error) {
+                        toastr.error(options.appName, getText('DELETE_ERROR_MESSAGE'))
+                        console.error(error);
+                    },
+                });
+            }
+        })
+
+    }
+
     exports.setOptions = function (new_options) {
         options = sanitize(new_options);
         return exports;
