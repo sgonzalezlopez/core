@@ -18,6 +18,7 @@
                         <th data-field="link"><%= __('COL_link') %></th>
                         <th data-field="icon"><%= __('COL_icon') %></th>
                         <th data-field="parent"><%= __('COL_parent') %></th>
+                        <th data-field="createdAt" data-formatter="core.formatters.datetime">CREATED</th>
                         <th data-field="id" data-formatter="actionFormatter" data-events="actionEvents"><%= __('COL_actions') %></th>
                     </tr>
                 </thead>
@@ -28,7 +29,7 @@
     </div>
     <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
     <script>
-    pagesCore.setOptions({api : '/api/app'}) 
+    core.setOptions({api : '/api/app'}) 
 
     function actionFormatter(value, row, index) {
       return [

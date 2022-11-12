@@ -8,7 +8,7 @@
       module.exports = factory(require('jquery'));
     } else {
       // Browser globals (root is window)
-      root.pagesCore = factory(root.jQuery);
+      root.core = factory(root.jQuery);
     }
   }(this, function init($, undefined) {
     'use strict';
@@ -200,8 +200,13 @@
         return options;
     }
 
-    exports.dateFormatter = function (value, row, index) {
-        return moment.utc(value).locale(options.locale).format(options.dateFormat)
+    exports.formatters = {
+        date : function (value, row, index) {
+            return moment.utc(value).locale(options.locale).format(options.dateFormat)
+        },
+        datetime : function (value, row, index) {
+            return moment(value).locale(options.locale).format()
+        }
     }
 
 

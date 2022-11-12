@@ -1,1 +1,1 @@
-pagesCore.setup()
+core.setup()

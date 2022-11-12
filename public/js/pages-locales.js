@@ -5,12 +5,12 @@
     } else if (typeof module === 'object' && module.exports) {
       factory(require('./pages'));
     } else {
-      factory(global.pagesCore);
+      factory(global.core);
     }
-  }(this, function (pagesCore) {
+  }(this, function (core) {
     'use strict';
     (function () {
-      pagesCore.addLocale('es', {
+      core.addLocale('es', {
         DELETE_CONFIRM_MESSAGE : 'Se va a eliminar un elemento. ¿Deseas continuar?',
         DELETE_SUCCESS_MESSAGE : 'El elemento se ha eliminado correctamente.',
         DELETE_ERROR_MESSAGE : 'Se ha producido un error al eliminar el elemento.',

@@ -3,7 +3,7 @@
     <div class="card-body">
         <h5 class="card-title">Basic Datatable</h5>
         <div class="table-responsive">
-            <table id="table" data-toggle="table" data-url="/api/user" class="table table-striped table-bordered">
+            <table id="table" data-toggle="table" data-url="/api/user" class="table table-striped table-bordered clickable" detail-url="/admin/user/">
             <thead>
                 <tr>
                     <th data-field="username"><%= __('COL_Username') %></th>
@@ -22,7 +22,7 @@
 <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
 
 <script>
-    pagesCore.setOptions({api : '/api/user'}) 
+    core.setOptions({api : '/api/user'}) 
 
 function actionFormatter(value, row, index) {
   return [
