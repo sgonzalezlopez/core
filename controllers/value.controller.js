@@ -2,6 +2,7 @@ const Model = require("../models/value.model");
 
     exports.getAll = (req, res) => {
         Model.find()
+        .sort({type : 1, order :1})
         .then(items => {
             res.send(items)
         })
@@ -43,6 +44,7 @@ const Model = require("../models/value.model");
             }
         }
         Model.find(req.body)
+        .sort({type : 1, order :1})
         .then(items => {
             res.send(items)
         })
@@ -50,6 +52,7 @@ const Model = require("../models/value.model");
 
     exports.getValues = (key) => {
         return Model.find({type : key})
+        .sort({type : 1, order :1})
         .then(items => {
             if(!items) items = []
             return items

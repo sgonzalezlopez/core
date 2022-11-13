@@ -14,6 +14,11 @@
         DELETE_CONFIRM_MESSAGE : 'Se va a eliminar un elemento. ¿Deseas continuar?',
         DELETE_SUCCESS_MESSAGE : 'El elemento se ha eliminado correctamente.',
         DELETE_ERROR_MESSAGE : 'Se ha producido un error al eliminar el elemento.',
+        UPDATE_SUCCESS_MESSAGE : 'Se ha actualizado el elemento correctamente.',
+        UPDATE_ERROR_MESSAGE : 'Se ha producido un error al actualizar el elemento.',
+        CREATE_SUCCESS_MESSAGE : 'El elemento se ha creado correctamente.',
+        CREATE_ERROR_MESSAGE : 'Se ha producido un error al crear el elemento.',
+        SEARCH_ERROR_MESSAGE : 'Se ha producido un error al buscar elementos.',
         DATE_FORMAT : 'dd/mm/yyyy',
       });
     })();

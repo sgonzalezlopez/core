@@ -65,7 +65,6 @@
 </div>
 <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
 <script>
-    core.setOptions({api : '/api/app'}) 
 
 function actionFormatter(value, row, index) {
   return [
@@ -77,20 +76,8 @@ function actionFormatter(value, row, index) {
         '</a> ',        
   ].join('');
 }
-jQuery('#ValueForm_search_btn').click(() => {
-    var data = $('#ValueForm').serialize();
-    $.ajax({
-        type: 'POST',
-        url: '/api/value/find',
-        data: data,
-        dataType: 'json',
-        success: function(data) {
-            $('#table').bootstrapTable('load', data)
-        },
-        error: function(error) {
-            console.error(error);
-            toastr.error("<%= __('SEARCH_ERROR') %>", "<%= __('APP_NAME') %>")
-        },
-    });
+$('#ValueForm_search_btn').click(() => {
+    values = core.forms.parse('ValueForm')
+    core.api.find('/api/value', values, (data) => { $('#table').bootstrapTable('load', data)})
 })
 </script>

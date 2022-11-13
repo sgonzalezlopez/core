@@ -25,7 +25,7 @@ router.use('/user', [authentication.isAuthenticated], users)
 router.use('/app', [authentication.isAuthenticated], apps)
 router.use('/config', [authentication.isAuthenticated, authorization.isAdmin], config)
 router.use('/feature', [authentication.isAuthenticated, authorization.isAdmin], features)
-router.use('/value', [authentication.isAuthenticated, authorization.isAdmin], values)
+router.use('/value', [authentication.isAuthenticated], values)
 
 module.exports = router;
 

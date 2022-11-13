@@ -16,7 +16,11 @@ function validateRole(req, res, next, profile) {
 
 
     if (req.user.roles.includes('admin') || req.user.roles.includes(profile)) return next()
-    else return res.status(400).send({message : res.__('ERR005')})
+    else {
+        console.log('Acceso denegado para', req);
+        console.log('Usuario', req.user);
+        return res.status(400).send({message : res.__('ERR005')})
+    }
 }
 
 module.exports.checkPermision = function checkPermision(entity, access) {
@@ -30,7 +34,10 @@ module.exports.checkPermision = function checkPermision(entity, access) {
         // Permission.find({entity : entity})
         .then (items => {
             if (items.length > 0) return next();
-            else return res.status(400).send({message : res.__('ERR005')})
+            else {
+                console.log('Acceso denegado para', req);
+                return res.status(400).send({message : res.__('ERR005')})
+            }
         })  
     }
 }

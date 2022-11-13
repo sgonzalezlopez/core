@@ -5,8 +5,8 @@
                 <form id="<%=formName%>" class="form-horizontal">
                     <div class="card-body">
                         <h4 class="card-title"><%= __('MODEL_'+ model.modelName) %></h4>
-                        <% model.schema.paths.createdAt.options.readOnly = true; %>
-                        <% model.schema.paths.updatedAt.options.readOnly = true; %>
+                        <% if (model.schema.paths.createdAt) model.schema.paths.createdAt.options.readOnly = true; %>
+                        <% if (model.schema.paths.updatedAt) model.schema.paths.updatedAt.options.readOnly = true; %>
                         <% model.schema.paths._id.options.hideInForm = true; %>
                         <% model.schema.paths.__v.options.hideInForm = true; %>
                         <% Object.keys(model.schema.paths).forEach(element => { path = model.schema.paths[element] %>
@@ -65,50 +65,17 @@
                 <% if (locals.permissions.includes('U')) { %>
                     <button id="<%=formName%>_submit_btn" type="button" class="btn btn-primary"><%= __('SAVE') %></button>
                 <% } %>
+                <input type="hidden" class="custom-file-input" id="id" name="id" value="<%= locals.object ? locals.object._id : ''%>" />
                 <button id="<%=formName%>_list_btn" type="button" class="btn btn-info"><%= __('LIST') %></button>
             </div>
         </div>
     </form>
 </div>
-        
-        <script src="/assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
-        <script src="/dist/js/pages/mask/mask.init.js"></script>
-        <script src="/assets/libs/select2/dist/js/select2.full.min.js"></script>
-        <script src="/assets/libs/select2/dist/js/select2.min.js"></script>
-        <script src="/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-        <script src="/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"></script>
-        <script>
-            //***********************************//
-            // For select 2
-            //***********************************//
-            $(".select2").select2();
-            
-            /*datwpicker*/
-            jQuery(".mydatepicker").datepicker({
-                language: '<%=__("LANGUAGE")%>',
-                todayHighlight: true,
-            });
-            jQuery("#datepicker-autoclose").datepicker({
-                language: '<%=__("LANGUAGE")%>',
-                autoclose: true,
-                todayHighlight: true,
-            });
-
-            jQuery('#<%=formName%>_submit_btn').click(() => {
-                var data = $('#<%=formName%>').serialize();
-                $.ajax({
-                    type: '<%= locals.object ? "PUT" : "POST" %>',
-                    url: '<%= locals.api + (locals.object ? `/${object._id}` : ``) %>',
-                    data: data,
-                    dataType: 'json',
-                    success: function(data) {
-                        toastr.success("<%= __('SAVE_SUCCESS') %>", "<%= __('APP_NAME') %>")
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        toastr.error("<%= __('SAVE_ERROR') %>", "<%= __('APP_NAME') %>")
-                    },
-                });
+        <script>          
+            $('#<%=formName%>_submit_btn').click(() => {
+                values = core.forms.parse('<%=formName%>')
+                if (values.id) core.api.update('<%=locals.api%>', values.id, values, null)
+                else core.api.create('<%=locals.api%>', values, null)
             })
 
             $('#<%=formName%>_list_btn').click(() => {

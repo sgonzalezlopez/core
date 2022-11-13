@@ -102,7 +102,7 @@
 </div>
 <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
 <script>
-    core.setOptions({api : '/api/app'})
+
 function actionFormatter(value, row, index) {
   return [
     '<a class="view" href="/admin/app/' + row._id + '" title="">',
@@ -114,20 +114,9 @@ function actionFormatter(value, row, index) {
   ].join('');
 }
 
-jQuery('#AppForm_search_btn').click(() => {
-    var data = $('#AppForm').serialize();
-    $.ajax({
-        type: 'POST',
-        url: '/api/app/find',
-        data: data,
-        dataType: 'json',
-        success: function(data) {
-            $('#table').bootstrapTable('load', data)
-        },
-        error: function(error) {
-            console.error(error);
-            toastr.error("<%= __('SEARCH_ERROR') %>", "<%= __('APP_NAME') %>")
-        },
-    });
+$('#AppForm_search_btn').click(() => {
+    values = core.forms.parse('AppForm')
+    core.api.find('/api/app', values, (data) => { $('#table').bootstrapTable('load', data)})
 })
+
 </script>

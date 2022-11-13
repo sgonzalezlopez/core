@@ -14,23 +14,14 @@
                     <div class="form-group row col-md-6">
                         <label for="<%= path.path %>" class="col-sm-3 text-end control-label col-form-label"><%%= __('MODEL_<%=model.modelName%>_<%=path.path%>')%%></label>
                         <div class="col-sm-9">
-                        <% if (path.options.combo && path.options.combo.multiple) { %>
-                            <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" multiple="multiple" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%> >
-                            <%% model.schema.paths['<%=path.path%>'].options.combo.values.forEach(v => { %%>
-                                <option <%%= locals.object && object["<%=path.path%>"].includes(v.value) ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
-                            <%% }) %%>
-                            </select>
-                        <% } else if (path.options.combo) { %>
-                            <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%> >
-                                <option value=""></option>
-                            <%% model.schema.paths['<%=path.path%>'].options.combo.values.forEach(v => { %%>
-                                <option <%%= locals.object && object["<%=path.path%>"] == v.value ? 'selected' : '' %%> value="<%%=v.value%%>"><%%=v.text%%></option>
-                            <%% }) %%>
-                            </select>
+                        <% if (path.options.combo && path.options.combo.collection) { %>
+                            <%-'<select id="' + path.path + '" name="' + path.path + '" ' + (path.options.combo.multiple ? 'multiple="multiple"' : '') + ' class="select2 form-select shadow-none" style="width:100%; height: 36px" data-collection="' + path.options.combo.collection.name + '" data-show="' + path.options.combo.collection.text + '" data-value="'%><%%=locals.object && locals.object.<%=path.path%> ? object.<%=path.path%>._id : ''%%>"></select> %>
+                        <% } else if (path.options.combo && path.options.combo.type) { %>
+                            <%-'<select id="' + path.path + '" name="' + path.path + '" ' + (path.options.combo.multiple ? 'multiple="multiple"' : '') + ' class="select2 form-select shadow-none" style="width:100%; height: 36px" data-value-list="' + path.options.combo.type + '" data-value="'%><%%=locals.object && locals.object.<%=path.path%> ? object.<%=path.path%> : ''%%>"></select> %>
                         <% } else if (path.options.type.name == 'Boolean') { %>
-                            <select id="<%= path.path %>" name="<%= path.path%>" class="select2 form-select shadow-none" style="width: 100%; height: 36px" <%= path.options.readOnly ? 'disabled' : ''%>>
-                                <option <%%= locals.object && object["<%=path.path%>"] ? 'selected' : '' %%> value="true"><%%= __('BOOLEAN_true') %%></option>
-                                <option <%%= locals.object && !object["<%=path.path%>"] ? 'selected' : '' %%> value="false"><%%= __('BOOLEAN_false') %%></option>
+                            <%=`<select id="${path.path}" name="${path.path}" class="select2 form-select shadow-none" style="width: 100%; height: 36px" ${path.options.readOnly ? 'disabled' : ''}>`%>
+                                <option <%%= locals.object && object["<%=path.path%>"] ? 'selected' : '' %> value="true"><%%= __('BOOLEAN_true') %></option>
+                                <option <%%= locals.object && !object["<%=path.path%>"] ? 'selected' : '' %> value="false"><%%= __('BOOLEAN_false') %></option>
                             </select> 
                         <% } else if (path.options.type.name == 'Date') { %>
                             <div class="input-group">
@@ -50,6 +41,7 @@
                         <% } else { %>
                             <input type="text" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value="<%%= locals.object ? object['<%=path.path%>'] : '' %%>"/>
                         <% } %>
+
                         </div>
                     </div>
                 <% if (index % 2 != 0) { %>
@@ -91,50 +83,18 @@
     
 <script>
 function actionFormatter(value, row, index) {
-  return [
-    '<a class="view" href="/<%=params.view != "" ? params.view + "/" : ""%><%=model.modelName.toLowerCase()%>/' + row._id + '" title="">',
-    '<i class="fa fa-eye"></i>',
-    '</a> ',
-    '<a class="delete" href="javascript:void(0)" title="">',
-        '<i class="fa fa-trash"></i>',
-        '</a> ',        
-  ].join('');
+    var del = '<%%=permission.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%>'
+    return [
+        '<a class="view" href="/admin/registry/' + row._id + '" title="">',
+        '<i class="fa fa-eye"></i>',
+        '</a> ',
+        del,       
+    ].join('');
 }
 
-window.actionEvents = {    
-  'click .delete' : function (e, value, row, index) {
-    e.stopPropagation()
-    $.ajax({
-            type: 'DELETE',
-            url: `/api/<%=model.modelName%>/${row._id}`,
-            dataType: 'json',
-            success: function(data) {
-                toastr.success("<%%= __('APP_NAME') %%>", "<%%= __('DELETE_SUCCESS') %%>")
-                $('#table').bootstrapTable('refresh')
-            },
-            error: function(error) {
-                console.log('error');
-                console.error(error);
-            },
-        });
-  },
-}
-
-jQuery('#<%=model.modelName%>Form_search_btn').click(() => {
-    var data = $('#<%=model.modelName%>Form').serialize();
-    $.ajax({
-        type: 'POST',
-        url: '/api/<%=model.modelName.toLowerCase()%>/find',
-        data: data,
-        dataType: 'json',
-        success: function(data) {
-            $('#table').bootstrapTable('load', data)
-        },
-        error: function(error) {
-            console.error(error);
-            toastr.error("<%%= __('SEARCH_ERROR') %>", "<%%= __('APP_NAME') %>")
-        },
-    });
+$('#<%=model.modelName%>Form_search_btn').click(() => {
+    values = core.forms.parse('<%=model.modelName%>Form')
+    core.api.find('/api/<%=model.modelName.toLowerCase()%>', values, (data) => { $('#table').bootstrapTable('load', data)})
 })
 
 </script>

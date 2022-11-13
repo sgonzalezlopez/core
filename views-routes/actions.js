@@ -8,6 +8,7 @@ const { db } = require('../models/config.model');
 const i18n = require('../i18n/i18n.config')
 const fs = require('fs');
 const configs = require('../../config/app.config');
+const moment = require('moment')
 
 module.exports.renderWithApps = function (req, res, next, view, data) {
     this.renderWithApps(req, res, next, view, data, id)
@@ -22,6 +23,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.user = req.user;
 
     data.config = configs
+    data.moment = moment
 
     if (await getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
     else data.apps = req.session.apps || await apps.getApplications(req.user)
@@ -56,7 +58,10 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
         if (id) data.object = await model.findById(id)
     }
     catch (err) {
-        if (err.code !== 'MODULE_NOT_FOUND') console.error(err);
+        if (err.code !== 'MODULE_NOT_FOUND') {
+            console.error(err);
+            throw err
+        }
     }
     finally {
         res.render(view, data);
@@ -64,7 +69,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 }
 
 async function getValues(name, text) {
-    val = await db.model(name).find().select(`_id, ${text}`);
+    val = await db.model(name).find();
     val.map(a => {
         a.value = a._id;
         a.text = a[text];

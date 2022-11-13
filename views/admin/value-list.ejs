@@ -8,7 +8,7 @@
                     data-url="/api/value" 
                     class="table table-striped table-bordered clickable"
                     detail-url="/admin/value/"
-                    >
+                    data-show-export="true">
                 <thead>
                     <tr>
                         <th data-field="type"><%= __('COL_type') %></th>
@@ -25,7 +25,6 @@
     </div>
     <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
     <script>
-    core.setOptions({api : '/api/value'}) 
 
 function actionFormatter(value, row, index) {
   return [
