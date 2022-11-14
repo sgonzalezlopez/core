@@ -141,5 +141,6 @@ module.exports.values = values
 
 
 ## Referencias externas y librerías utilizadas
+- [Wenzhixin Bootstrap Table](https://bootstrap-table.com/)
 - [Wrappixel Dashboard](https://demos.wrappixel.com/free-admin-templates/bootstrap/matrix-bootstrap-free/html/index.html)
 - [Icon set Material Design](https://zavoloklom.github.io/material-design-iconic-font/icons.html)
