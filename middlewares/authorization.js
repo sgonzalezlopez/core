@@ -44,7 +44,7 @@ module.exports.checkPermision = function checkPermision(entity, access) {
 
 module.exports.getPermissionsForEntity = function (entity, user) {
     if (user.roles.includes('admin')) return ['C', 'R', 'U', 'D'];
-    return Permission.find({entity : entity.modelName.toLowerCase(), roles : {$in : user.roles}})
+    return Permission.find({entity : entity.toLowerCase(), roles : {$in : user.roles}})
     .then (items => {
         var permissions = [];
         items.map(i => {

@@ -34,6 +34,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.actionApps = data.apps.filter(a => a.type.includes('action'))
     data.userApps = data.apps.filter(a => a.type.includes('user'))
     data.mainApps = data.apps.filter(a => a.type.includes('main'))
+    data.permissions = await authorization.getPermissionsForEntity(modelName, data.user)
 
     try {
         var model_path = fs.existsSync(`./models/${modelName}.model.js`) ? `../../models/${modelName}.model` : `../models/${modelName}.model`
@@ -49,7 +50,6 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
             })
 
 
-            data.permissions = await authorization.getPermissionsForEntity(model, data.user)
             data.model = model
             data.list = viewBase + '-list'
             data.detail = data.permissions.includes('C') ? viewBase : null
