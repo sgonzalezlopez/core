@@ -187,6 +187,9 @@
         },
         distance : function (value, row, index) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " m";
+        },
+        speed : function (value, row, index) {
+            return value + " km/h";
         }
     }
 
@@ -210,6 +213,14 @@
                     url: `/api/${select.attr('data-collection')}`,
                     dataType: 'json',
                     success: function(data) {
+                        if (select.attr('data-distinct')) {
+                            // const unique =  [...new Set(data.map(item => {_id: item[select.attr('data-distinct')]}))];
+                            const unique = [...new Map(data.map(item => [item[select.attr('data-distinct')], item])).values()];
+                            unique.map(v => {
+                                v._id = v[select.attr('data-show')]
+                            })
+                            data = unique;
+                        }
                         select.empty()
                         select.append('<option value=""></option>')
                         $.each(data, (i, item) => {
