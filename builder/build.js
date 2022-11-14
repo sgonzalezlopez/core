@@ -77,7 +77,7 @@ function processEntity(entityName) {
         params = {}
     }
 
-    params = {...default_params, ...params}
+    params = {...default_params, ...params, ...argv}
 
     if (argv.fullForm) params.generateFullForm = argv.fullForm
 
