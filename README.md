@@ -139,6 +139,11 @@ module.exports.applications = applications
 module.exports.values = values
 ```
 
+## Ayuda en la correción de errores en EJS
+Cuando se producen errores en la compilación de los ficheros EJS y no se obtiene información relevante, se puede ejecutar el comando:
+```
+ejslint {nombre_fichero}
+```
 
 ## Referencias externas y librerías utilizadas
 - [Wenzhixin Bootstrap Table](https://bootstrap-table.com/)

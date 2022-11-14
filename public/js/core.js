@@ -184,6 +184,9 @@
         },
         milliseconds : function (value, row, index) {
             return moment.utc(value).format('HH:mm:ss.SSS')
+        },
+        distance : function (value, row, index) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " m";
         }
     }
 
