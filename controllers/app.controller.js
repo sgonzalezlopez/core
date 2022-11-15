@@ -68,7 +68,7 @@ exports.find = (req, res) => {
 
 exports.getApplications = (user) => {
     console.log('Recuperando aplicaciones de BD');
-    if (!user) user = {roles : []}
+    if (!user) user = {roles : ['public']}
     return Apps.find()
     .sort('level')
     .then(items => {
