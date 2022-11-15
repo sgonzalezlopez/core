@@ -72,7 +72,7 @@ exports.getApplications = (user) => {
     return Apps.find()
     .sort('level')
     .then(items => {
-        return items.filter(a => a.roles.includes('public') || a.roles.some(r=> user.roles.includes(r)))
+        return items.filter(a => a.roles.some(r=> user.roles.includes(r)))
     })
     // return applications.filter(a => a.roles.some(r=> user.roles.includes(r)))
     // return applications.filter(a => checkRoles(a.roles, user.roles))
