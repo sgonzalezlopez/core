@@ -38,7 +38,7 @@ router.post('/complete-registry/:token', async function(req, res, next) {
   req.body.username = user.username;
   passport.authenticate('local', (err, user, info) => {
         req.login(user, (err) => {
-            res.redirect('/')
+            res.redirect(req.query.url)
         })
     })(req, res, next);
 });
