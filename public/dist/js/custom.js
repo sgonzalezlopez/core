@@ -28,8 +28,9 @@ $(function () {
     $("body, .page-wrapper").trigger("resize");
   });
   $(".search-box a, .search-box .app-search .srh-btn").on("click", function () {
-    $(".app-search").toggle(200);
-    $(".app-search input").focus();
+    // $(".app-search").toggle(200);
+    // $(".app-search input").focus();
+    window.location.href = $(this).attr('data-target')
   });
 
   // ==============================================================

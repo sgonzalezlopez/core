@@ -163,6 +163,27 @@
         // Establecer las máscaras de formato
         $(".registry-time-inputmask").inputmask("99:99:99.999")
 
+
+        // Comportamiento de collapse
+        $('[data-bs-toggle="collapse"]').each(function () {
+            var panelelement = $($( this ).attr('data-bs-target'))
+            
+            panelelement.on('hidden.bs.collapse', function () {
+                var element = $ ( this )[0]
+                $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-down')
+                $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-up')
+                
+                // do something…
+            })
+            panelelement.on('shown.bs.collapse', function () {
+                var element = $ ( this )[0]
+                $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-up')
+                $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-down')
+        
+              // do something…
+            })
+        })
+
         return exports;
     }
 
@@ -322,7 +343,21 @@
                 },
                 error: function(error) {
                     console.error(error);
-                    toastr.error(getText('UPDATE_ERROR_MESSAGE'), options.appName)
+                    toastr.error(getText('FIND_ERROR_MESSAGE'), options.appName)
+                },
+            });
+        },
+        get : function (api, callback) {
+            $.ajax({
+                type: 'GET',
+                url: api,
+                dataType: 'json',
+                success: function(data) {
+                    if (callback && $.isFunction(callback)) callback(data);
+                },
+                error: function(error) {
+                    console.error(error);
+                    toastr.error(getText('GET_ERROR_MESSAGE'), options.appName)
                 },
             });
         }

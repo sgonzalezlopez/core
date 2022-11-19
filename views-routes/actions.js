@@ -52,6 +52,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 
             data.model = model
             data.list = viewBase + '-list'
+            data.search = viewBase + '-search'
             data.detail = data.permissions.includes('C') ? viewBase : null
         }
 
