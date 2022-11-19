@@ -97,7 +97,8 @@ module.exports.configureRoutes = (app) => {
   
   app.use('/api', require('./api/routes'))
   app.use('/', require('./views-routes/routes'));
-  
+  app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
+  app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
   app.use(logErrors)
   app.use(clientErrorHandler)
   app.use(errorHandler)

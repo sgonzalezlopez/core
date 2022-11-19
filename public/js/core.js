@@ -148,6 +148,7 @@
 
         // Formatear los SELECT
         $(".select2").select2();
+        $(".select2.allow-new ").select2({tags:true});
 
         // Establecer las acciones de BORRADO en las tablas
         var tables = $("[data-toggle='table']")
@@ -242,6 +243,7 @@
                             })
                             data = unique;
                         }
+                        if (select.attr('data-sort')) data.sort((a, b) => (a[select.attr('data-sort')] > b[select.attr('data-sort')]) ? 1 : ((b[select.attr('data-sort')] > a[select.attr('data-sort')]) ? -1 : 0));
                         select.empty()
                         select.append('<option value=""></option>')
                         $.each(data, (i, item) => {
