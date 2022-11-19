@@ -62,6 +62,9 @@
 						<button id="<%=model.modelName%>Form_search_btn" type="button" class="btn btn-primary">
 							<%%= __('SEARCH') %>
 						</button>
+						<%% if (locals.permissions.includes('C')) { %%>
+							<button id="<%=model.modelName%>Form_new_btn" type="button" class="btn btn-warning"><%= __('CREATE_NEW') %></button>
+							<%% } %%>
 					</div>
 				</div>
 			</div>
@@ -109,3 +112,10 @@
 		})
 	})
 </script>
+<%% if(locals.permissions.includes('C')) { %%>
+<script>
+	$("#<%=model.modelName%>Form_new_btn").click(() => {
+		window.location.href = '/<%= locals.detail%>'
+	})
+</script>
+<%% } %%>
