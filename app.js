@@ -104,6 +104,7 @@ module.exports.configureRoutes = (app) => {
 }
 
 module.exports.configureStatic = (app) => {
+  app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap')));
   app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
   app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
   for (let i = 0; i < this.staticPaths.length; i++) {
