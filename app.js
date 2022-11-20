@@ -19,6 +19,9 @@ module.exports.setupDB = async function () {
 module.exports.setup = async function() {
   await config.db.connectDB()
 
+
+module.exports.staticPaths = [path.join(__dirname, './public')];
+
 // configure passport.js to use the local strategy
 passport.use(new LocalStrategy(
   {usernameField: 'username' },
@@ -94,18 +97,30 @@ return app;
 }
 
 module.exports.configureRoutes = (app) => {
-  
   app.use('/api', require('./api/routes'))
   app.use('/', require('./views-routes/routes'));
-  app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
-  app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
-  app.use(logErrors)
-  app.use(clientErrorHandler)
-  app.use(errorHandler)
-
+  
   return app;
 }
 
+module.exports.configureStatic = (app) => {
+  app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
+  app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
+  for (let i = 0; i < this.staticPaths.length; i++) {
+    const element = this.staticPaths[i];
+    app.use(express.static(element));   
+  }
+  
+  return app;
+}
+
+module.exports.configureErrorHandling = (app) => {
+  app.use(logErrors)
+  app.use(clientErrorHandler)
+  app.use(errorHandler)
+  
+  return app;
+}
 
 function enableMultipleViewFolders(express) {
   var renderProxy = express.response.render;
