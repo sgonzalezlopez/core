@@ -247,7 +247,7 @@
                         select.empty()
                         select.append('<option value=""></option>')
                         $.each(data, (i, item) => {
-                            select.append(`<option value="${item._id}" ${((select.attr('data-value') && select.attr('data-value') == item._id) ? "selected" : "")}>${item[select.attr('data-show')]}</option>`);
+                            select.append(`<option value="${item._id}" ${((select.attr('data-value') && select.attr('data-value').includes(item._id)) ? "selected" : "")}>${item[select.attr('data-show')]}</option>`);
                         })
                     },
                     error: function(error) {
@@ -265,7 +265,7 @@
                         select.empty()
                         select.append('<option value=""></option>')
                         $.each(data, (i, item) => {
-                            select.append(`<option value="${item.value}" ${((select.attr('data-value') && select.attr('data-value') == item.value) ? "selected" : "")}>${item.text || item.value}</option>`);
+                            select.append(`<option value="${item.value}" ${((select.attr('data-value') && select.attr('data-value').includes(item.value)) ? "selected" : "")}>${item.text || item.value}</option>`);
                         })
                     },
                     error: function(error) {
