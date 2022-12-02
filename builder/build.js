@@ -18,16 +18,29 @@ var argv;
 
 build()
 
+// **** // Parameters
+// -p : Root path to find models folder
+// -e : List of models to process
+// -force : Force changes in all objects
+// -forceUI : Force changes in UI objects
+// -forceForm : Force generation of forms page
+// -forceList : Force generation of list page
+// -forceSearch : Force generation of search page
+// -generateFullForm : Indicates if the process generates the entire form page or a reference to dynamic form
+// -fullForm : Equal to generateFullForm
+// -view: Folder to contain the pages and class to process requests
+
 function build() {
     argv = require('yargs/yargs')(process.argv.slice(2).join(' '))
-    .boolean('force')
-    .boolean('forceUI')
-    .boolean('forceForm')
-    .boolean('forceList')
+    .alias('forceForm', 'ff')
     .alias('ent', 'e')
     .alias('path', 'p')
     .default('path', './')
     .array('ent')
+    .boolean('force')
+    .boolean('forceUI')
+    // .boolean('forceForm')
+    .boolean('forceList')
     .argv;
 
     var originDir = argv.path;
@@ -35,7 +48,7 @@ function build() {
 
     basedir = path.resolve(originDir) + "/"
 
-    if (!entities || typeof entities == 'undefined') { 
+    if (!entities || typeof entities == 'undefined' || entities.length == 0) { 
         console.log('Buscando entidades en ', basedir);
         entities = fs.readdirSync(basedir + '/models').map(f => f.split('.')[0])
     }
@@ -77,7 +90,7 @@ function processEntity(entityName) {
         params = {}
     }
 
-    params = {...default_params, ...params}
+    params = {...default_params, ...params, ...argv}
 
     if (argv.fullForm) params.generateFullForm = argv.fullForm
 

@@ -49,7 +49,7 @@ const configs = {...core_configs, ...local_configs}
 module.exports =  async function initalize () {
     await initializeDB()
 
-    // await loadDefaultValues()
+    await loadDefaultValues()
 
 
     // Features
