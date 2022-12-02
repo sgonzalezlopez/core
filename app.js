@@ -99,7 +99,6 @@ return app;
 module.exports.configureRoutes = (app) => {
   app.use('/api', require('./api/routes'))
   app.use('/', require('./views-routes/routes'));
-  
   return app;
 }
 
