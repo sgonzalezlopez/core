@@ -252,9 +252,6 @@
                         if (select.attr('data-sort')) data.sort((a, b) => (a[select.attr('data-sort')] > b[select.attr('data-sort')]) ? 1 : ((b[select.attr('data-sort')] > a[select.attr('data-sort')]) ? -1 : 0));
                         select.empty()
                         select.append('<option value=""></option>')
-                        console.log("Select", $(this));
-                        console.log("data", data);
-                        console.log("value", select.attr('data-value'));
                         $.each(data, (i, item) => {
                             select.append(`<option value="${item._id}" ${((select.attr('data-value') && select.attr('data-value').includes(item._id)) ? "selected" : "")}>${item[select.attr('data-show')]}</option>`);
                         })
@@ -362,6 +359,20 @@
             $.ajax({
                 type: 'GET',
                 url: api,
+                dataType: 'json',
+                success: function (data) {
+                    if (callback && $.isFunction(callback)) callback(data);
+                },
+                error: function (error) {
+                    console.error(error);
+                    toastr.error(getText('GET_ERROR_MESSAGE'), options.appName)
+                },
+            });
+        },
+        getById: function (api, id, callback) {
+            $.ajax({
+                type: 'GET',
+                url: api + '/' + id,
                 dataType: 'json',
                 success: function (data) {
                     if (callback && $.isFunction(callback)) callback(data);

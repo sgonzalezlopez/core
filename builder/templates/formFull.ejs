@@ -36,7 +36,7 @@
 							</div>
 
 							<% } else if (path.options.type.name == 'Number') { %>
-							<input type="number" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value='<%%= locals.object ? object[' <%=path.path%>'] : '' %%>'/>
+							<input type="number" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value='<%%= locals.object ? object['<%=path.path%>'] : '' %%>'/>
 							<% } else if (path.options.password) { %>
 							<input type="password" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value="<%%= locals.object ? object['<%=path.path%>'] : '' %%>" />
 							<% } else if (path.options.fileUpload) { %>
