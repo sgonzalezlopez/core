@@ -29,7 +29,7 @@
 			'<a class="view" href="/<%=params.view != "" ? params.view + "/" : ""%><%=model.modelName.toLowerCase()%>/' + row._id + '" title="">',
 			'<i class="fa fa-eye"></i>',
 			"</a> ",
-			'<%%=-permissions.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%%>'
+			'<%%-permissions.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%%>'
 		].join("");
 
 	}
