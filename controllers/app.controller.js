@@ -23,7 +23,7 @@ exports.get = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    Apps.create(req.body)
+    Apps.create(parseBody(req.body))
     .then(item => {
         res.status(200).send(item)
     })
@@ -34,7 +34,7 @@ exports.create = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    Apps.findByIdAndUpdate(req.params.id, req.body)
+    Apps.findByIdAndUpdate(req.params.id, parseBody(req.body))
     .then(item => {
         res.status(200).send({msg: res.__('UPDATE_OK')})
     })
@@ -88,4 +88,15 @@ function checkRoles(a, b) {
         if (a.includes(element)) resp = true;
     });
     return resp;
+}
+
+function parseBody(body) {
+    var values = body
+    for (const key in body) {
+        if (Object.hasOwnProperty.call(body, key)) {
+            values[key] = body[key] == "" ? null : body[key];
+        }
+    }
+
+    return values;
 }

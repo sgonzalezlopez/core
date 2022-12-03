@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
     var data = {};
     data.actions = [
         {name : 'users', href: '/admin/user-list'},
-        {name : 'applications', href: '/admin/app-list'},
+        {name : 'applications', href: '/admin/app-list'}, b
     ]
 
     actions.renderWithApps(req, res, next, viewRoute + 'index', data)

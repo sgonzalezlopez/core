@@ -25,7 +25,7 @@
                                             <option value=""></option>
                                         <% path.options.combo.values.forEach(v => { %>
                                             <% if (path.options.type.name == 'ObjectId') { %>
-                                            <option <%= locals.object && object[element]._id.toString() == v.value ? 'selected' : '' %> value="<%=v.value%>"><%=v.text%></option>
+                                            <option <%= locals.object && locals.object[element] && object[element]._id.toString() == v.value ? 'selected' : '' %> value="<%=v.value%>"><%=v.text%></option>
                                             <% } else { %>
                                             <option <%= locals.object && object[element] == v.value ? 'selected' : '' %> value="<%=v.value%>"><%=v.text%></option>
                                             <% } %>
