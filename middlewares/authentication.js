@@ -9,7 +9,7 @@ module.exports.isAuthenticated = function isAuthenticated(req, res, next) {
     else return next();
 }
 
-module.exports.isAuthenticatedWeb = function isAuthenticated(req, res, next) {
+module.exports.isAuthenticatedWeb = function isAuthenticatedWeb(req, res, next) {
 
     if (req.headers["x-access-token"] || req.query.token) return authJwt.verifyToken(req, res, next);    
 
