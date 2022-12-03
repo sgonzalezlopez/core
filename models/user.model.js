@@ -37,6 +37,7 @@ const UserSchema = mongoose.Schema({
 // then it hashes the salt with user password and creates a hash
 // this hash is stored in the database as user password
 UserSchema.methods.setPassword = function(password) {
+    if (!password) return
 
   console.log("cifrando password");
  // creating a unique salt for a particular user

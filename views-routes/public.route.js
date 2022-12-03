@@ -20,15 +20,15 @@ router.get('/register', async function(req, res) {
 
 router.get('/complete-registry/:token', async function(req, res) {
 
-  user = await Users.findOne({salt: req.params.token, active:false, hash:null})
-  if (!user) return res.redirect('/login')
+  // user = await Users.findOne({salt: req.params.token, active:false, hash:null})
+  // if (!user) return res.redirect('/login')
   res.render('complete-registry', {layout:false, token: req.params.token})
 });
 
 router.post('/complete-registry/:token', async function(req, res, next) {
   if (req.body.password && req.body.passwordVerify && req.body.password != req.body.passwordVerify) return res.status(400).send({ message: res.__('Passwords don\'t match') });
 
-  user = await Users.findOne({salt: req.body.token, active:false, hash:null})
+  user = await Users.findOne({salt: req.body.token})
   if (!user) return res.redirect('/login')
 
   user.setPassword(req.body.password);
@@ -38,7 +38,7 @@ router.post('/complete-registry/:token', async function(req, res, next) {
   req.body.username = user.username;
   passport.authenticate('local', (err, user, info) => {
         req.login(user, (err) => {
-            res.redirect(req.query.url)
+            res.redirect(req.query.url || "/")
         })
     })(req, res, next);
 });

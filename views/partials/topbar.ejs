@@ -27,7 +27,7 @@
             <!-- ============================================================== -->
             <!-- Toggle which is visible on mobile only -->
             <!-- ============================================================== -->
-            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="mdi mdi-menu font-24"></i></a>
           </div>
           <!-- ============================================================== -->
           <!-- End Logo -->
@@ -61,7 +61,7 @@
               <% } %>
               <% level0 = locals.actionApps.filter(f => f.parent == null || f.parent == '') %>
               <% level0.forEach(element => { %>
-                <% level1 = locals.actionApps.filter(f => f.parent == element._id)%>
+                <% level1 = locals.actionApps.filter(f => f.parent && f.parent.id == element._id)%>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="d-none d-md-block"><%= __('APP_' + element.name) %> <i class="fa fa-angle-down"></i></span>

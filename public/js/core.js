@@ -173,9 +173,11 @@
 
         // Comportamiento de collapse
         $('[data-bs-toggle="collapse"]').each(function () {
+            console.log($(this));
             var panelelement = $($(this).attr('data-bs-target'))
 
             panelelement.on('hidden.bs.collapse', function () {
+                console.log('aqui');
                 var element = $(this)[0]
                 $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-down')
                 $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-up')

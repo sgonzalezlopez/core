@@ -1,4 +1,4 @@
-const { config } = require("../config/config");
+const config = require("../config/config");
 const Users = require("../models/user.model");
 
 var jwt = require("jsonwebtoken");
@@ -21,13 +21,29 @@ exports.register = async (req, res) => {
 				return;
 			}
 		});
-		console.log(req);
-		to = await (config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
+		to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
 		Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
 		Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
 		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);
+		throw err;
+	}
+};
+
+exports.resetPass = async (req, res) => {
+	try {
+		Users.findOne({email : req.body.email})
+		.then(async user => {
+			if (!user) res.status(500).send({message : res.__('USER_NOT_FOUND')})
+			else {
+				to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
+				Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
+			}
+		})
+	} catch (err) {
+		console.error(err)
+		res.status(400).send(err.message)
 		throw err;
 	}
 };
@@ -49,9 +65,9 @@ exports.signup = async (req, res) => {
 				return;
 			}
 		});
-		to = await (config.app.ENV == 'development' ? (await config.app.CONFIGS.ADMIN_EMAIL) : user.email)
+		to = await (config.config.app.ENV == 'development' ? (await config.config.app.CONFIGS.ADMIN_EMAIL) : user.email)
 		Email.sendTemplatedEmail('registration-confirmation', to, { user: user, link: req.protocol + '://' + req.get('host') })
-		Email.sendTemplatedEmail('new-registration', (await config.app.CONFIGS.ADMIN_EMAIL), { user: user })
+		Email.sendTemplatedEmail('new-registration', (await config.config.app.CONFIGS.ADMIN_EMAIL), { user: user })
 		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);

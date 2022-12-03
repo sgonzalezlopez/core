@@ -1,111 +1,131 @@
 <!DOCTYPE html>
 <html dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex,nofollow" />
-    <title>RTM</title>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png" />
-    
-    <!-- Custom CSS -->
-    <link href="/css/common.css" rel="stylesheet" />
-    <link href="/dist/css/style.min.css" rel="stylesheet" />
-  </head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="robots" content="noindex,nofollow" />
+	<title>RTM</title>
+
+	<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png" />
+
+	<!-- Custom CSS -->
+	<%- include('./partials/styles.ejs')%>
+</head>
 <style>
-  .f {
-    height: 100%;
-  }
+	.f {
+		height: 100%;
+	}
 </style>
-  <body>
-    <div class="main-wrapper">
-      <div class="preloader">
-        <div class="lds-ripple">
-          <div class="lds-pos"></div>
-          <div class="lds-pos"></div>
-        </div>
-      </div>
-      <div class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
-        <div class="row bg-dark f"></div>
-        <div class="auth-box bg-dark border-top border-secondary">
-          <div id="loginform">
-            <div class="text-center pt-3 pb-3">
-              <span class="db"><img src="../assets/images/logo.png" alt="logo"/></span>
-            </div>
-            <!-- Form -->
-            <form class="form-horizontal mt-3" id="loginform" method="POST">
-                <div class="col-12">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text bg-success text-white h-100" id="basic-addon1" ><i class="mdi mdi-account fs-4"></i></span>
-                    </div>
-                    <input type="text" class="form-control form-control-lg" placeholder="<%= __('Username') %>" aria-label="Username" aria-describedby="basic-addon1" required="" name="username"/>
-                  </div>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
-                    </div>
-                    <input type="password" class="form-control form-control-lg" placeholder="<%= __('Password') %>" aria-label="Password" aria-describedby="basic-addon1" required="" name="password"/>
-                  </div>
-                </div>
-              </div>
-              <div class="row border-top border-secondary">
-                <div class="col-12">
-                  <div class="form-group">
-                    <div class="pt-3">
-                      <button class="btn btn-info" id="to-recover" type="button">
-                        <i class="mdi mdi-lock fs-4 me-1"></i><%= __('Lost') %>
-                      </button>
-                      <a href="/register"><button class="btn btn-secondary float-end text-white" type="button"><%= __('Register') %></button></a>
-                      <button class="btn btn-success float-end text-white" type="submit"><%= __('Login') %></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div id="recoverform">
-            <div class="text-center">
-              <span class="text-white"><%= __('Recover Message') %></span>
-            </div>
-            <div class="row mt-3">
-              <!-- Form -->
-              <form class="col-12">
-                <!-- email -->
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text bg-danger text-white h-100" id="basic-addon1" ><i class="mdi mdi-email fs-4"></i></span>
-                  </div>
-                  <input type="text" class="form-control form-control-lg" placeholder="<%= __('Email Address') %>" aria-label="Username" aria-describedby="basic-addon1"/>
-                </div>
-                <!-- pwd -->
-                <div class="row mt-3 pt-3 border-top border-secondary">
-                  <div class="col-12">
-                    <a class="btn btn-success text-white" href="#" id="to-login" name="action"><%= __('Back To Login') %></a>
-                    <button class="btn btn-info float-end" type="button" name="action"><%= __('Recover') %></button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      $(".preloader").fadeOut();
-      $("#to-recover").on("click", function () {
-        $("#loginform").slideUp();
-        $("#recoverform").fadeIn();
-      });
-      $("#to-login").click(function () {
-        $("#recoverform").hide();
-        $("#loginform").fadeIn();
-      });
-      $("#recoverform").hide();
-    </script>
-  </body>
+
+<body>
+	<div class="main-wrapper">
+		<div class="preloader">
+			<div class="lds-ripple">
+				<div class="lds-pos"></div>
+				<div class="lds-pos"></div>
+			</div>
+		</div>
+		<div class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
+			<div class="row bg-dark f">
+				<div class="auth-box bg-dark border-top border-secondary">
+					<div class="text-center pt-3 pb-3">
+						<span class="db"><img src="../assets/images/logo.png" alt="logo" /></span>
+					</div>
+					<div id="loginform">
+						<!-- Form -->
+						<form class="form-horizontal mt-3" id="loginform" method="POST">
+							<div class="col-12">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="mdi mdi-account fs-4"></i></span>
+									</div>
+									<input type="text" class="form-control form-control-lg" placeholder="<%= __('Username') %>" aria-label="Username" aria-describedby="basic-addon1" required="" name="username" />
+								</div>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
+									</div>
+									<input type="password" class="form-control form-control-lg" placeholder="<%= __('Password') %>" aria-label="Password" aria-describedby="basic-addon1" required="" name="password" />
+								</div>
+							</div>
+							<div class="row border-top border-secondary">
+								<div class="col-12">
+									<div class="form-group">
+										<div class="pt-3">
+											<button class="btn btn-info" id="to-recover" type="button">
+												<i class="mdi mdi-lock fs-4 me-1"></i><%= __('Lost') %>
+											</button>
+											<a href="/register"><button class="btn btn-secondary float-end text-white" type="button"><%= __('Register') %></button></a>
+											<button class="btn btn-success float-end text-white" type="submit"><%= __('Login') %></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div id="recoverform">
+					<div class="text-center">
+						<span class="text-white"><%= __('Recover Message') %></span>
+					</div>
+					<div class="row mt-3">
+						<!-- Form -->
+						<form class="col-12">
+							<!-- email -->
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text bg-danger text-white h-100" id="basic-addon1"><i class="mdi mdi-email fs-4"></i></span>
+								</div>
+								<input id="recover-email" type="text" class="form-control form-control-lg" placeholder="<%= __('Email Address') %>" aria-label="email" aria-describedby="basic-addon1" />
+							</div>
+							<!-- pwd -->
+							<div class="row mt-3 pt-3 border-top border-secondary">
+								<div class="col-12">
+									<a class="btn btn-success text-white" href="#" id="to-login" name="action"><%= __('Back To Login') %></a>
+									<button class="btn btn-info float-end recover-pass" type="button" name=""><%= __('Recover') %></button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+	<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		$(".preloader").fadeOut();
+		$("#to-recover").on("click", function() {
+			$("#loginform").hide();
+			$("#recoverform").show();
+		});
+		$("#to-login").click(function() {
+			$("#recoverform").hide();
+			$("#loginform").show();
+		});
+		$("#recoverform").hide();
+
+		$('.recover-pass').on('click', function() {
+			$.ajax({
+				method: "POST",
+				url: '/api/auth/reset',
+				data: {
+					email: $('#recover-email').val()
+				},
+				dataType: 'json',
+				success: function(data) {
+					toastr.success('<%= __("RECOVER_SEND_MESSAGE") %>', core.options.appName)
+				},
+				error: function(error) {
+					console.error(error);
+					toastr.error(error, core.options.appName)
+				},
+			})
+		})
+	</script>
+</body>
+
 </html>

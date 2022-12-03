@@ -8,6 +8,7 @@ const applications = [
 
 exports.getAll = (req, res) => {
     Apps.find()
+    .populate('parent')
     .then(items => {
         res.send(items)
     })
@@ -15,6 +16,7 @@ exports.getAll = (req, res) => {
 
 exports.get = (req, res) => {
     Apps.findById(req.params.id)
+    .populate('parent')
     .then(item => {
         res.send(item)
     })
@@ -60,6 +62,7 @@ exports.find = (req, res) => {
         }
     }
     Apps.find(req.body)
+    .populate('parent')
     .then(items => {
         res.send(items)
     })
@@ -70,6 +73,7 @@ exports.getApplications = (user) => {
     console.log('Recuperando aplicaciones de BD');
     if (!user) user = {roles : ['public']}
     return Apps.find()
+    .populate('parent')
     .sort('level')
     .then(items => {
         return items.filter(a => a.roles.some(r=> user.roles.includes(r)))

@@ -1,3 +1,116 @@
-<div class="container-fluid">
-    <%- include('../partials/form.ejs', {formName :'userForm', api:'/api/user'})%>
+<link rel="stylesheet" type="text/css" href="/assets/libs/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<form id="UserForm" class="form-horizontal">
+				<div class="card-body">
+					<h4 class="card-title">
+						<%= __('MODEL_User') %>
+					</h4>
+					<div class="form-group row">
+						<label for="username" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_User_username')%>
+						</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="username" name="username" placeholder=""  value="<%= locals.object ? object['username'] : '' %>" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_User_email')%>
+						</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="email" name="email" placeholder=""  value="<%= locals.object ? object['email'] : '' %>" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="roles" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_User_roles')%>
+						</label>
+						<div class="col-sm-9">
+							<select id="roles" name="roles" multiple="multiple" class="select2 form-select shadow-none" style="width:100%; height: 36px" data-value-list="role" data-value="<%=locals.object && locals.object.roles ? object.roles : '' %>"></select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="active" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_User_active')%>
+						</label>
+						<div class="col-sm-9">
+							<select id="active" name="active" class="select2 form-select shadow-none" style="width: 100%; height: 36px" >
+								<option value=""></option>
+									<option <%=locals.object && object["active"] ? 'selected' : '' %> value="true"><%= __('BOOLEAN_true') %></option>
+									<option <%=locals.object && !object["active"] ? 'selected' : '' %> value="false"><%= __('BOOLEAN_false') %></option>
+								</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="createdAt" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_User_createdAt')%>
+						</label>
+						<div class="col-sm-9">
+							<div class="input-group">
+								<input type="text" class="form-control mydatepicker" placeholder="<%=__('DATE_FORMAT')%>" id="createdAt" name="createdAt" disabled date-value="<%= locals.object ? object['createdAt'] : '' %>" />
+								<div class="input-group-append">
+									<span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="updatedAt" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_User_updatedAt')%>
+						</label>
+						<div class="col-sm-9">
+							<div class="input-group">
+								<input type="text" class="form-control mydatepicker" placeholder="<%=__('DATE_FORMAT')%>" id="updatedAt" name="updatedAt" disabled date-value="<%= locals.object ? object['updatedAt'] : '' %>" />
+								<div class="input-group-append">
+									<span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="border-top">
+						<div class="card-body">
+							<% if (locals.permissions.includes('U')) { %>
+							<button id="UserForm_submit_btn" type="button" class="btn btn-primary">
+								<%= __('SAVE') %>
+							</button>
+							<% } %>
+							<input type="hidden" class="custom-file-input" id="id" name="id" value="<%= locals.object ? locals.object.id : ''%>" />
+							<button id="UserForm_list_btn" type="button" class="btn btn-info">
+								<%= __('LIST') %>
+							</button>
+							<button id="UserForm_search_btn" type="button" class="btn btn-warning">
+								<%= __('SEARCH') %>
+							</button>
+							<% if (locals.permissions.includes('U')) { %>
+							<button id="UserForm_setPassword_btn" type="button" class="btn btn-info">
+								<%= __('CHANGE PASSWORD') %>
+							</button>
+							<% } %>
+						</div>
+					</div>
+                </div>
+			</form>
+		</div>
+	</div>
 </div>
+<script>
+	$('#UserForm_submit_btn').click(() => {
+		values = core.forms.parse('UserForm')
+		if (values.id) core.api.update('/api/User', values.id, values, null)
+		else core.api.create('/api/User', values, null)
+	})
+	$('#UserForm_list_btn').click(() => {
+		window.location.replace('/admin/user-list')
+	})
+	$('#UserForm_search_btn').click(() => {
+		window.location.replace('/admin/user-search')
+	})
+
+	$('#UserForm_setPassword_btn').click(() => {
+		window.location.replace('/admin/user-search')
+	})
+</script>

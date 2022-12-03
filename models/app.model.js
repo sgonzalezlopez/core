@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+const { type } = require('os');
 
 // creating user schema
 const AppSchema = mongoose.Schema({
@@ -31,7 +32,8 @@ const AppSchema = mongoose.Schema({
         type : String,
     },
     parent : {
-        type : String,
+        type : Schema.Types.ObjectId,
+        ref : 'App',
         combo : { collection : {name : 'App', text : 'name'}}
     }
 },{ timestamps: true });
