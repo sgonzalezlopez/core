@@ -127,7 +127,7 @@ exports.signin = (req, res) => {
 					});
 				}
 
-				var token = jwt.sign({ id: user.id, username: user.username, roles: user.roles }, config.auth.JWT_SECRET, {
+				var token = jwt.sign({ id: user.id, username: user.username, roles: user.roles }, config.config.auth.JWT_SECRET, {
 					expiresIn: 86400 // 24 hours
 				});
 

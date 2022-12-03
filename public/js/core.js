@@ -173,7 +173,6 @@
 
         // Comportamiento de collapse
         $('[data-bs-toggle="collapse"]').each(function () {
-            console.log($(this));
             var panelelement = $($(this).attr('data-bs-target'))
 
             panelelement.on('hidden.bs.collapse', function () {

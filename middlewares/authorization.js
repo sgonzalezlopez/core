@@ -1,4 +1,5 @@
 const Permission = require('../models/permission.model')
+const jwt = require ('./auth.jwt')
 
 module.exports.isAdmin = function isAdmin(req, res, next) {
     validateRole(req, res, next, 'admin')
@@ -24,6 +25,8 @@ function validateRole(req, res, next, profile) {
 
 module.exports.checkPermision = function checkPermision(entity, access) {
     return function (req, res, next) {
+        if (!req.user) jwt.verifyToken(req, res, next)
+        
         if (!req.user) return res.status(400).send({message : res.__('ERR004')})
 
         if (req.user.roles.includes('admin')) return next();
