@@ -111,6 +111,20 @@
 	})
 
 	$('#UserForm_setPassword_btn').click(() => {
-		window.location.replace('/admin/user-search')
+		$.ajax({
+				method: "POST",
+				url: '/api/auth/reset',
+				data: {
+					email: $('#email').val()
+				},
+				dataType: 'json',
+				success: function(data) {
+					toastr.success('<%= __("RECOVER_SEND_MESSAGE") %>', core.options.appName)
+				},
+				error: function(error) {
+					console.error(error);
+					toastr.error(error, core.options.appName)
+				},
+			})
 	})
 </script>
