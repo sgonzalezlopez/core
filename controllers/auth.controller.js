@@ -39,6 +39,7 @@ exports.resetPass = async (req, res) => {
 			else {
 				to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
 				Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
+				res.send({message : res.__('Email sent with link to reset password')})
 			}
 		})
 	} catch (err) {

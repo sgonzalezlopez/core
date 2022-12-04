@@ -119,11 +119,11 @@
 				},
 				dataType: 'json',
 				success: function(data) {
-					toastr.success('<%= __("RECOVER_SEND_MESSAGE") %>', core.options.appName)
+					toastr.success(data.message, core.getOptions().appName)
 				},
 				error: function(error) {
 					console.error(error);
-					toastr.error(error, core.options.appName)
+					toastr.error(error, core.getOptions().appName)
 				},
 			})
 	})
