@@ -28,7 +28,9 @@
             CREATE_SUCCESS_MESSAGE: 'Element has been updated.',
             CREATE_ERROR_MESSAGE: 'An error occurred when creating the element.',
             SEARCH_ERROR_MESSAGE: 'An error occurred when searching elements.',
-            DATE_FORMAT: 'mm/dd/yyyy'
+            DATE_FORMAT: 'mm/dd/yyyy',
+            BOOLEAN_TRUE: 'Yes',
+            BOOLEAN_FALSE: 'No'
         }
     };
 
@@ -280,6 +282,11 @@
                         console.error(error);
                     },
                 });
+            } else if (select.attr('data-value-boolean')) {
+                select.empty()
+                select.append('<option value=""></option>')
+                select.append(`<option value="true">${getText('BOOLEAN_TRUE')}</option>`)
+                select.append(`<option value="false">${getText('BOOLEAN_FALSE')}</option>`)
             }
         }
     }

@@ -20,6 +20,8 @@
         CREATE_ERROR_MESSAGE : 'Se ha producido un error al crear el elemento.',
         SEARCH_ERROR_MESSAGE : 'Se ha producido un error al buscar elementos.',
         DATE_FORMAT : 'dd/mm/yyyy',
+        BOOLEAN_TRUE: 'Si',
+        BOOLEAN_FALSE: 'No'
       });
     })();
 })
