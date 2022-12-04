@@ -124,8 +124,11 @@
         // Tablas abren el elemento con un click
         $('table.clickable').each(function (index, value) {
             var a = $(`#${value.id}`)
-            $(a).on('click-row.bs.table', function (e, row, $element) {
-                window.location.href = $(a).attr('detail-url') + row._id
+            $(a).on('click-cell.bs.table', function (e, field, row, $element) {
+                if (field != 'id' && !e.sender.columns.find(a => a.field == field).hasOwnProperty('detailFormatter')) {
+                    e.stopPropagation();
+                    window.location.href = $(a).attr('detail-url') + row._id
+                }
             })
         });
 
