@@ -127,7 +127,7 @@
             $(a).on('click-cell.bs.table', function (e, field, row, $element) {
                 if (field != 'id' && !e.sender.columns.find(a => a.field == field).hasOwnProperty('detailFormatter')) {
                     e.stopPropagation();
-                    window.location.href = $(a).attr('detail-url') + row._id
+                    window.location.href = $(a).attr('detail-url') + $element._id
                 }
             })
         });
