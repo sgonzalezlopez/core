@@ -164,7 +164,7 @@
             window.actionEvents = {
                 'click .delete': function (e, value, row, index) {
                     e.stopPropagation()
-                    core.api.delete(tables.attr('data-url'), row._id, function () { tables.bootstrapTable('refresh') })
+                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () { tables.bootstrapTable('refresh') })
                 }
             }
         }
@@ -397,7 +397,7 @@
     // Funciones locales
 
     function createModalNew(object) {
-        var entity = object.attr('data-entity').toLowerCase();
+        var entity = object.attr('data-entity');
         var api = object.attr('data-api');
         // object.append(`	<div class="modal-dialog" role="document">
         //     <div class="modal-content">
@@ -417,12 +417,13 @@
 
         $(`#${entity}Form_submit_btn`).unbind("click")
         $(`#${entity}Form_submit_btn`).hide()
-        $(`#${entity}Form_submit_btn_modal`).click(() => {
-            values = core.forms.parse(`${entity}Form`)
+        $(`#${entity}Form_submit_btn_modal`).on('click', () => {
+            var values = core.forms.parse(`${entity}Form`)
+            console.log(values);
             core.api.create(api, values, (item) => {
-                $(`#${entity}`).attr("data-value", item._id)
+                $(`#${entity.toLowerCase()}`).attr("data-value", item._id)
                 $(`#New${entity}Modal`).modal("hide")
-                core.forms.loadSelect($(`#${entity}`))
+                core.forms.loadSelect($(`#${entity.toLowerCase()}`))
                 $(`#${entity}Form`).each(function () {
                     this.reset()
                 })
