@@ -241,6 +241,7 @@
             return values;
         },
         loadSelect: function (select) {
+            console.log(select);
             if (select.attr('data-collection')) {
                 $.ajax({
                     type: 'GET',
@@ -285,6 +286,13 @@
                         console.error(error);
                     },
                 });
+            } else if (select.attr('data-list-values')) {
+                console.log(select.attr('data-list-values'));
+                select.empty()
+                select.append('<option value=""></option>')
+                $.each(select.attr('data-list-values'), (i, item) => {
+                    select.append(`<option value="${item.value}" ${((select.attr('data-value') && select.attr('data-value').includes(item.value)) ? "selected" : "")}>${item.text || item.value}</option>`);
+                })
             } else if (select.attr('data-value-boolean')) {
                 select.empty()
                 select.append('<option value=""></option>')

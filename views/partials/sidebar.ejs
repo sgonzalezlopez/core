@@ -7,9 +7,9 @@
           <!-- Sidebar navigation-->
           <nav class="sidebar-nav">
             <ul id="sidebarnav" class="pt-4">
-              <% level0 = locals.sideApps.filter(f => f.parent == null || f.parent == '') %>
+              <% level0 = locals.sideApps %>
               <% level0.forEach(element => { %>
-                <% level1 = locals.sideApps.filter(f => f.parent && f.parent._id == element.id)%>
+                <% level1 = element.child || [];%>
                 <li class="sidebar-item">
                   <a class="sidebar-link <%=level1.length >0 ? 'has-arrow' : ''%> waves-effect waves-dark sidebar-link" href="<%=element.link%>" aria-expanded="false" >
                     <i class="<%=element.icon%>"></i><span class="hide-menu"><%= __(`APP_${element.name}`) %></span>

@@ -59,9 +59,9 @@
                 </ul>
               </li>
               <% } %>
-              <% level0 = locals.actionApps.filter(f => f.parent == null || f.parent == '') %>
+              <% level0 = locals.actionApps; %>
               <% level0.forEach(element => { %>
-                <% level1 = locals.actionApps.filter(f => f.parent && f.parent.id == element._id)%>
+                <% level1 = element.child ||[];%>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="d-none d-md-block"><%= __('APP_' + element.name) %> <i class="fa fa-angle-down"></i></span>

@@ -45,7 +45,7 @@ module.exports.setup = async function (params) {
     done(null, user._id);
   });
 
-  if (params && params.hasOwnProperty('deserializaUser') && params.deserializeUser) {
+  if (params && params.hasOwnProperty('deserializeUser') && params.deserializeUser) {
     passport.deserializeUser((id, done) => {params.deserializeUser(id, done)})
   } else {
     passport.deserializeUser((id, done) => {

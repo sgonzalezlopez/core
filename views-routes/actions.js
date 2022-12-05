@@ -3,11 +3,9 @@ const router = express.Router();
 const authentication = require('../middlewares/authentication')
 const authorization = require('../middlewares/authorization')
 const apps = require('../controllers/app.controller')
-const { getFeature } = require('../config/config');
-const { db } = require('../models/config.model');
 const i18n = require('../i18n/i18n.config')
 const fs = require('fs');
-const configs = require('../../config/app.config');
+const config = require('../config/config');
 const moment = require('moment')
 
 module.exports.renderWithApps = function (req, res, next, view, data) {
@@ -19,15 +17,17 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     var viewBase = view.split('-')[0]
 
 
-    if (!data || data == null) data = {actions : null};
+    if (!data || data == null) data = { actions: null };
     data.user = req.user;
 
-    data.config = configs
+    data.config = config.getConfig()
     data.moment = moment
-
-    if (getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
-    else data.apps = req.session.apps || await apps.getApplications(req.user)
+    if (config.getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
+    else (data.apps =  req.session.hasOwnProperty('apps') ? req.session.apps : await apps.getApplications(req.user))
     req.session.apps = data.apps
+
+
+
 
     // data.apps = await apps.getApplications(req.user)
     data.sideApps = data.apps.filter(a => a.type.includes('side'))
@@ -38,21 +38,11 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.currentApp = data.apps.filter(a => a.link == ("/" + view))[0]
     data.view = view
 
-
     try {
         var model_path = fs.existsSync(`./models/${modelName}.model.js`) ? `../../models/${modelName}.model` : `../models/${modelName}.model`
         var model = await require(model_path)
-        var props = Object.keys(model.schema.paths)
-        
+
         if (model) {
-
-            props.forEach(async path => {
-                p = model.schema.paths[path];
-                if (p.options.combo && p.options.combo.collection) p.options.combo.values = await getValues(p.options.combo.collection.name, p.options.combo.collection.text)
-                else if (p.options.combo && p.options.combo.type) p.options.combo.values = await getType(p.options.combo.type)
-            })
-
-
             data.model = model
             data.list = viewBase + '-list'
             data.search = viewBase + '-search'
@@ -72,22 +62,22 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     }
 }
 
-async function getValues(name, text) {
-    val = await db.model(name).find();
-    val.map(a => {
-        a.value = a._id;
-        a.text = a[text];
-    })
+// async function getValues(name, text) {
+//     val = await db.model(name).find();
+//     val.map(a => {
+//         a.value = a._id;
+//         a.text = a[text];
+//     })
 
-    return val
+//     return val
 
-}
+// }
 
-async function getType(type) {
-    val = await db.model('Value').find({type:type}).sort('order');
-    val.map(v => {
-        if (!v.text) v.text = i18n.__(`VAL_${v.value}`)
-    })
-    return val
+// async function getType(type) {
+//     val = await db.model('Value').find({type:type}).sort('order');
+//     val.map(v => {
+//         if (!v.text) v.text = i18n.__(`VAL_${v.value}`)
+//     })
+//     return val
 
-}
+// }

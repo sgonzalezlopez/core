@@ -76,7 +76,13 @@ exports.getApplications = (user) => {
     .populate('parent')
     .sort('level')
     .then(items => {
-        return items.filter(a => a.roles.some(r=> user.roles.includes(r)))
+        var filtered = items.filter(a => a.roles.some(r=> user.roles.includes(r)))
+        var tree = filtered.filter(a => a.parent == null);
+        tree.map(t => {
+            t.child = filtered.filter(a => a.parent && a.parent.id == t._id)
+        })
+
+        return tree
     })
     // return applications.filter(a => a.roles.some(r=> user.roles.includes(r)))
     // return applications.filter(a => checkRoles(a.roles, user.roles))

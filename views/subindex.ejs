@@ -2,7 +2,9 @@
           <div class="row">
             <% var styles = ['bg-cyan', 'bg-success', 'bg-warning', 'bg-info', 'bg-danger'];
                 var index = 0;
-                var mgnt = apps.filter(a => a.parent && parentApp.startsWith(a.parent.link))
+                var appParent = apps.find(a => a.link == parentApp)
+                console.log(appParent);
+                var mgnt = appParent.child ? appParent.child : [];
             %>
             <% mgnt.forEach(function(app) { %>
               <div class="col-md-6 col-lg-2 col-xlg-3">

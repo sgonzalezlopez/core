@@ -12,10 +12,7 @@ const AppSchema = mongoose.Schema({
     },
     type : {
         type : [String],
-        combo : { values : [{value:'side', text:'Menu lateral'},
-                            {value:'action', text:'Menu superior'},
-                            {value:'user', text:'Menu de usuario'},
-                            {value:'main', text:'Menu principal'}], multiple : true}
+        combo : { type : "appPosition", multiple : true}
     },
     roles : {
         type : [String],

@@ -22,10 +22,10 @@ function loadConfigs() {
 
 module.exports.loadFeatures = loadFeatures;
 function loadFeatures() {
-    config_model.find()
+    feature_model.find()
     .then( items => {
         items.forEach(item => {
-            features[item.key] = item.value
+            features[item.key] = item.active
         })
     })
 }
@@ -45,6 +45,7 @@ module.exports.forceSSL = function (req, res, next){
 
 
 module.exports.getConfig = (key) => {
+    if (key == '') return configs;
     var value = configs[key];
     if (typeof(value) == 'undefined') return null;
     else if (value == 'true' || value == 'false') return (value == 'true')
@@ -65,6 +66,7 @@ module.exports.getConfig = (key) => {
 }
 
 module.exports.getFeature = (key) => {
+    if (key == '') return features;
     var value = features[key];
     if (typeof(value) == 'undefined') return null;
     else if (value == 'true' || value == 'false') return (value == 'true')

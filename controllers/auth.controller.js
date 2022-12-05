@@ -3,6 +3,7 @@ const Users = require("../models/user.model");
 
 var jwt = require("jsonwebtoken");
 const Email = require("../config/email.config");
+const apps = require('../controllers/app.controller')
 
 exports.register = async (req, res) => {
 	try {
@@ -111,7 +112,7 @@ exports.signin = (req, res) => {
 		Users.findOne({
 			username: req.body.username, active: true
 		})
-			.exec((err, user) => {
+			.exec(async (err, user) => {
 				if (err) {
 					res.status(500).send({ message: err });
 					return;
@@ -137,6 +138,7 @@ exports.signin = (req, res) => {
 				for (let i = 0; i < user.roles.length; i++) {
 					authorities.push("ROLE_" + user.roles[i].toUpperCase());
 				}
+				req.session.apps = await apps.getApplications(req.user);
 				res.status(200).send({
 					id: user._id,
 					username: user.username,
