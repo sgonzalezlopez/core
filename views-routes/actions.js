@@ -25,7 +25,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.config = configs
     data.moment = moment
 
-    if (await getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
+    if (getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
     else data.apps = req.session.apps || await apps.getApplications(req.user)
     req.session.apps = data.apps
 

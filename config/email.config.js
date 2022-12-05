@@ -17,8 +17,8 @@ transporter.verify().then(console.log('Conectado a email server')).catch(console
 
 
 exports.sendTemplatedEmail = async (template, to, data) => {
-  var send = await getConfig('ENABLE_EMAIL_SEND')
-  var preview = await getConfig('ENABLE_EMAIL_PREVIEW')
+  var send = getConfig('ENABLE_EMAIL_SEND')
+  var preview = getConfig('ENABLE_EMAIL_PREVIEW')
 
   const email = new Email({
     template : template,

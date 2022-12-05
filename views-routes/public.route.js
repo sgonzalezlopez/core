@@ -14,7 +14,7 @@ router.get('/login', function(req, res) {
 });
 
 router.get('/register', async function(req, res) {
-  twoSteps = await getFeature('TWO_STEPS_REGISTRY')
+  twoSteps = getFeature('TWO_STEPS_REGISTRY')
   res.render('register', {layout: false, twoSteps:twoSteps});
 });
 
