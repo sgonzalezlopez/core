@@ -9,3 +9,7 @@ table td, .table th {
 table.clickable tbody tr {
     cursor: pointer;
 }
+
+.auth-wrapper {
+    height: 100vh !important;
+}
