@@ -133,15 +133,15 @@
         });
 
         // Establecer el valor de datepickers
-        $(".mydatepicker[date-value]").each(function () {
+        $(".mydatepicker").each(function () {
             var element = $(this)
             element.datepicker({
                 language: options.locale,
                 format: getText('DATE_FORMAT'),
                 todayHighlight: true,
             });
-
-            element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
+            if (element.attr('date-value')) element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
+            element.attr('autocomplete', 'off')
         })
 
         // Cargar los select con datos
@@ -238,10 +238,15 @@
                     if (formValues.getAll(key).length > 1) values[key] = formValues.getAll(key)
                 }
             }
+
+            var dateInput = $(`#${formName} .mydatepicker`)
+            dateInput.each((e, element) => {
+                if ($(element).datepicker("getDate") != null) values[element.id] = moment($(element).datepicker("getDate")).format("YYYY-MM-DD")
+            })
+
             return values;
         },
         loadSelect: function (select) {
-            console.log(select);
             if (select.attr('data-collection')) {
                 $.ajax({
                     type: 'GET',
