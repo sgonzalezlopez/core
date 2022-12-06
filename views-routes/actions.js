@@ -40,7 +40,9 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 
     try {
         var model_path = fs.existsSync(`./models/${modelName}.model.js`) ? `../../models/${modelName}.model` : `../models/${modelName}.model`
+        var controller_path = fs.existsSync(`./controllers/${modelName}.controller.js`) ? `../../controllers/${modelName}.controller` : `../controllers/${modelName}.controller`
         var model = await require(model_path)
+        var controller = await require(controller_path)
 
         if (model) {
             data.model = model
@@ -49,7 +51,8 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
             data.detail = data.permissions.includes('C') ? viewBase : null
         }
 
-        if (id) data.object = await model.findById(id)
+        if (id && controller.hasOwnProperty('getObject')) data.object = await controller.getObject(id, req.user)
+        else if (id) data.object = await model.findById(id)
     }
     catch (err) {
         if (err.code !== 'MODULE_NOT_FOUND') {
