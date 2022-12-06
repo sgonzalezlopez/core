@@ -15,7 +15,7 @@ exports.get = (req, res) => {
     })
 }
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     const user = new Users({
         username: req.body.username,
         email: req.body.email,
@@ -23,7 +23,7 @@ exports.create = (req, res) => {
         active : req.body.active || false,
     });
   
-    user.setPassword(req.body.password)
+    await user.setPassword(req.body.password)
     
     user.save((err, user) => {
         if (err) {

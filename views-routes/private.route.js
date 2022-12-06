@@ -35,7 +35,7 @@ router.post('/change-password', function (req, res, next) {
       if (!user || user == null) data.error = res.__('Invalid user')
       else if (!user.validPassword(req.body.oldPassword)) data.error = res.__('Invalid credentials')
       else {
-        user.setPassword(req.body.newPassword)
+        await user.setPassword(req.body.newPassword)
         await user.save()
         data.message = res.__('Password changed') 
       }

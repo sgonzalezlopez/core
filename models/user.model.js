@@ -2,6 +2,8 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+const config = require('../config/config')
+const i18n = require('../i18n/i18n.config')
 
 // creating user schema
 const UserSchema = mongoose.Schema({
@@ -36,8 +38,16 @@ const UserSchema = mongoose.Schema({
 // setPassword method first creates a salt unique for every user
 // then it hashes the salt with user password and creates a hash
 // this hash is stored in the database as user password
-UserSchema.methods.setPassword = function(password) {
+UserSchema.methods.setPassword = async function(password) {
     if (!password) return
+
+    var regText = await config.getConfig('PASSWORD_COMPLEXITY');
+    var regexp = new RegExp(regText)
+    if ( regexp != null && regexp != '' && !regexp.test(password)) {
+        const error = new Error(i18n.__('Password does not match complexity'))
+        error.detail = i18n.__(regText)
+        throw (error);
+    }
 
   console.log("cifrando password");
  // creating a unique salt for a particular user

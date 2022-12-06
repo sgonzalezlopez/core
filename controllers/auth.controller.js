@@ -59,7 +59,7 @@ exports.signup = async (req, res) => {
 			active: false,
 		});
 
-		user.setPassword(req.body.password)
+		await user.setPassword(req.body.password)
 
 		user.save((err, user) => {
 			if (err) {
@@ -77,7 +77,7 @@ exports.signup = async (req, res) => {
 	}
 };
 
-exports.changepassword = (req, res) => {
+exports.changepassword = async (req, res) => {
 	try {
 		const user = new Users({
 			username: req.body.username,
@@ -85,7 +85,7 @@ exports.changepassword = (req, res) => {
 			roles: ['user']
 		});
 
-		user.setPassword(req.body.password)
+		await user.setPassword(req.body.password)
 
 		user.save((err, user) => {
 			if (err) {

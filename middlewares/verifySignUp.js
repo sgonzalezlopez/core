@@ -1,4 +1,5 @@
 const Users = require("../models/user.model");
+const config = require('../config/config')
 
 
 
@@ -46,9 +47,12 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
   });
 };
 
-validateNewPassword = (req, res, next) => {
+validateNewPassword = async (req, res, next) => {
+  var regexp = await config.getConfig('PASSWORD_COMPLEXITY');
+
   if (req.user.id != req.body.id) next(new Error(res.__('Invalid operation')))
   else if (req.body.newPassword != req.body.newPasswordVerify) next(new Error(res.__('Password does not match')))
+  else if ( regexp != null && regexp != '' && !regexp.test(req.body.newPassword)) next(new Error(res.__('Password does not match complexity')))
   else {
     Users.findById(req.user.id)
     .then(user => {

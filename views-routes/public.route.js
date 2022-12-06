@@ -1,7 +1,7 @@
 const express = require('express');
 const Users = require('../models/user.model')
 const passport = require('passport');
-const {authentication, verifySignUp} = require('../middlewares/middlewares')
+const { authentication, verifySignUp } = require('../middlewares/middlewares')
 const { getFeature } = require('../config/config');
 const actions = require('./actions')
 
@@ -9,69 +9,73 @@ const actions = require('./actions')
 const router = express.Router();
 const viewRoute = '';
 
-router.get('/login', function(req, res) {
-  res.render('login', {layout: false});
+router.get('/login', function (req, res) {
+  res.render('login', { layout: false });
 });
 
-router.get('/register', async function(req, res) {
+router.get('/register', async function (req, res) {
   twoSteps = getFeature('TWO_STEPS_REGISTRY')
-  res.render('register', {layout: false, twoSteps:twoSteps});
+  res.render('register', { layout: false, twoSteps: twoSteps });
 });
 
-router.get('/complete-registry/:token', async function(req, res) {
-
-  // user = await Users.findOne({salt: req.params.token, active:false, hash:null})
-  // if (!user) return res.redirect('/login')
-  res.render('complete-registry', {layout:false, token: req.params.token})
+router.get('/complete-registry/:token', async function (req, res) {
+  res.render('complete-registry', { layout: false, token: req.params.token })
 });
 
-router.post('/complete-registry/:token', async function(req, res, next) {
-  if (req.body.password && req.body.passwordVerify && req.body.password != req.body.passwordVerify) return res.status(400).send({ message: res.__('Passwords don\'t match') });
+router.post('/complete-registry/:token', async function (req, res, next) {
+  try {
+    if (req.body.password && req.body.passwordVerify && req.body.password != req.body.passwordVerify) throw (new Error(res.__('Passwords don\'t match')));
 
-  user = await Users.findOne({salt: req.body.token})
-  if (!user) return res.redirect('/login')
+    token = req.params.token || req.body.token
+    user = await Users.findOne({ salt: token })
+    if (!user) return res.redirect('/login')
 
-  user.setPassword(req.body.password);
-  user.active = true
-  await user.save();
-  
-  req.body.username = user.username;
-  passport.authenticate('local', (err, user, info) => {
-        req.login(user, (err) => {
-            res.redirect(req.query.url || "/")
-        })
+    await user.setPassword(req.body.password);
+    user.active = true
+    await user.save();
+
+    req.body.username = user.username;
+    passport.authenticate('local', (err, user, info) => {
+      req.login(user, (err) => {
+        res.redirect(req.query.url || "/")
+      })
     })(req, res, next);
+  }
+  catch (err) {
+    console.error(err);
+    res.render('complete-registry', { layout: false, token: token, error : err})
+  }
 });
 
 router.post('/login', function (req, res, next) {
-    passport.authenticate('local', (err, user, info) => {
-        req.login(user, (err) => {
-            res.redirect(req.query.url || "/")
-        })
-    })(req, res, next);
+  passport.authenticate('local', (err, user, info) => {
+    req.login(user, (err) => {
+      res.redirect(req.query.url || "/")
+    })
+  })(req, res, next);
 })
 
 // GET /logout
-router.get('/logout', function(req, res, next) {
-    if (req.session) {
-      // delete session object
-      req.session.destroy(function(err) {
-        if(err) {
-          return next(err);
-        } else {
-          return res.redirect('/');
-        }
-      });
-    }
-  });
+router.get('/logout', function (req, res, next) {
+  if (req.session) {
+    // delete session object
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err);
+      } else {
+        return res.redirect('/');
+      }
+    });
+  }
+});
 
 router.get('/', function (req, res, next) {
-    actions.renderWithApps(req, res, next, viewRoute + 'index')
+  actions.renderWithApps(req, res, next, viewRoute + 'index')
 });
 
 router.get('/:page', function (req, res, next) {
   var page = req.params.page;
-  actions.renderWithApps(req, res, next, viewRoute + page, {title : req.params.page})
+  actions.renderWithApps(req, res, next, viewRoute + page, { title: req.params.page })
 });
 
 router.get('/:page/:id', function (req, res, next) {
