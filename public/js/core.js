@@ -167,7 +167,12 @@
             window.actionEvents = {
                 'click .delete': function (e, value, row, index) {
                     e.stopPropagation()
-                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () { tables.bootstrapTable('refresh') })
+                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () { 
+                        tables.bootstrapTable('remove', {
+                            field: '$index',
+                            values: [index]
+                          }) 
+                    })
                 }
             }
         }
