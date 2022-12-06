@@ -2,12 +2,23 @@
     background-color: #343a40;
 }
 
-table td, .table th {
-     padding: 0.5rem 0.5rem !important;
+table td,
+.table th {
+    padding: 0.5rem 0.5rem !important;
 }
 
 table.clickable tbody tr {
     cursor: pointer;
+}
+
+.fc-h-event .fc-event-title {
+    white-space: normal;
+}
+
+.bootstrap-table .fixed-table-container .table thead th .th-inner {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    font-weight: bold !important;
 }
 
 .auth-wrapper {
