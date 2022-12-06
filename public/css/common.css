@@ -13,3 +13,16 @@ table.clickable tbody tr {
 .auth-wrapper {
     height: 100vh !important;
 }
+
+.auth-box .db img {
+    max-width: 330px;
+    width: 95%;
+}
+
+.auth-box #loginform, .auth-box #recoverform, .auth-box #signinFrm {
+    margin : 1rem !important;
+}
+
+.auth-box .btn {
+    margin-bottom: 0.5rem;
+}

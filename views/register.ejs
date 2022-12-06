@@ -1,146 +1,114 @@
 <!DOCTYPE html>
 <html dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex,nofollow" />
-    <title><%= __('APP_NAME') %></title>
-    <!-- Favicon icon -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/assets/images/favicon.png"
-    />
-    <!-- Custom CSS -->
-    <link href="/css/common.css" rel="stylesheet" />
-    <%- include('./partials/styles.ejs')%>
-  </head>
 
-  <body>
-    <div class="main-wrapper">
-      <!-- ============================================================== -->
-      <!-- Preloader - style you can find in spinners.css -->
-      <!-- ============================================================== -->
-      <div class="preloader">
-        <div class="lds-ripple">
-          <div class="lds-pos"></div>
-          <div class="lds-pos"></div>
-        </div>
-      </div>
-      <!-- ============================================================== -->
-      <!-- Preloader - style you can find in spinners.css -->
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- Login box.scss -->
-      <!-- ============================================================== -->
-      <div
-        class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
-        <div class="auth-box bg-dark border-top border-secondary">
-          <div>
-            <div class="text-center pt-3 pb-3">
-              <span class="db"><img src="/assets/images/logo.png" alt="logo"/></span>
-            </div>
-            <!-- Form -->
-            <form id="signinFrm" class="form-horizontal mt-3">
-              <div class="row pb-4">
-                <div class="col-12">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="mdi mdi-account fs-4"></i></span>
-                    </div>
-                    <input type="text" class="form-control form-control-lg" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" required/>
-                  </div>
-                  <!-- email -->
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text bg-danger text-white h-100" id="basic-addon1" ><i class="mdi mdi-email fs-4"></i></span>
-                    </div>
-                    <input type="text" class="form-control form-control-lg" name="email" placeholder="Email Address" aria-label="Username" aria-describedby="basic-addon1" required/>
-                  </div>
-                  <% if (!twoSteps) { %>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
-                      </div>
-                      <input type="password" class="form-control form-control-lg" name="password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required/>
-                    </div>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text bg-info text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
-                      </div>
-                      <input type="password" class="form-control form-control-lg" name="passwordVerify" placeholder=" Confirm Password" aria-label="Password" aria-describedby="basic-addon1" required/>
-                    </div>
-                  <% } %>
-                </div>
-              </div>
-            <div class="row border-top border-secondary">
-                <div class="col-12">
-                    <div class="form-group">
-                        <div class="pt-3 d-grid">
-                            <button id="submit_btn" class="btn btn-block btn-lg btn-info" type="button">Sign Up</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div id="msg" class="alert alert-primary" style="display: none;" role="alert"></div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <!-- ============================================================== -->
-      <!-- Login box.scss -->
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- Page wrapper scss in scafholding.scss -->
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- Page wrapper scss in scafholding.scss -->
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- Right Sidebar -->
-      <!-- ============================================================== -->
-      <!-- ============================================================== -->
-      <!-- Right Sidebar -->
-      <!-- ============================================================== -->
-    </div>
-    <!-- ============================================================== -->
-    <!-- All Required js -->
-    <!-- ============================================================== -->
-    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- ============================================================== -->
-    <!-- This page plugin js -->
-    <!-- ============================================================== -->
-    <script>
-      $(".preloader").fadeOut();
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-      $('#submit_btn').click(() => {
-        $.ajax({
-                    type: 'POST',
-                    url: '/api/auth/<%=twoSteps ? "register" : "signup"%>',
-                    data: $('#signinFrm').serialize(),
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#msg').text("<%= __('REGISTRY_SUCCESS')%>")
-                        $('#msg').show()
-                    },
-                    error: function(error) {
-                        console.log(error.responseJSON.message);
-                        console.error(error);
-                        $('#msg').text(error.responseJSON.message)
-                        $('#msg').show()
-                    },
-                });
-      })
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="robots" content="noindex,nofollow" />
+	<title><%= __('APP_NAME') %></title>
 
-    </script>
-  </body>
+	<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png" />
+
+	<!-- Custom CSS -->
+	<link href="/css/common.css" rel="stylesheet" />
+	<%- include('./partials/styles.ejs')%>
+</head>
+<style>
+	.f {
+		height: 100%;
+	}
+</style>
+<body>
+	<div class="main-wrapper">
+		<div class="preloader">
+			<div class="lds-ripple">
+				<div class="lds-pos"></div>
+				<div class="lds-pos"></div>
+			</div>
+		</div>
+		<div class="auth-wrapper d-flex no-block justify-content-center bg-dark">
+			<div class="auth-box bg-dark border-top border-secondary">
+				<div>
+					<div class="text-center pt-3 pb-3">
+						<span class="db"><img src="/assets/images/logo.png" alt="logo" /></span>
+					</div>
+					<!-- Form -->
+					<form id="signinFrm" class="form-horizontal mt-3">
+						<div class="row pb-4">
+							<div class="col-12">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="mdi mdi-account fs-4"></i></span>
+									</div>
+									<input type="text" class="form-control form-control-lg" name="username" placeholder="<%= __('USERNAME') %>" aria-label="Username" aria-describedby="basic-addon1" required />
+								</div>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white h-100" id="basic-addon1"><i class="mdi mdi-email fs-4"></i></span>
+									</div>
+									<input type="text" class="form-control form-control-lg" name="email" placeholder="<%= __('EMAIL') %>" aria-label="Username" aria-describedby="basic-addon1" required />
+								</div>
+								<% if (!twoSteps) { %>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
+									</div>
+									<input type="password" class="form-control form-control-lg" name="password" placeholder="<%= __('PASSWORD') %>" aria-label="Password" aria-describedby="basic-addon1" required />
+								</div>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-info text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
+									</div>
+									<input type="password" class="form-control form-control-lg" name="passwordVerify" placeholder="<%= __('PASSWORD VERIFY') %>" aria-label="Password" aria-describedby="basic-addon1" required />
+								</div>
+								<% } %>
+							</div>
+						</div>
+						<div class="row border-top border-secondary">
+							<div class="col-12">
+								<div class="form-group">
+									<div class="pt-3 d-grid">
+										<button id="submit_btn" class="btn btn-block btn-lg btn-info" type="button"><%= __('SEND') %></button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div id="msg" class="alert alert-primary" style="display: none;" role="alert"></div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+	<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		$(".preloader").fadeOut();
+
+		$('#submit_btn').click(() => {
+			$.ajax({
+				type: 'POST',
+				url: '/api/auth/<%=twoSteps ? "register" : "signup"%>',
+				data: $('#signinFrm').serialize(),
+				dataType: 'json',
+				success: function(data) {
+					$('#msg').text("<%= __('REGISTRY_SUCCESS')%>")
+					$('#msg').show()
+				},
+				error: function(error) {
+					console.log(error.responseJSON.message);
+					console.error(error);
+					$('#msg').text(error.responseJSON.message)
+					$('#msg').show()
+				},
+			});
+		})
+	</script>
+</body>
+
 </html>

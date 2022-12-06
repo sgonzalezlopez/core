@@ -16,9 +16,9 @@
 	<%- include('./partials/styles.ejs')%>
 </head>
 <style>
-	.f {
-		height: 100%;
-	}
+	/* .main-wrapper {
+		overflow: hidden;
+	} */
 </style>
 
 <body>
@@ -29,7 +29,7 @@
 				<div class="lds-pos"></div>
 			</div>
 		</div>
-		<div class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
+		<div class="auth-wrapper d-flex no-block justify-content-center bg-dark">
 			<div class="row bg-dark f">
 				<div class="auth-box bg-dark border-top border-secondary">
 					<div class="text-center pt-3 pb-3">
@@ -52,43 +52,40 @@
 									<input type="password" class="form-control form-control-lg" placeholder="<%= __('Password') %>" aria-label="Password" aria-describedby="basic-addon1" required="" name="password" />
 								</div>
 							</div>
-							<div class="row border-top border-secondary">
+							<div class="row mt-3 pt-3 border-top border-secondary">
 								<div class="col-12">
 									<div class="form-group">
-										<div class="pt-3">
-											<button class="btn btn-info" id="to-recover" type="button">
-												<i class="mdi mdi-lock fs-4 me-1"></i><%= __('Lost') %>
-											</button>
-											<a href="/register"><button class="btn btn-secondary float-end text-white" type="button"><%= __('Register') %></button></a>
-											<button class="btn btn-success float-end text-white" type="submit"><%= __('Login') %></button>
+										<div class="row">
+											<button class="btn btn-success text-white btn-block btn-lg" type="submit"><%= __('Login') %></button>
+											<button class="btn btn-secondary text-white btn-block btn-lg" onclick="window.location.assign('/register');" type="button"><%= __('Register') %></button>
+											<button class="btn btn-info btn-block btn-lg" id="to-recover" type="button"><i class="mdi mdi-lock fs-4 me-1"></i><%= __('Lost') %></button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-				</div>
-				<div id="recoverform">
-					<div class="text-center">
-						<span class="text-white"><%= __('Recover Message') %></span>
-					</div>
-					<div class="row mt-3">
+					<div id="recoverform">
 						<!-- Form -->
-						<form class="col-12">
-							<!-- email -->
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text bg-danger text-white h-100" id="basic-addon1"><i class="mdi mdi-email fs-4"></i></span>
+						<form class="form-horizontal mt-3" id="recoverform">
+							<div class="col-12">
+								<div class="text-center">
+									<span class="text-white"><%= __('Recover Message') %></span>
 								</div>
-								<input id="recover-email" type="text" class="form-control form-control-lg" placeholder="<%= __('Email Address') %>" aria-label="email" aria-describedby="basic-addon1" />
-							</div>
-							<!-- pwd -->
-							<div class="row mt-3 pt-3 border-top border-secondary">
-								<div class="col-12">
-									<a class="btn btn-success text-white" href="#" id="to-login" name="action"><%= __('Back To Login') %></a>
-									<button class="btn btn-info float-end recover-pass" type="button" name=""><%= __('Recover') %></button>
+								<!-- email -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white h-100" id="basic-addon1"><i class="mdi mdi-email fs-4"></i></span>
+									</div>
+									<input id="recover-email" type="text" class="form-control form-control-lg" placeholder="<%= __('Email Address') %>" aria-label="email" aria-describedby="basic-addon1" />
 								</div>
-							</div>
+								<!-- pwd -->
+								<div class="row mt-3 pt-3 border-top border-secondary">
+									<div class="col-12">
+										<a class="btn btn-success text-white btn-block btn-lg" href="#" id="to-login" name="action"><%= __('Back To Login') %></a>
+										<button class="btn btn-info float-end recover-pass btn-block btn-lg" type="button" name=""><%= __('Recover') %></button>
+									</div>
+								</div>
 						</form>
 					</div>
 				</div>
