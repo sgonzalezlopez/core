@@ -37,3 +37,11 @@ table.clickable tbody tr {
 .auth-box .btn {
     margin-bottom: 0.5rem;
 }
+
+.bi-plus:before {
+    content: "\f067"; 
+}
+
+.bi-dash:before {
+    content: "\f067"; 
+}

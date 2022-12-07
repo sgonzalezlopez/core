@@ -108,6 +108,7 @@ module.exports.configureRoutes = (app) => {
 
 module.exports.configureStatic = (app) => {
   app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap')));
+  app.use('/bootstrap-table', express.static(path.join(__dirname, '../node_modules/bootstrap-table/dist')));
   app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
   app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
   app.use('/moment', express.static(path.join(__dirname, '../node_modules/moment')));
@@ -115,6 +116,7 @@ module.exports.configureStatic = (app) => {
     const element = this.staticPaths[i];
     app.use(express.static(element));
   }
+  
 
   return app;
 }
