@@ -33,6 +33,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.mainApps = data.apps.filter(a => a.type.includes('main'))
     data.permissions = await authorization.getPermissionsForEntity(modelName, data.user)
     data.currentApp = data.apps.filter(a => a.link == ("/" + view))[0]
+    data.object = null;
     data.view = view
 
     try {
@@ -50,7 +51,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 
         if (id && controller.hasOwnProperty('getObject')) data.object = await controller.getObject(id, req.user)
         else if (id) data.object = await model.findById(id)
-        else res.render(view, data);
+        res.render(view, data);
     }
     catch (err) {
         if (err.code === 'MODULE_NOT_FOUND') res.render(view, data);
