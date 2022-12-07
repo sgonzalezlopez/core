@@ -26,9 +26,6 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     else (data.apps =  req.session.hasOwnProperty('apps') ? req.session.apps : await apps.getApplications(req.user))
     req.session.apps = data.apps
 
-
-
-
     // data.apps = await apps.getApplications(req.user)
     data.sideApps = data.apps.filter(a => a.type.includes('side'))
     data.actionApps = data.apps.filter(a => a.type.includes('action'))
@@ -53,34 +50,13 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 
         if (id && controller.hasOwnProperty('getObject')) data.object = await controller.getObject(id, req.user)
         else if (id) data.object = await model.findById(id)
+        else res.render(view, data);
     }
     catch (err) {
-        if (err.code !== 'MODULE_NOT_FOUND') {
+        if (err.code === 'MODULE_NOT_FOUND') res.render(view, data);
+        else {
             console.error(err);
-            throw err
+            next(err, null);
         }
     }
-    finally {
-        res.render(view, data);
-    }
 }
-
-// async function getValues(name, text) {
-//     val = await db.model(name).find();
-//     val.map(a => {
-//         a.value = a._id;
-//         a.text = a[text];
-//     })
-
-//     return val
-
-// }
-
-// async function getType(type) {
-//     val = await db.model('Value').find({type:type}).sort('order');
-//     val.map(v => {
-//         if (!v.text) v.text = i18n.__(`VAL_${v.value}`)
-//     })
-//     return val
-
-// }
