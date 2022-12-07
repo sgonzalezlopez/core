@@ -3,7 +3,6 @@
             <% var styles = ['bg-cyan', 'bg-success', 'bg-warning', 'bg-info', 'bg-danger'];
                 var index = 0;
                 var appParent = apps.find(a => a.link == parentApp)
-                console.log(appParent);
                 var mgnt = appParent.child ? appParent.child : [];
             %>
             <% mgnt.forEach(function(app) { %>

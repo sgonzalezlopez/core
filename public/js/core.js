@@ -186,7 +186,6 @@
             var panelelement = $($(this).attr('data-bs-target'))
 
             panelelement.on('hidden.bs.collapse', function () {
-                console.log('aqui');
                 var element = $(this)[0]
                 $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-down')
                 $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-up')
@@ -297,7 +296,6 @@
                     },
                 });
             } else if (select.attr('data-list-values')) {
-                console.log(select.attr('data-list-values'));
                 select.empty()
                 select.append('<option value=""></option>')
                 $.each(select.attr('data-list-values'), (i, item) => {
@@ -440,7 +438,6 @@
         $(`#${entity}Form_submit_btn`).hide()
         $(`#${entity}Form_submit_btn_modal`).on('click', () => {
             var values = core.forms.parse(`${entity}Form`)
-            console.log(values);
             core.api.create(api, values, (item) => {
                 $(`#${entity.toLowerCase()}`).attr("data-value", item._id)
                 $(`#New${entity}Modal`).modal("hide")
