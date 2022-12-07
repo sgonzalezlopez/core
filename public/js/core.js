@@ -418,22 +418,6 @@
     function createModalNew(object) {
         var entity = object.attr('data-entity');
         var api = object.attr('data-api');
-        // object.append(`	<div class="modal-dialog" role="document">
-        //     <div class="modal-content">
-        //         <div class="modal-header">
-        //             <h5 class="modal-title" id="New${entity}ModalLabel"><%= __('CREATE_NEW_TRACK') %></h5>
-        //             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-        //                 <span aria-hidden="true">&times;</span>
-        //             </button>
-        //         </div>
-        //         <div class="modal-body"><%- include('./${entity}.ejs', {formName :'${entity}Form', api:'${api}', object: null}) %></div>
-        //         <div class="modal-footer">
-        //             <button id="" type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= __('CLOSE') %></button>
-        //             <button id="${entity}Form_submit_btn_modal" type="button" class="btn btn-primary"><%= __('SAVE_&_CONTINUE') %></button>
-        //         </div>
-        //     </div>
-        // </div>`);
-
         $(`#${entity}Form_submit_btn`).unbind("click")
         $(`#${entity}Form_submit_btn`).hide()
         $(`#${entity}Form_submit_btn_modal`).on('click', () => {
