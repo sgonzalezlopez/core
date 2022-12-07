@@ -51,7 +51,9 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
 
         if (id && controller.hasOwnProperty('getObject')) data.object = await controller.getObject(id, req.user)
         else if (id) data.object = await model.findById(id)
-        res.render(view, data);
+
+        if (id && data.object == null) throw (new Error(i18n.__('OBJECT_NOT_FOUND')))
+        else res.render(view, data);
     }
     catch (err) {
         if (err.code === 'MODULE_NOT_FOUND') res.render(view, data);
