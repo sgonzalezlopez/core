@@ -133,6 +133,7 @@
             $(this).attr('data-search-align', 'left')
             $(this).attr('data-search-accent-neutralise', 'true')
             $(this).attr('data-height', '650')
+            $(this).attr('data-locale', options.locale)
         }) 
 
         // Tablas abren el elemento con un click
