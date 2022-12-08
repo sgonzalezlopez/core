@@ -13,14 +13,7 @@ const Schema = mongoose.Schema({
     },
     type : {
         type : [String],
-        combo : { 
-            values : [
-                {value:'C', text:'Create'},
-                {value:'R', text:'Read'},
-                {value:'U', text:'Update'},
-                {value:'D', text:'Delete'}
-            ], 
-            multiple : true}
+        combo : { type : "permission", multiple : true}
     },
 },{ timestamps: true });
 

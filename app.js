@@ -12,6 +12,7 @@ var LokiStore = require('connect-loki')(session);
 const LocalStrategy = require('passport-local').Strategy;
 const expressLayouts = require('express-ejs-layouts')
 const passport = require('passport');
+var fileUpload = require('express-fileupload');
 
 module.exports.setupDB = async function () {
 }
@@ -66,6 +67,9 @@ module.exports.setup = async function (params) {
   if (config.app.ENV === 'production') app.use(forceSSL);
 
   app.use(cors());
+
+  //
+  app.use(fileUpload());
 
   // parse requests of content-type - application/json
   app.use(express.json());
