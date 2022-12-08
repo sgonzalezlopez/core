@@ -2,30 +2,28 @@
       <!-- Left Sidebar - style you can find in sidebar.scss  -->
       <!-- ============================================================== -->
       <aside class="left-sidebar" data-sidebarbg="skin5">
+      	<div class="side-navbar-buttons">
+      		<% if (locals.search) { %>
+      		<div class="nav-item">
+      			<a class="nav-link waves-effect waves-dark" href="/<%=locals.search%>"><i class="fa-solid fa-magnifying-glass"></i></a>
+      		</div>
+      		<% } %>
+      		<% if (locals.list) { %>
+      		<div class="nav-item">
+      			<a class="nav-link waves-effect waves-dark" href="/<%=locals.list%>"><i class="fa-solid fa-list"></i></a>
+      		</div>
+      		<% } %>
+      		<% if (locals.detail) { %>
+      		<div class="nav-item">
+      			<a class="nav-link waves-effect waves-dark" href="/<%=locals.detail%>"><i class="fa-solid fa-square-plus"></i></a>
+      		</div>
+      		<% } %>
+      	</div>
       	<!-- Sidebar scroll-->
       	<div class="scroll-sidebar">
       		<!-- Sidebar navigation-->
       		<nav class="sidebar-nav">
-      			<ul id="sidebarnav" class="pt-4">
-      				<li>
-      					<div class="side-navbar-buttons">
-                  <% if (locals.search) { %>
-                    <div class="nav-item">
-                      <a class="nav-link waves-effect waves-dark" href="/<%=locals.search%>"><i class="mdi mdi-magnify fs-4"></i></a>
-                    </div>
-                    <% } %>
-                    <% if (locals.list) { %>
-                    <div class="nav-item">
-                      <a class="nav-link waves-effect waves-dark" href="/<%=locals.list%>"><i class="fa-solid fa-list"></i></a>
-                    </div>
-                    <% } %>
-                    <% if (locals.detail) { %>
-                    <div class="nav-item">
-                      <a class="nav-link waves-effect waves-dark" href="/<%=locals.detail%>"><i class="fa-solid fa-square-plus"></i></a>
-                    </div>
-                    <% } %>
-      					</div>
-      				</li>
+      			<ul id="sidebarnav" class="">
       				<% level0 = locals.sideApps %>
       				<% level0.forEach(element => { %>
       				<% level1 = element.child || [];%>

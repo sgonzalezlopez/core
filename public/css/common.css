@@ -48,11 +48,26 @@ table.clickable tbody tr {
 }
 
 .side-navbar-buttons {
+    background-color: #ffffff4f;
+    width: 100%;
     display: flex;
+    justify-items: center;
     flex-direction: row;
+    align-content: space-around;
+    flex-wrap: nowrap;
     justify-content: space-around;
 }
 
-.side-navbar-buttons .nav-item a {
+.mini-sidebar .side-navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.side-navbar-buttons .nav-item a{
     color: white !important;
+}
+.side-navbar-buttons .nav-item {
+    width: max-content;
 }

@@ -99,8 +99,10 @@ $(function () {
     var width = window.innerWidth > 0 ? window.innerWidth : this.screen.width;
     if (width < 1170) {
       $("#main-wrapper").attr("data-sidebartype", "mini-sidebar");
+      $('.side-navbar-buttons').addClass('minimized')
     } else {
       $("#main-wrapper").attr("data-sidebartype", "full");
+      $('.side-navbar-buttons').removeClass('minimized')
     }
   };
   $(window).ready(setsidebartype);
