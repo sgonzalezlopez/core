@@ -107,6 +107,7 @@ module.exports.configureRoutes = (app) => {
 }
 
 module.exports.configureStatic = (app) => {
+  app.use('/inputmask', express.static(path.join(__dirname, '../node_modules/inputmask')));
   app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap')));
   app.use('/bootstrap-table', express.static(path.join(__dirname, '../node_modules/bootstrap-table/dist')));
   app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
