@@ -71,3 +71,8 @@ table.clickable tbody tr {
 .side-navbar-buttons .nav-item {
     width: max-content;
 }
+
+.scroll-sidebar {
+    height: calc(100% - 40px);
+    position: relative;
+}
