@@ -33,7 +33,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.actionApps = data.apps.filter(a => a.type.includes('action'))
     data.userApps = data.apps.filter(a => a.type.includes('user'))
     data.mainApps = data.apps.filter(a => a.type.includes('main'))
-    data.permissions = await authorization.getPermissionsForEntity(modelName, data.user)
+    data.permissions = data.permissions || await authorization.getPermissionsForEntity(modelName, data.user)
     data.currentApp = data.apps.filter(a => a.link == ("/" + view))[0]
     data.object = null;
     data.view = view
