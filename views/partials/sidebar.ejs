@@ -2,34 +2,53 @@
       <!-- Left Sidebar - style you can find in sidebar.scss  -->
       <!-- ============================================================== -->
       <aside class="left-sidebar" data-sidebarbg="skin5">
-        <!-- Sidebar scroll-->
-        <div class="scroll-sidebar">
-          <!-- Sidebar navigation-->
-          <nav class="sidebar-nav">
-            <ul id="sidebarnav" class="pt-4">
-              <% level0 = locals.sideApps %>
-              <% level0.forEach(element => { %>
-                <% level1 = element.child || [];%>
-                <li class="sidebar-item">
-                  <a class="sidebar-link <%=level1.length >0 ? 'has-arrow' : ''%> waves-effect waves-dark sidebar-link" href="<%=element.link%>" aria-expanded="false" >
-                    <i class="<%=element.icon%>"></i><span class="hide-menu"><%= __(`APP_${element.name}`) %></span>
-                  </a>
-                  <% if (level1.length >0) { %> 
-                    <ul aria-expanded="false" class="collapse first-level">
-                      <% level1.forEach(element => { %>
-                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="<%=element.link%>"><i class="<%=element.icon%>"></i><span class="hide-menu"><%= __(`APP_${element.name}`) %></span></a>
-                      </li>
-                      <% }) %>
-                    </ul>
+      	<!-- Sidebar scroll-->
+      	<div class="scroll-sidebar">
+      		<!-- Sidebar navigation-->
+      		<nav class="sidebar-nav">
+      			<ul id="sidebarnav" class="pt-4">
+      				<li>
+      					<div class="side-navbar-buttons">
+                  <% if (locals.search) { %>
+                    <div class="nav-item">
+                      <a class="nav-link waves-effect waves-dark" href="/<%=locals.search%>"><i class="mdi mdi-magnify fs-4"></i></a>
+                    </div>
                     <% } %>
-                    <% }) %>
-                </li>
-              </ul>
-          </nav>
-          <!-- End Sidebar navigation -->
-        </div>
-        <!-- End Sidebar scroll-->
+                    <% if (locals.list) { %>
+                    <div class="nav-item">
+                      <a class="nav-link waves-effect waves-dark" href="/<%=locals.list%>"><i class="fa-solid fa-list"></i></a>
+                    </div>
+                    <% } %>
+                    <% if (locals.detail) { %>
+                    <div class="nav-item">
+                      <a class="nav-link waves-effect waves-dark" href="/<%=locals.detail%>"><i class="fa-solid fa-square-plus"></i></a>
+                    </div>
+                    <% } %>
+      					</div>
+      				</li>
+      				<% level0 = locals.sideApps %>
+      				<% level0.forEach(element => { %>
+      				<% level1 = element.child || [];%>
+      				<li class="sidebar-item">
+      					<a class="sidebar-link <%=level1.length >0 ? 'has-arrow' : ''%> waves-effect waves-dark sidebar-link" href="<%=element.link%>" aria-expanded="false">
+      						<i class="<%=element.icon%>"></i><span class="hide-menu"><%= __(`APP_${element.name}`) %></span>
+      					</a>
+      					<% if (level1.length >0) { %>
+      					<ul aria-expanded="false" class="collapse first-level">
+      						<% level1.forEach(element => { %>
+      						<li class="sidebar-item">
+      							<a class="sidebar-link" href="<%=element.link%>"><i class="<%=element.icon%>"></i><span class="hide-menu"><%= __(`APP_${element.name}`) %></span></a>
+      						</li>
+      						<% }) %>
+      					</ul>
+      					<% } %>
+      					<% }) %>
+      				</li>
+      			</ul>
+      		</nav>
+      		<!-- End Sidebar navigation -->
+      	</div>
+      	<!-- End Sidebar scroll-->
       </aside>
       <!-- ============================================================== -->
       <!-- End Left Sidebar - style you can find in sidebar.scss  -->

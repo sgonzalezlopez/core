@@ -46,3 +46,13 @@ table.clickable tbody tr {
     /* max-height: calc(100vh - 64px) !important; */
     height: 460px !important;
 }
+
+.side-navbar-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.side-navbar-buttons .nav-item a {
+    color: white !important;
+}

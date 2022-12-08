@@ -81,10 +81,16 @@
               <% if (locals.search) { %>
               <li class="nav-item search-box">
                 <a class="nav-link waves-effect waves-dark" href="javascript:void(0)" data-target="<%=locals.search%>"><i class="mdi mdi-magnify fs-4"></i></a>
-                <form class="app-search position-absolute">
-                  <input type="text" class="form-control" placeholder="Search &amp; enter"/>
-                  <a class="srh-btn"><i class="mdi mdi-window-close"></i></a>
-                </form>
+              </li>
+              <% } %>
+              <% if (locals.list) { %>
+              <li class="nav-item search-box">
+                <a class="nav-link waves-effect waves-dark" href="javascript:void(0)" data-target="<%=locals.list%>"><i class="fa-solid fa-list"></i></a>
+              </li>
+              <% } %>
+              <% if (locals.detail) { %>
+              <li class="nav-item search-box">
+                <a class="nav-link waves-effect waves-dark" href="javascript:void(0)" data-target="<%=locals.detail%>"><i class="fa-solid fa-square-plus"></i></a>
               </li>
               <% } %>
             </ul>
