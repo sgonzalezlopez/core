@@ -38,16 +38,11 @@ table.clickable tbody tr {
     margin-bottom: 0.5rem;
 }
 
-.bi-plus:before {
-    content: "\f067"; 
-    font-family: 'Font Awesome 6 Free';
-}
-
-.bi-dash:before {
-    content: "\f067"; 
-    font-family: 'Font Awesome 6 Free';
-}
-
 .page-wrapper {
     min-height: calc(100vh - 64px) !important;
+}
+
+.full-height tbody {
+    /* max-height: calc(100vh - 64px) !important; */
+    height: 460px !important;
 }

@@ -121,6 +121,20 @@
     exports.setup = function (new_options) {
         options = sanitize(new_options);
 
+        $('table').each(function() {
+            $(this).attr('data-show-fullscreen', 'true')
+            $(this).attr('data-minimum-count-columns', '2')
+            $(this).attr('data-show-pagination-switch', 'true')
+            $(this).attr('data-pagination', 'true')
+            $(this).attr('data-show-columns', 'true')
+            $(this).attr('data-show-columns-toggle-all', 'true')
+            $(this).attr('data-buttons-align', 'left')
+            $(this).attr('data-search', 'true')
+            $(this).attr('data-search-align', 'left')
+            $(this).attr('data-search-accent-neutralise', 'true')
+            $(this).attr('data-height', '650')
+        }) 
+
         // Tablas abren el elemento con un click
         $('table.clickable').each(function (index, value) {
             var a = $(`#${value.id}`)
