@@ -17,7 +17,7 @@
 						</label>
 						<div class="col-sm-9">
 							<% if (path.options.combo && path.options.combo.collection) { %>
-							<%-`\<select id="${path.path}" name="${path.path}" ${path.options.combo.multiple ? 'multiple="multiple"' : ''} class="select2 form-select shadow-none" style="width:100%; height: 36px" data-collection="${path.options.combo.collection.name}" data-show="${path.options.combo.collection.text}" data-value="\<\%= locals.object && locals.object.${path.path} ? object.${path.path}._id : '' \%\>"></select>`%>
+							<%-`\<select id="${path.path}" name="${path.path}" ${path.options.combo.multiple ? 'multiple="multiple"' : ''} class="select2 form-select shadow-none" style="width:100%; height: 36px" data-collection="${path.options.combo.collection.name}" data-show="${path.options.combo.collection.text}" data-value="\<\%= locals.object && locals.object.${path.path} ? object.${path.path} : '' \%\>"></select>`%>
 							<% } else if (path.options.combo && path.options.combo.type) { %>
 							<%-`\<select id="${path.path}" name="${path.path}" ${path.options.combo.multiple ? 'multiple="multiple"' : ''} class="select2 form-select shadow-none" style="width:100%; height: 36px" data-value-list="${path.options.combo.type}" data-value="\<\%=locals.object && locals.object.${path.path} ? object.${path.path} : '' \%\>"></select>`%>
 							<% } else if (path.options.type.name == 'Boolean') { %>

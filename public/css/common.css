@@ -76,3 +76,8 @@ table.clickable tbody tr {
     height: calc(100% - 40px);
     position: relative;
 }
+
+.select2-selection--multiple{
+    overflow: hidden !important;
+    height: auto !important;
+}
