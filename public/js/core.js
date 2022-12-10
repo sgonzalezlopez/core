@@ -117,11 +117,17 @@
     // CORE HELPER FUNCTIONS
     // *************************************************************************************************************
 
+    function getLocales() {
+        return $.getJSON(`/locales/${options.locale}.json`, function (data) {
+            options.localized = data;
+        });
+    }
+
     // Core dialog function
-    exports.setup = function (new_options) {
+    exports.setup = async function (new_options) {
         options = sanitize(new_options);
 
-        $('table').each(function() {
+        $('table').each(function () {
             $(this).attr('data-show-fullscreen', 'true')
             $(this).attr('data-minimum-count-columns', '2')
             $(this).attr('data-show-pagination-switch', 'true')
@@ -134,7 +140,7 @@
             $(this).attr('data-search-accent-neutralise', 'true')
             $(this).attr('data-height', '650')
             $(this).attr('data-locale', options.locale)
-        }) 
+        })
 
         // Tablas abren el elemento con un click
         $('table.clickable').each(function (index, value) {
@@ -182,11 +188,11 @@
             window.actionEvents = {
                 'click .delete': function (e, value, row, index) {
                     e.stopPropagation()
-                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () { 
+                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () {
                         tables.bootstrapTable('remove', {
                             field: '$index',
                             values: [index]
-                          }) 
+                        })
                     })
                 }
             }
@@ -214,6 +220,74 @@
 
                 // do something…
             })
+        })
+
+        await getLocales();
+
+        // Creación de botonera en detalle de elementos
+        // REQUIERE
+        // data-type="action-buttons" 
+        // data-api="url-api"
+        // data-form="nombre-de-formulario"
+        // data-permissions="<%=locals.permissions.join('')%>"
+
+        // Si existe una función refreshView se va a llamar después de guardar o borrar
+        
+        // OPCIONES
+        // data-save="true"         --> Mostrar el boton de GUARDAR
+        // data-save-override=""    --> Función que sobreescribe comportamiento de GUARDAR
+        // data-save-after=""       --> Función a ejecutar después de crear un nuevo registro
+        // data-update-after=""     --> Función a ejecutar después de actualizar un registro existente
+        // data-savenew="true"      --> Mostrar el botón de GUARDAR Y NUEVO
+        // data-savenew-override="" --> Función que sobreescribe comportamiento de GUARDAR Y NUEVO
+        // data-savenew-after=""    --> Función a ejecutar después de pulsar el botón GUARDAR Y NUEVO (se ejecuta después de data-save-after o data-update-after)
+        // data-delete="true"       --> Mostrar el botón de ELIMINAR
+        // data-delete-override=""  --> Función que sobreescribe comportamiento de ELIMINAR
+        // data-delete-after=""     --> Función a ejecutar después de eliminar un registro
+        // data-new="link"          --> Si no es vacío muestra el botón NUEVO y navega a la dirección especificada en el atributo al pulsarlo
+        // data-list"link"          --> Si no es vacío muestra el botón LISTADO y navega a la dirección especificada en el atributo al pulsarlo
+        // data-search"link"        --> Si no es vacío muestra el botón BUSCAR y navega a la dirección especificada en el atributo al pulsarlo
+        $('[data-type="action-buttons"').each(function () {
+            var buttonsGroup = $(this);
+            var permissions = buttonsGroup.attr('data-permissions') ? buttonsGroup.attr('data-permissions').split('') : [];
+
+            var dataApi = buttonsGroup.attr('data-api');
+            var dataEntity = buttonsGroup.attr('data-entity') || 'Entity';
+            var dataForm = buttonsGroup.attr('data-form') || dataEntity + "Form";
+
+            var dataSave = buttonsGroup.attr('data-save') || true;
+            var dataSaveAfter = buttonsGroup.attr('data-save-after');
+
+            if (dataSaveAfter === '') dataSaveAfter = null;
+            var dataUpdateAfter = buttonsGroup.attr('data-update-after');
+            if (dataUpdateAfter === '') dataUpdateAfter = null;
+            var dataSaveOverride = buttonsGroup.attr('data-save-override');
+            if (dataSaveOverride == '') dataSaveOverride = null;
+
+            var dataSaveNew = buttonsGroup.attr('data-savenew') || true;
+            var dataSaveNewOverride = buttonsGroup.attr('data-savenew-override');
+            if (dataSaveNewOverride == '') dataSaveNewOverride = null;
+            var dataNewAfter = buttonsGroup.attr('data-savenew-after');
+            if (dataNewAfter == '') dataNewAfter = null;
+
+            var dataDelete = buttonsGroup.attr('data-delete') || false;
+            var dataDeleteOverride = buttonsGroup.attr('data-delete-override');
+            if (dataDeleteOverride == '') dataDeleteOverride = null;
+            var dataDeleteAfter = buttonsGroup.attr('data-delete-after');
+            if (dataDeleteAfter == '') dataDeleteAfter = null;
+
+            var dataList = buttonsGroup.attr('data-list');
+            var dataSearch = buttonsGroup.attr('data-search');
+            var dataNew = buttonsGroup.attr('data-new');
+
+            if (dataNew && dataNew != '' && permissions.includes('C')) buttonsGroup.prepend(`<button onclick="window.location.assign('${dataNew}')" id="${dataForm}_search_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
+            if (dataSearch && dataSearch != '') buttonsGroup.prepend(`<button onclick="window.location.assign('${dataSearch}')" id="${dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
+            if (dataList && dataList != '') buttonsGroup.prepend(`<button onclick="window.location.assign('${dataList}')" id="${dataForm}_list_btn" type="button" class="btn btn-info">${options.localized['LIST']}</button>\n`)
+            if (dataDelete && permissions.includes('D')) buttonsGroup.prepend(`<button onclick="core.forms.delete('${dataForm}', '${dataApi}', ${dataDeleteOverride}, ${dataDeleteAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-danger onlyId">${options.localized['DELETE']}</button>\n`)
+            if (dataSaveNew && permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.saveNew('${dataForm}', '${dataApi}', ${dataSaveNewOverride}, ${dataNewAfter}, ${dataSaveAfter}, ${dataUpdateAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE&NEW']}</button>\n`)
+            if (dataSave && permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.save('${dataForm}', '${dataApi}', ${dataSaveOverride}, ${dataSaveAfter}, ${dataUpdateAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE']}</button>\n`)
+            if (typeof refreshView !== 'undefined') refreshView()
+
         })
 
         return exports;
@@ -321,6 +395,47 @@
                 select.append('<option value=""></option>')
                 select.append(`<option value="true">${getText('BOOLEAN_TRUE')}</option>`)
                 select.append(`<option value="false">${getText('BOOLEAN_FALSE')}</option>`)
+            }
+        },
+        save: function (form, api, saveOverride, saveAfter, updateAfter) {
+            if (saveOverride != null) saveOverride()
+            else {
+                var values = core.forms.parse(form)
+                if (values.id) core.api.update(api, values.id, values, function (data) {
+                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    if (saveAfter != null && saveAfter != '') saveAfter(data);
+                })
+                else core.api.create('/api/TrainingSession', values, function (data) {
+                    $(`#${form} #id`).val(data.id)
+                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    if (updateAfter != null && updateAfter != '') updateAfter(data);
+                })
+            }
+        },
+        saveNew: function (form, api, saveNewOverride, newAfter, saveAfter, updateAfter) {
+            if (saveNewOverride != null) saveNewOverride()
+            else {
+                var values = core.forms.parse(form)
+                if (values.id) core.api.update(api, values.id, values, function (data) {
+                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    if (saveAfter != null && saveAfter != '') saveAfter(data);
+                })
+                else core.api.create('/api/TrainingSession', values, function (data) {
+                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    if (updateAfter != null && updateAfter != '') updateAfter(data);
+                })
+                $(`#${form} #id`).val(null)
+                if (newAfter != null && newAfter != '') newAfter();
+            }
+        },
+        delete: function (form, api, deleteOverride, deleteAfter) {
+            if (deleteOverride != null) deleteOverride()
+            else {
+                var values = core.forms.parse(form)
+                if (values.id) core.api.delete(api, values.id, function (data) {
+                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    if (deleteAfter != null && deleteAfter != '') deleteAfter(data);
+                })
             }
         }
     }

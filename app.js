@@ -118,6 +118,7 @@ module.exports.configureStatic = (app) => {
   app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
   app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
   app.use('/moment', express.static(path.join(__dirname, '../node_modules/moment')));
+  app.use('/locales', express.static(path.join(__dirname, '../locales')));
   for (let i = 0; i < this.staticPaths.length; i++) {
     const element = this.staticPaths[i];
     app.use(express.static(element));

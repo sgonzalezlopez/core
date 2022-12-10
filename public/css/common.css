@@ -81,3 +81,7 @@ table.clickable tbody tr {
     overflow: hidden !important;
     height: auto !important;
 }
+
+div[data-type="action-buttons"] .btn {
+    margin-left: 2px;
+}
