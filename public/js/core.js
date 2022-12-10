@@ -125,183 +125,35 @@
 
     // Core dialog function
     exports.setup = async function (new_options) {
+        addActionEvent();
+        await setTablesOptions();
+
         options = sanitize(new_options);
-
-        $('table').each(function () {
-            $(this).attr('data-show-fullscreen', 'true')
-            $(this).attr('data-minimum-count-columns', '2')
-            $(this).attr('data-show-pagination-switch', 'true')
-            $(this).attr('data-pagination', 'true')
-            $(this).attr('data-show-columns', 'true')
-            $(this).attr('data-show-columns-toggle-all', 'true')
-            $(this).attr('data-buttons-align', 'left')
-            $(this).attr('data-search', 'true')
-            $(this).attr('data-search-align', 'left')
-            $(this).attr('data-search-accent-neutralise', 'true')
-            $(this).attr('data-height', '650')
-            $(this).attr('data-locale', options.locale)
-        })
-
-        // Tablas abren el elemento con un click
-        $('table.clickable').each(function (index, value) {
-            var a = $(`#${value.id}`)
-            $(a).on('click-cell.bs.table', function (e, field, row, $element) {
-                if (field != 'id' && !e.sender.columns.find(a => a.field == field).hasOwnProperty('detailFormatter')) {
-                    e.stopPropagation();
-                    window.location.href = $(a).attr('detail-url') + $element._id
-                }
-            })
-        });
-
-        // Establecer el valor de datepickers
-        $(".mydatepicker").each(function () {
-            var element = $(this)
-            element.datepicker({
-                language: options.locale,
-                format: getText('DATE_FORMAT'),
-                todayHighlight: true,
-            });
-            if (element.attr('date-value')) element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
-            element.attr('autocomplete', 'off')
-        })
-
-        // Cargar los select con datos
-        $("select").each(function () {
-            var select = $(this)
-            exports.forms.loadSelect(select)
-        })
-
-
-        // Cargar los cuadros modales
-        $(".modal-new").each(function () {
-            createModalNew($(this));
-        })
-
-
-        // Formatear los SELECT
-        $(".select2").select2();
-        $(".select2.allow-new ").select2({ tags: true });
-
-        // Establecer las acciones de BORRADO en las tablas
-        var tables = $("[data-toggle='table']")
-        if (tables) {
-            window.actionEvents = {
-                'click .delete': function (e, value, row, index) {
-                    e.stopPropagation()
-                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () {
-                        tables.bootstrapTable('remove', {
-                            field: '$index',
-                            values: [index]
-                        })
-                    })
-                }
-            }
-        }
-
-        // Establecer las máscaras de formato
-        $(".registry-time-inputmask").inputmask("99:99:99.999")
-
-
-        // Comportamiento de collapse
-        $('[data-bs-toggle="collapse"]').each(function () {
-            var panelelement = $($(this).attr('data-bs-target'))
-
-            panelelement.on('hidden.bs.collapse', function () {
-                var element = $(this)[0]
-                $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-down')
-                $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-up')
-
-                // do something…
-            })
-            panelelement.on('shown.bs.collapse', function () {
-                var element = $(this)[0]
-                $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-up')
-                $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-down')
-
-                // do something…
-            })
-        })
-
         await getLocales();
 
-        // Creación de botonera en detalle de elementos
-        // REQUIERE
-        // data-type="action-buttons" 
-        // data-api="url-api"
-        // data-form="nombre-de-formulario"
-        // data-permissions="<%=locals.permissions.join('')%>"
 
-        // Si existe una función refreshView se va a llamar después de guardar o borrar
-        
-        // OPCIONES
-        // data-save="true"         --> Mostrar el boton de GUARDAR
-        // data-save-override=""    --> Función que sobreescribe comportamiento de GUARDAR
-        // data-save-after=""       --> Función a ejecutar después de crear un nuevo registro
-        // data-update-after=""     --> Función a ejecutar después de actualizar un registro existente
-        // data-savenew="true"      --> Mostrar el botón de GUARDAR Y NUEVO
-        // data-savenew-override="" --> Función que sobreescribe comportamiento de GUARDAR Y NUEVO
-        // data-savenew-after=""    --> Función a ejecutar después de pulsar el botón GUARDAR Y NUEVO (se ejecuta después de data-save-after o data-update-after)
-        // data-delete="true"       --> Mostrar el botón de ELIMINAR
-        // data-delete-override=""  --> Función que sobreescribe comportamiento de ELIMINAR
-        // data-delete-after=""     --> Función a ejecutar después de eliminar un registro
-        // data-new="link"          --> Si no es vacío muestra el botón NUEVO y navega a la dirección especificada en el atributo al pulsarlo
-        // data-list"link"          --> Si no es vacío muestra el botón LISTADO y navega a la dirección especificada en el atributo al pulsarlo
-        // data-search"link"        --> Si no es vacío muestra el botón BUSCAR y navega a la dirección especificada en el atributo al pulsarlo
-        $('[data-type="action-buttons"').each(function () {
-            var buttonsGroup = $(this);
-            var permissions = buttonsGroup.attr('data-permissions') ? buttonsGroup.attr('data-permissions').split('') : [];
+        setDatePickers();
 
-            var dataApi = buttonsGroup.attr('data-api');
-            var dataEntity = buttonsGroup.attr('data-entity') || 'Entity';
-            var dataForm = buttonsGroup.attr('data-form') || dataEntity + "Form";
 
-            var dataList = buttonsGroup.attr('data-list');
-            var dataSearch = buttonsGroup.attr('data-search');
-            var dataNew = buttonsGroup.attr('data-new');
-            
-            var dataSave = buttonsGroup.attr('data-save') || true;
-            var dataSaveAfter = buttonsGroup.attr('data-save-after');
+        setSelect2()
 
-            if (dataSaveAfter === '') dataSaveAfter = null;
-            var dataUpdateAfter = buttonsGroup.attr('data-update-after');
-            if (dataUpdateAfter === '') dataUpdateAfter = null;
-            var dataSaveOverride = buttonsGroup.attr('data-save-override');
-            if (dataSaveOverride == '') dataSaveOverride = null;
+        await createActionButton();
+        await setModals();
 
-            var dataSaveNew = buttonsGroup.attr('data-savenew') || true;
-            var dataSaveNewOverride = buttonsGroup.attr('data-savenew-override');
-            if (dataSaveNewOverride == '') dataSaveNewOverride = null;
-            var dataNewAfter = buttonsGroup.attr('data-savenew-after');
-            if (dataNewAfter == '') dataNewAfter = null;
+        setInputMasks();
 
-            var dataDelete = buttonsGroup.attr('data-delete') || false;
-            var dataDeleteOverride = buttonsGroup.attr('data-delete-override');
-            if (dataDeleteOverride == '') dataDeleteOverride = null;
-            var dataDeleteAfter = buttonsGroup.attr('data-delete-after');
-            if (dataDeleteAfter == '') dataDeleteAfter = null;
-            if (!dataDeleteAfter && dataList) dataDeleteAfter = `function () {core.goTo('${dataList}')}`;
-
-            if (dataNew && dataNew != '' && permissions.includes('C')) buttonsGroup.prepend(`<button onclick="core.goTo('${dataNew}')" id="${dataForm}_search_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
-            if (dataSearch && dataSearch != '') buttonsGroup.prepend(`<button onclick="core.goTo('${dataSearch}')" id="${dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
-            if (dataList && dataList != '') buttonsGroup.prepend(`<button onclick="core.goTo('${dataList}')" id="${dataForm}_list_btn" type="button" class="btn btn-info">${options.localized['LIST']}</button>\n`)
-            if (dataDelete && permissions.includes('D')) buttonsGroup.prepend(`<button onclick="core.forms.delete('${dataForm}', '${dataApi}', ${dataDeleteOverride}, ${dataDeleteAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-danger onlyId">${options.localized['DELETE']}</button>\n`)
-            if (dataSaveNew && permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.saveNew('${dataForm}', '${dataApi}', ${dataSaveNewOverride}, ${dataNewAfter}, ${dataSaveAfter}, ${dataUpdateAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE&NEW']}</button>\n`)
-            if (dataSave && permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.save('${dataForm}', '${dataApi}', ${dataSaveOverride}, ${dataSaveAfter}, ${dataUpdateAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE']}</button>\n`)
-                       
-            refreshViewCore()
-
-        })
+        setCollapse();
 
         return exports;
     }
 
-    exports.goTo = function goTo(url) {window.location.assign(url)}
+    exports.goTo = function goTo(url) { window.location.assign(url) }
 
-    var refreshViewCore = function() {
+    var refreshViewCore = function () {
         if ($('#id').val() != '') $('.onlyId').show()
         else $('.onlyId').hide()
 
-        if (typeof refreshView !== 'undefined') refreshView()        
+        if (typeof refreshView !== 'undefined') refreshView()
     }
 
     exports.setOptions = function (new_options) {
@@ -408,10 +260,12 @@
                 select.append(`<option value="false">${getText('BOOLEAN_FALSE')}</option>`)
             }
         },
-        save: function (form, api, saveOverride, saveAfter, updateAfter) {
+        save: function (form, api, saveOverride, saveAfter, updateAfter, formParse) {
             if (saveOverride != null) saveOverride()
             else {
                 var values = core.forms.parse(form)
+                if (formParse) values = formParse(values)
+                if (values == null) return;
                 if (values.id) core.api.update(api, values.id, values, function (data) {
                     refreshViewCore(data)
                     if (saveAfter != null && saveAfter != '') saveAfter(data);
@@ -423,10 +277,12 @@
                 })
             }
         },
-        saveNew: function (form, api, saveNewOverride, newAfter, saveAfter, updateAfter) {
+        saveNew: function (form, api, saveNewOverride, newAfter, saveAfter, updateAfter, formParse) {
             if (saveNewOverride != null) saveNewOverride()
             else {
                 var values = core.forms.parse(form)
+                if (formParse) values = formParse(values)
+                if (values == null) return;
                 if (values.id) core.api.update(api, values.id, values, function (data) {
                     refreshViewCore(data)
                     if (saveAfter != null && saveAfter != '') saveAfter(data);
@@ -558,21 +414,219 @@
 
     function createModalNew(object) {
         var entity = object.attr('data-entity');
-        var api = object.attr('data-api');
-        $(`#${entity}Form_submit_btn`).unbind("click")
-        $(`#${entity}Form_submit_btn`).hide()
-        $(`#${entity}Form_submit_btn_modal`).on('click', () => {
-            var values = core.forms.parse(`${entity}Form`)
-            core.api.create(api, values, (item) => {
-                $(`#${entity.toLowerCase()}`).attr("data-value", item._id)
-                $(`#New${entity}Modal`).modal("hide")
-                core.forms.loadSelect($(`#${entity.toLowerCase()}`))
-                $(`#${entity}Form`).each(function () {
-                    this.reset()
-                })
+        $(object).find(`[data-type="action-buttons"] .btn`).each(function () {
+            if (typeof $(this).attr('id') === 'undefined' || $(this).attr('id').search('_save_btn') == -1) $(this).remove();
+            else {
+                $(this).attr('onclick', `core.modalCallback("${entity}", "${$(object).find('form').attr('id')}", "${$(object).attr('data-api')}", "${$(object).attr('id')}")`)
+            }
+        })
+        $(object).find(`[data-type="action-buttons"]`).append(`<button id="" type="button" class="btn btn-secondary" data-bs-dismiss="modal">${options.localized['CLOSE']}</button>`)
+    }
+
+    async function setModals() {
+        // Cargar los cuadros modales
+        await $(".modal-new").each(function () {
+            createModalNew($(this));
+        })
+    }
+
+    function setDatePickers() {
+        // Establecer el valor de datepickers
+        $(".mydatepicker").each(function () {
+            var element = $(this)
+            element.datepicker({
+                language: options.locale,
+                format: getText('DATE_FORMAT'),
+                todayHighlight: true,
+            });
+            if (element.attr('date-value')) element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
+            element.attr('autocomplete', 'off')
+        })
+    }
+
+    function setCollapse() {
+        // Comportamiento de collapse
+        $('[data-bs-toggle="collapse"]').each(function () {
+            var panelelement = $($(this).attr('data-bs-target'))
+
+            panelelement.on('hidden.bs.collapse', function () {
+                var element = $(this)[0]
+                $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-down')
+                $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-up')
+
+                // do something…
+            })
+            panelelement.on('shown.bs.collapse', function () {
+                var element = $(this)[0]
+                $(`div[data-bs-target="#${element.id}"] i`).addClass('fa-angle-double-up')
+                $(`div[data-bs-target="#${element.id}"] i`).removeClass('fa-angle-double-down')
+
+                // do something…
             })
         })
+    }
 
+    function setSelect2() {
+        // Cargar los select con datos
+        $("select").each(function () {
+            var select = $(this)
+            exports.forms.loadSelect(select)
+        })
+
+        // Formatear los SELECT
+        $(".select2").select2();
+        $(".select2.allow-new ").select2({ tags: true });
+    }
+
+    function setTablesOptions() {
+        $('table').each(function () {
+            $(this).attr('data-show-fullscreen', 'true')
+            $(this).attr('data-minimum-count-columns', '2')
+            $(this).attr('data-show-pagination-switch', 'true')
+            $(this).attr('data-pagination', 'true')
+            $(this).attr('data-show-columns', 'true')
+            $(this).attr('data-show-columns-toggle-all', 'true')
+            $(this).attr('data-buttons-align', 'left')
+            $(this).attr('data-search', 'true')
+            $(this).attr('data-search-align', 'left')
+            $(this).attr('data-search-accent-neutralise', 'true')
+            $(this).attr('data-height', '650')
+            $(this).attr('data-locale', options.locale)
+        })
+
+        // Tablas abren el elemento con un click
+        $('table.clickable').each(function (index, value) {
+            var a = $(`#${value.id}`)
+            $(a).on('click-cell.bs.table', function (e, field, row, $element) {
+                if (field != 'id' && !e.sender.columns.find(a => a.field == field).hasOwnProperty('detailFormatter')) {
+                    e.stopPropagation();
+                    window.location.href = $(a).attr('detail-url') + $element._id
+                }
+            })
+        });
+    }
+
+    function addActionEvent() {
+        // Establecer las acciones de BORRADO en las tablas
+        var tables = $("[data-toggle='table']")
+        if (tables) {
+            window.actionEvents = {
+                'click .delete': function (e, value, row, index) {
+                    e.stopPropagation()
+                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () {
+                        tables.bootstrapTable('remove', {
+                            field: '$index',
+                            values: [index]
+                        })
+                    })
+                }
+            }
+        }
+    }
+
+    function setInputMasks() {
+        // Establecer las máscaras de formato
+        $(".registry-time-inputmask").inputmask("99:99:99.999")
+    }
+
+    async function createActionButton() {
+        // Creación de botonera en detalle de elementos
+        // REQUIERE
+        // data-type="action-buttons" 
+        // data-api="url-api"
+        // data-form="nombre-de-formulario"
+        // data-permissions="<%=locals.permissions.join('')%>"
+
+        // Si existe una función refreshView se va a llamar después de guardar o borrar
+
+        // OPCIONES
+        // data-save="true"         --> Mostrar el boton de GUARDAR
+        // data-save-override=""    --> Función que sobreescribe comportamiento de GUARDAR
+        // data-save-after=""       --> Función a ejecutar después de crear un nuevo registro
+        // data-update-after=""     --> Función a ejecutar después de actualizar un registro existente
+        // data-savenew="true"      --> Mostrar el botón de GUARDAR Y NUEVO
+        // data-savenew-override="" --> Función que sobreescribe comportamiento de GUARDAR Y NUEVO
+        // data-savenew-after=""    --> Función a ejecutar después de pulsar el botón GUARDAR Y NUEVO (se ejecuta después de data-save-after o data-update-after)
+        // data-delete="true"       --> Mostrar el botón de ELIMINAR
+        // data-delete-override=""  --> Función que sobreescribe comportamiento de ELIMINAR
+        // data-delete-after=""     --> Función a ejecutar después de eliminar un registro
+        // data-new="link"          --> Si no es vacío muestra el botón NUEVO y navega a la dirección especificada en el atributo al pulsarlo
+        // data-list"link"          --> Si no es vacío muestra el botón LISTADO y navega a la dirección especificada en el atributo al pulsarlo
+        // data-search"link"        --> Si no es vacío muestra el botón BUSCAR y navega a la dirección especificada en el atributo al pulsarlo
+        await $('[data-type="action-buttons"]').each(function () {
+            var buttonsGroup = $(this);
+
+            var object = {};
+
+            object.permissions = buttonsGroup.attr('data-permissions') ? buttonsGroup.attr('data-permissions').split('') : [];
+
+
+
+            object.dataEntity = buttonsGroup.attr('data-entity') || 'Entity';
+
+            object.dataApi = buttonsGroup.attr('data-api') || '/api/' + object.dataEntity;
+            object.dataForm = buttonsGroup.attr('data-form') || object.dataEntity + "Form";
+
+            object.dataNew = buttonsGroup.attr('data-new') || null;
+            object.dataList = buttonsGroup.attr('data-list') || object.dataNew ? object.dataNew + "-list" : null;
+            object.dataSearch = buttonsGroup.attr('data-search') || object.dataNew ? object.dataNew + "-search" : null;
+
+            object.dataSave = buttonsGroup.attr('data-save') ? buttonsGroup.attr('data-save') == 'true' : true;
+
+            object.dataSaveAfter = buttonsGroup.attr('data-save-after');
+            if (object.dataSaveAfter === '') object.dataSaveAfter = null;
+
+            object.dataFormParse = buttonsGroup.attr('data-save-form-parse');
+            if (object.dataFormParse === '') object.dataFormParse = null;
+
+            object.dataUpdateAfter = buttonsGroup.attr('data-update-after');
+            if (object.dataUpdateAfter === '') object.dataUpdateAfter = null;
+
+            object.dataSaveOverride = buttonsGroup.attr('data-save-override');
+            if (object.dataSaveOverride == '') object.dataSaveOverride = null;
+
+            object.dataSaveNew = buttonsGroup.attr('data-savenew') ? buttonsGroup.attr('data-savenew') == 'true' : true;
+
+            object.dataSaveNewOverride = buttonsGroup.attr('data-savenew-override');
+            if (object.dataSaveNewOverride == '') object.dataSaveNewOverride = null;
+
+            object.dataNewAfter = buttonsGroup.attr('data-savenew-after');
+            if (object.dataNewAfter == '') object.dataNewAfter = null;
+
+            object.dataDelete = buttonsGroup.attr('data-delete') ? buttonsGroup.attr('data-delete') == 'true' : true;
+
+            object.dataDeleteOverride = buttonsGroup.attr('data-delete-override');
+            if (object.dataDeleteOverride == '') object.dataDeleteOverride = null;
+
+            object.dataDeleteAfter = buttonsGroup.attr('data-delete-after');
+            if (object.dataDeleteAfter == '') object.dataDeleteAfter = null;
+            if (!object.dataDeleteAfter && object.dataList) object.dataDeleteAfter = `function () {core.goTo('${object.dataList}')}`;
+
+            console.log(object);
+
+            if (object.dataNew && object.dataNew != '' && object.permissions.includes('C')) buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataNew}')" id="${object.dataForm}_new_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
+            if (object.dataSearch && object.dataSearch != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataSearch}')" id="${object.dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
+            if (object.dataList && object.dataList != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataList}')" id="${object.dataForm}_list_btn" type="button" class="btn btn-info">${options.localized['LIST']}</button>\n`)
+            if (object.dataDelete && object.permissions.includes('D')) buttonsGroup.prepend(`<button onclick="core.forms.delete('${object.dataForm}', '${object.dataApi}', ${object.dataDeleteOverride}, ${object.dataDeleteAfter});" id="${object.dataForm}_delete_btn" type="button" class="btn btn-danger onlyId">${options.localized['DELETE']}</button>\n`)
+            if (object.dataSaveNew && object.permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.saveNew('${object.dataForm}', '${object.dataApi}', ${object.dataSaveNewOverride}, ${object.dataNewAfter}, ${object.dataSaveAfter}, ${object.dataUpdateAfter}, ${object.dataFormParse});" id="${object.dataForm}_savenew_btn" type="button" class="btn btn-primary">${options.localized['SAVE&NEW']}</button>\n`)
+            if (object.dataSave && object.permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.save('${object.dataForm}', '${object.dataApi}', ${object.dataSaveOverride}, ${object.dataSaveAfter}, ${object.dataUpdateAfter}, ${object.dataFormParse});" id="${object.dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE']}</button>\n`)
+
+
+            refreshViewCore()
+        })
+    }
+
+    // Funcion para recuperar los datos de un modal y asignarlos al formulario padre
+    exports.modalCallback = function (entity, form, api, modal) {
+        var values = core.forms.parse(`${form}`)
+        core.api.create(api, values, (item) => {
+            $(`#${entity.toLowerCase()}`).attr("data-value", item._id)
+            $(`#${modal}`).modal("hide")
+            core.forms.loadSelect($(`#${entity.toLowerCase()}`))
+            $(`#${form}`).each(function () {
+                this.reset()
+            })
+        })
     }
 
     //  Get localized text from a locale. Defaults to 'en' locale if no locale 
