@@ -255,6 +255,10 @@
             var dataEntity = buttonsGroup.attr('data-entity') || 'Entity';
             var dataForm = buttonsGroup.attr('data-form') || dataEntity + "Form";
 
+            var dataList = buttonsGroup.attr('data-list');
+            var dataSearch = buttonsGroup.attr('data-search');
+            var dataNew = buttonsGroup.attr('data-new');
+            
             var dataSave = buttonsGroup.attr('data-save') || true;
             var dataSaveAfter = buttonsGroup.attr('data-save-after');
 
@@ -275,22 +279,29 @@
             if (dataDeleteOverride == '') dataDeleteOverride = null;
             var dataDeleteAfter = buttonsGroup.attr('data-delete-after');
             if (dataDeleteAfter == '') dataDeleteAfter = null;
+            if (!dataDeleteAfter && dataList) dataDeleteAfter = `function () {core.goTo('${dataList}')}`;
 
-            var dataList = buttonsGroup.attr('data-list');
-            var dataSearch = buttonsGroup.attr('data-search');
-            var dataNew = buttonsGroup.attr('data-new');
-
-            if (dataNew && dataNew != '' && permissions.includes('C')) buttonsGroup.prepend(`<button onclick="window.location.assign('${dataNew}')" id="${dataForm}_search_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
-            if (dataSearch && dataSearch != '') buttonsGroup.prepend(`<button onclick="window.location.assign('${dataSearch}')" id="${dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
-            if (dataList && dataList != '') buttonsGroup.prepend(`<button onclick="window.location.assign('${dataList}')" id="${dataForm}_list_btn" type="button" class="btn btn-info">${options.localized['LIST']}</button>\n`)
+            if (dataNew && dataNew != '' && permissions.includes('C')) buttonsGroup.prepend(`<button onclick="core.goTo('${dataNew}')" id="${dataForm}_search_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
+            if (dataSearch && dataSearch != '') buttonsGroup.prepend(`<button onclick="core.goTo('${dataSearch}')" id="${dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
+            if (dataList && dataList != '') buttonsGroup.prepend(`<button onclick="core.goTo('${dataList}')" id="${dataForm}_list_btn" type="button" class="btn btn-info">${options.localized['LIST']}</button>\n`)
             if (dataDelete && permissions.includes('D')) buttonsGroup.prepend(`<button onclick="core.forms.delete('${dataForm}', '${dataApi}', ${dataDeleteOverride}, ${dataDeleteAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-danger onlyId">${options.localized['DELETE']}</button>\n`)
             if (dataSaveNew && permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.saveNew('${dataForm}', '${dataApi}', ${dataSaveNewOverride}, ${dataNewAfter}, ${dataSaveAfter}, ${dataUpdateAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE&NEW']}</button>\n`)
             if (dataSave && permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.save('${dataForm}', '${dataApi}', ${dataSaveOverride}, ${dataSaveAfter}, ${dataUpdateAfter});" id="${dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE']}</button>\n`)
-            if (typeof refreshView !== 'undefined') refreshView()
+                       
+            refreshViewCore()
 
         })
 
         return exports;
+    }
+
+    exports.goTo = function goTo(url) {window.location.assign(url)}
+
+    var refreshViewCore = function() {
+        if ($('#id').val() != '') $('.onlyId').show()
+        else $('.onlyId').hide()
+
+        if (typeof refreshView !== 'undefined') refreshView()        
     }
 
     exports.setOptions = function (new_options) {
@@ -402,12 +413,12 @@
             else {
                 var values = core.forms.parse(form)
                 if (values.id) core.api.update(api, values.id, values, function (data) {
-                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    refreshViewCore(data)
                     if (saveAfter != null && saveAfter != '') saveAfter(data);
                 })
-                else core.api.create('/api/TrainingSession', values, function (data) {
+                else core.api.create(api, values, function (data) {
                     $(`#${form} #id`).val(data.id)
-                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    refreshViewCore(data)
                     if (updateAfter != null && updateAfter != '') updateAfter(data);
                 })
             }
@@ -417,11 +428,11 @@
             else {
                 var values = core.forms.parse(form)
                 if (values.id) core.api.update(api, values.id, values, function (data) {
-                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    refreshViewCore(data)
                     if (saveAfter != null && saveAfter != '') saveAfter(data);
                 })
-                else core.api.create('/api/TrainingSession', values, function (data) {
-                    if (typeof refreshView !== 'undefined') refreshView(data)
+                else core.api.create(api, values, function (data) {
+                    refreshViewCore(data)
                     if (updateAfter != null && updateAfter != '') updateAfter(data);
                 })
                 $(`#${form} #id`).val(null)
@@ -433,7 +444,7 @@
             else {
                 var values = core.forms.parse(form)
                 if (values.id) core.api.delete(api, values.id, function (data) {
-                    if (typeof refreshView !== 'undefined') refreshView(data)
+                    refreshViewCore(data)
                     if (deleteAfter != null && deleteAfter != '') deleteAfter(data);
                 })
             }
