@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const Email = require('email-templates');
 const { existsSync } = require('fs');
 const { getConfig } = require('./config');
+const i18n = require('../i18n/i18n.config')
 
 
 const transporter = nodemailer.createTransport({
@@ -20,10 +21,14 @@ exports.sendTemplatedEmail = async (template, to, data) => {
   var send = getConfig('ENABLE_EMAIL_SEND')
   var preview = getConfig('ENABLE_EMAIL_PREVIEW')
 
+  data.appName = i18n.__('APP_NAME')
+
+
+
   const email = new Email({
     template : template,
     message: {
-      from: process.env.ADMIN_EMAIL,
+      from: process.env.EMAIL_ACCOUNT,
       to : to
     },
     views : {

@@ -15,12 +15,6 @@
 	<link href="/css/common.css" rel="stylesheet" />
 	<%- include('./partials/styles.ejs')%>
 </head>
-<style>
-	/* .main-wrapper {
-		overflow: hidden;
-	} */
-</style>
-
 <body>
 	<div class="main-wrapper">
 		<div class="preloader">
@@ -37,7 +31,10 @@
 					</div>
 					<div id="loginform">
 						<!-- Form -->
-						<form class="form-horizontal mt-3" id="loginform" method="POST">
+						<% if (locals.message) { %>
+							<div class="text-center"><span class="text-white"><%= message %></span></div>
+						<% } %>
+						<form class="form-horizontal mt-3" id="loginform" method="POST" target="/login">
 							<div class="col-12">
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
@@ -57,13 +54,28 @@
 									<div class="form-group">
 										<div class="row">
 											<button class="btn btn-success text-white btn-block btn-lg" type="submit"><%= __('Login') %></button>
-											<button class="btn btn-secondary text-white btn-block btn-lg" onclick="window.location.assign('/register');" type="button"><%= __('Register') %></button>
+											<% if (locals.selfRegister) { %>
+											<button class="btn btn-secondary text-white btn-block btn-lg" type="button" onclick="location.assign('/register')"><%= __('Register') %></button>
+											<% } %>
 											<button class="btn btn-info btn-block btn-lg" id="to-recover" type="button"><i class="mdi mdi-lock fs-4 me-1"></i><%= __('Lost') %></button>
 										</div>
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-12">
+									<% if (locals.error) { %>
+									<div id="msg" class="alert alert-primary" role="alert"><%=locals.error%></div>
+									<% if (error.detail) { %>
+									<div id="msg" class="alert alert-primary" role="alert" style="white-space: pre-line;"><%-locals.error.detail%></div>
+									<% } %>
+									<% } %>
+								</div>
+							</div>
 						</form>
+						<% if (!locals.selfRegister) { %>
+							<div class="text-center"><span class="text-white"><%= __('ONLY_ADMIN_REGISTRATION') %></span></div>
+						<% } %>
 					</div>
 					<div id="recoverform">
 						<!-- Form -->

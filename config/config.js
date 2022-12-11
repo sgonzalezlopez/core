@@ -49,20 +49,7 @@ module.exports.getConfig = (key) => {
     var value = configs[key];
     if (typeof(value) == 'undefined') return null;
     else if (value == 'true' || value == 'false') return (value == 'true')
-    return value
-
-    // return config_model.findOne({key: key})
-    // .then(v => {
-    //     var value = null;
-    //     if (v) {
-    //         value = v.value
-    //     }
-    //     else if (typeof app.CONFIGS[key] !== 'undefined') value = app.CONFIGS[key]
-    //     else if (typeof process.env[key] !== 'undefined') value = process.env[key]
-    //     else return null
-    //     if (value == 'true' || value == 'false') return (value == 'true')
-    //     return value
-    // })      
+    return value     
 }
 
 module.exports.getFeature = (key) => {
@@ -71,11 +58,5 @@ module.exports.getFeature = (key) => {
     if (typeof(value) == 'undefined') return null;
     else if (value == 'true' || value == 'false') return (value == 'true')
     return value
-    // return feature_model.findOne({key: key})
-    // .then(v => {
-    //     if (v) return v.active
-    //     else if (typeof app.FEATURES[key] !== 'undefined') return app.FEATURES[key]
-    //     else if (typeof process.env[key] !== 'undefined') return process.env[key]
-    //     else return false
-    // })        
+      
 }

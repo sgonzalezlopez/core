@@ -35,20 +35,20 @@
 						<span class="db"><img src="/assets/images/logo.png" alt="logo" /></span>
 					</div>
 					<!-- Form -->
-					<form id="signinFrm" class="form-horizontal mt-3">
+					<form id="signinFrm" class="form-horizontal mt-3" method="post" action="<%= !twoSteps ? '/register' : '/signup'%>">
 						<div class="row pb-4">
 							<div class="col-12">
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="mdi mdi-account fs-4"></i></span>
 									</div>
-									<input type="text" class="form-control form-control-lg" name="username" placeholder="<%= __('USERNAME') %>" aria-label="Username" aria-describedby="basic-addon1" required />
+									<input type="text" class="form-control form-control-lg" name="username" placeholder="<%= __('USERNAME') %>" aria-label="Username" aria-describedby="basic-addon1" required value="<%=locals.username ? username : ''%>" />
 								</div>
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text bg-danger text-white h-100" id="basic-addon1"><i class="mdi mdi-email fs-4"></i></span>
 									</div>
-									<input type="text" class="form-control form-control-lg" name="email" placeholder="<%= __('EMAIL') %>" aria-label="Username" aria-describedby="basic-addon1" required />
+									<input type="text" class="form-control form-control-lg" name="email" placeholder="<%= __('EMAIL') %>" aria-label="Username" aria-describedby="basic-addon1" required value="<%=locals.email ? email : ''%>"/>
 								</div>
 								<% if (!twoSteps) { %>
 								<div class="input-group mb-3">
@@ -70,14 +70,19 @@
 							<div class="col-12">
 								<div class="form-group">
 									<div class="pt-3 d-grid">
-										<button id="submit_btn" class="btn btn-block btn-lg btn-info" type="button"><%= __('SEND') %></button>
+										<button id="submit_btn" class="btn btn-block btn-lg btn-info" type="submit"><%= __('SEND') %></button>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-12">
-								<div id="msg" class="alert alert-primary" style="display: none;" role="alert"></div>
+								<% if (locals.error) { %>
+								<div id="msg" class="alert alert-primary" role="alert"><%=locals.error%></div>
+								<% if (error.detail) { %>
+								<div id="msg" class="alert alert-primary" role="alert" style="white-space: pre-line;"><%-locals.error.detail%></div>
+								<% } %>
+								<% } %>
 							</div>
 						</div>
 					</form>
@@ -89,25 +94,6 @@
 	<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
 		$(".preloader").fadeOut();
-
-		$('#submit_btn').click(() => {
-			$.ajax({
-				type: 'POST',
-				url: '/api/auth/<%=twoSteps ? "register" : "signup"%>',
-				data: $('#signinFrm').serialize(),
-				dataType: 'json',
-				success: function(data) {
-					$('#msg').text("<%= __('REGISTRY_SUCCESS')%>")
-					$('#msg').show()
-				},
-				error: function(error) {
-					console.log(error.responseJSON.message);
-					console.error(error);
-					$('#msg').text(error.responseJSON.message)
-					$('#msg').show()
-				},
-			});
-		})
 	</script>
 </body>
 

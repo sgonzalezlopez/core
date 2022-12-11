@@ -4,14 +4,16 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<!-- Tell the browser to be responsive to screen width -->
+
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="robots" content="noindex,nofollow" />
 	<title><%= __('APP_NAME') %></title>
-	<!-- Favicon icon -->
+
 	<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png" />
+
 	<!-- Custom CSS -->
-	<link href="/dist/css/style.min.css" rel="stylesheet" />
+	<link href="/css/common.css" rel="stylesheet" />
+	<%- include('./partials/styles.ejs')%>
 </head>
 
 <body>
@@ -22,61 +24,60 @@
 				<div class="lds-pos"></div>
 			</div>
 		</div>
-		<div class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
-			<div class="auth-box bg-dark border-top border-secondary">
-				<div>
+		<div class="auth-wrapper d-flex no-block justify-content-center bg-dark">
+			<div class="row bg-dark f">
+				<div class="auth-box bg-dark border-top border-secondary">
 					<div class="text-center pt-3 pb-3">
-						<span class="db"><img src="/assets/images/logo.png" alt="logo" /></span>
+						<span class="db"><img src="../assets/images/logo.png" alt="logo" /></span>
 					</div>
-					<!-- Form -->
-					<form id="signinFrm" class="form-horizontal mt-3" method="post" action="/complete-registry/<%=token%>">
-						<div class="row pb-4">
-							<div class="col-12">
-								<div class="input-group mb-3">
-									<div class="input-group-prepend">
-										<span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
+					<div id="loginform">
+						<form id="signinFrm" class="form-horizontal mt-3" method="post" action="/complete-registry/<%=token%>">
+							<div class="row pb-4">
+								<div class="col-12">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
+										</div>
+										<input type="password" id="password" class="form-control form-control-lg" name="password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required />
 									</div>
-									<input type="password" class="form-control form-control-lg" name="password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required />
-								</div>
-								<div class="input-group mb-3">
-									<div class="input-group-prepend">
-										<span class="input-group-text bg-info text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
-									</div>
-									<input type="password" class="form-control form-control-lg" name="passwordVerify" placeholder=" Confirm Password" aria-label="Password" aria-describedby="basic-addon1" required />
-								</div>
-							</div>
-						</div>
-						<div class="row border-top border-secondary">
-							<div class="col-12">
-								<div class="form-group">
-									<div class="pt-3 d-grid">
-										<button id="submit_btn" class="btn btn-block btn-lg btn-info" type="submit">Sign Up</button>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text bg-info text-white h-100" id="basic-addon2"><i class="mdi mdi-lock fs-4"></i></span>
+										</div>
+										<input type="password" id="passwordVerify" class="form-control form-control-lg" name="passwordVerify" placeholder=" Confirm Password" aria-label="Password" aria-describedby="basic-addon1" required />
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-12">
-								<% if (locals.error) { %>
-								<div id="msg" class="alert alert-primary" role="alert"><%=locals.error%></div>
-								<% if (error.detail) { %>
-								<div id="msg" class="alert alert-primary" role="alert" style="white-space: pre-line;"><%-locals.error.detail%></div>
-								<% } %>
-								<% } %>
+							<div class="row border-top border-secondary">
+								<div class="col-12">
+									<div class="form-group">
+										<div class="pt-3 d-grid">
+											<button id="submit_btn" class="btn btn-block btn-lg btn-info" type="submit">Sign Up</button>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
-						<input type="hidden" class="form-control form-control-lg" name="token" value="<%=token%>" />
-					</form>
+							<div class="row">
+								<div class="col-12">
+									<% if (locals.error) { %>
+									<div id="msg" class="alert alert-primary" role="alert"><%=locals.error%></div>
+									<% if (error.detail) { %>
+									<div id="msg" class="alert alert-primary" role="alert" style="white-space: pre-line;"><%-locals.error.detail%></div>
+									<% } %>
+									<% } %>
+								</div>
+							</div>
+							<input type="hidden" class="form-control form-control-lg" name="token" value="<%=token%>" />
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
-	<!-- Bootstrap tether Core JavaScript -->
-	<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script>
-		$(".preloader").fadeOut();
-	</script>
+		<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+		<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+		<script>
+			$(".preloader").fadeOut();
+		</script>
 </body>
 
 </html>
