@@ -620,12 +620,18 @@
     exports.modalCallback = function (entity, form, api, modal) {
         var values = core.forms.parse(`${form}`)
         core.api.create(api, values, (item) => {
-            $(`#${entity.toLowerCase()}`).attr("data-value", item._id)
+            var combo = $(`#${entity.toLowerCase()}`)
             $(`#${modal}`).modal("hide")
-            core.forms.loadSelect($(`#${entity.toLowerCase()}`))
-            $(`#${form}`).each(function () {
-                this.reset()
-            })
+
+            // Set the value, creating a new option if necessary
+            if ($(combo).find("option[value='" + item._id + "']").length) {
+                combo.val(item._id).trigger('change');
+            } else {
+                // Create a DOM Option and pre-select by default
+                var newOption = new Option(item[combo.attr('data-show')], item._id, true, true);
+                // Append it to the select
+                combo.append(newOption).trigger('change');
+            }
         })
     }
 
