@@ -7,8 +7,8 @@ const i18n = require('../i18n/i18n.config')
 
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
+  host: process.env.SMTP_SERVER || 'smtp.gmail.com',
+  port: process.env.SMTP_PORT || 587,
   auth: {
     user: process.env.EMAIL_ACCOUNT,
     pass: process.env.EMAIL_PASS,
