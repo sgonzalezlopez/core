@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-transporter.verify().then(console.log(`Conectado a email server ${transporter.host} con ${transporter.auth.user}`)).catch(console.error);
+transporter.verify().then(console.log(`Conectado a email server ${transporter.host}`)).catch(console.error);
 
 
 exports.sendTemplatedEmail = async (template, to, data) => {
