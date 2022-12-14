@@ -69,11 +69,3 @@ exports.delete = (req, res) => {
         res.send({message : 'OK'})
     })
 }
-
-exports.sendTestEmail = (req, res) => {
-    Users.findById(req.params.id).select('-salt -hash')
-    .then(users => {
-        sendTemplatedEmail('registration', 'sgonzalezlopez@gmail.com', {user:users, link:'AAAAA'})
-        res.send({message : 'OK'})
-    })
-}

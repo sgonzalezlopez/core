@@ -35,9 +35,9 @@ exports.register = async function (req, res, next) {
 
 		to = await (config.config.app.ENV == 'development' ? (config.getConfig('ADMIN_EMAIL')) : user.email)
 
-		if (twoSteps) Email.sendTemplatedEmail('registration-twosteps', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
-		else Email.sendTemplatedEmail('registration-completed', to, { user: user, link: req.protocol + '://' + req.get('host') + '/login' })
-		Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
+		if (twoSteps) await Email.sendTemplatedEmail('registration-twosteps', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
+		else await Email.sendTemplatedEmail('registration-completed', to, { user: user, link: req.protocol + '://' + req.get('host') + '/login' })
+		await Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
 		// res.render('login', { layout: false, message : res.__('Registration complete. You can now access.') })
 		if (!twoSteps) q = 'registerSucceed'
 		else q = 'registerPending'
@@ -97,11 +97,17 @@ exports.register2 = async (req, res) => {
 			}
 		});
 		to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
-		Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
-		Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
-		res.send({ message: 'OK' })
+		try {
+			await Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
+			await Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
+			res.send({ message: 'OK' })
+		}
+		catch (err) {
+			res.status(500).send({ message: res.__('An error ocurred. Contact your system administrator.') })
+		}
 	} catch (err) {
 		console.error(err);
+		res.status(400).send(err.message)
 		throw err;
 	}
 };
@@ -113,8 +119,13 @@ exports.resetPass = async (req, res) => {
 				if (!user) res.status(500).send({ message: res.__('USER_NOT_FOUND') })
 				else {
 					to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
-					Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
-					res.send({ message: res.__('Email sent with link to reset password') })
+					try {
+						await Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
+						res.send({ message: res.__('Email sent with link to reset password') })
+					}
+					catch (err) {
+						res.status(500).send({ message: res.__('An error ocurred. Contact your system administrator.') })
+					}
 				}
 			})
 	} catch (err) {
@@ -142,8 +153,8 @@ exports.signup = async (req, res) => {
 			}
 		});
 		to = await (config.config.app.ENV == 'development' ? (await config.config.app.CONFIGS.ADMIN_EMAIL) : user.email)
-		Email.sendTemplatedEmail('registration-confirmation', to, { user: user, link: req.protocol + '://' + req.get('host') })
-		Email.sendTemplatedEmail('new-registration', (await config.config.app.CONFIGS.ADMIN_EMAIL), { user: user })
+		await Email.sendTemplatedEmail('registration-confirmation', to, { user: user, link: req.protocol + '://' + req.get('host') })
+		await Email.sendTemplatedEmail('new-registration', (await config.config.app.CONFIGS.ADMIN_EMAIL), { user: user })
 		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);
