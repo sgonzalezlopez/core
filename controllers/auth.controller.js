@@ -33,11 +33,12 @@ exports.register = async function (req, res, next) {
 			if (err) return next(err, null)
 		});
 
-		to = await (config.config.app.ENV == 'development' ? (config.getConfig('ADMIN_EMAIL')) : user.email)
+		console.log(config.config.app.ENV);
+		to = (config.config.app.ENV == 'development' ? (config.getConfig('ADMIN_EMAIL')) : user.email)
 
 		if (twoSteps) await Email.sendTemplatedEmail('registration-twosteps', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
 		else await Email.sendTemplatedEmail('registration-completed', to, { user: user, link: req.protocol + '://' + req.get('host') + '/login' })
-		await Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
+		await Email.sendTemplatedEmail('new-registration', (config.getConfig('ADMIN_EMAIL')), { user: user })
 		// res.render('login', { layout: false, message : res.__('Registration complete. You can now access.') })
 		if (!twoSteps) q = 'registerSucceed'
 		else q = 'registerPending'
@@ -96,10 +97,10 @@ exports.register2 = async (req, res) => {
 				return;
 			}
 		});
-		to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
+		to = (config.config.app.ENV == 'development' ? config.getConfig('ADMIN_EMAIL') : user.email)
 		try {
 			await Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
-			await Email.sendTemplatedEmail('new-registration', (await config.getConfig('ADMIN_EMAIL')), { user: user })
+			await Email.sendTemplatedEmail('new-registration', config.getConfig('ADMIN_EMAIL'), { user: user })
 			res.send({ message: 'OK' })
 		}
 		catch (err) {
@@ -118,7 +119,7 @@ exports.resetPass = async (req, res) => {
 			.then(async user => {
 				if (!user) res.status(500).send({ message: res.__('USER_NOT_FOUND') })
 				else {
-					to = await (config.config.app.ENV == 'development' ? (await config.getConfig('ADMIN_EMAIL')) : user.email)
+					to = await (config.config.app.ENV == 'development' ? config.getConfig('ADMIN_EMAIL') : user.email)
 					try {
 						await Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
 						res.send({ message: res.__('Email sent with link to reset password') })
@@ -152,9 +153,9 @@ exports.signup = async (req, res) => {
 				return;
 			}
 		});
-		to = await (config.config.app.ENV == 'development' ? (await config.config.app.CONFIGS.ADMIN_EMAIL) : user.email)
+		to = (config.config.app.ENV == 'development' ? config.getConfig('ADMIN_EMAIL') : user.email)
 		await Email.sendTemplatedEmail('registration-confirmation', to, { user: user, link: req.protocol + '://' + req.get('host') })
-		await Email.sendTemplatedEmail('new-registration', (await config.config.app.CONFIGS.ADMIN_EMAIL), { user: user })
+		await Email.sendTemplatedEmail('new-registration', config.getConfig('ADMIN_EMAIL'), { user: user })
 		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);
