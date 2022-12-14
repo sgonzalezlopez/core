@@ -483,6 +483,7 @@
             $(this).attr('data-show-fullscreen', 'true')
             $(this).attr('data-minimum-count-columns', '2')
             $(this).attr('data-show-pagination-switch', 'true')
+            $(this).attr('data-page-size', '15')
             $(this).attr('data-pagination', 'true')
             $(this).attr('data-show-columns', 'true')
             $(this).attr('data-show-columns-toggle-all', 'true')
@@ -491,6 +492,7 @@
             $(this).attr('data-search-align', 'left')
             $(this).attr('data-search-accent-neutralise', 'true')
             $(this).attr('data-height', '650')
+            $(this).attr('data-show-export', 'true')
             $(this).attr('data-locale', options.locale)
         })
 
