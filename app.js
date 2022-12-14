@@ -13,6 +13,10 @@ const LocalStrategy = require('passport-local').Strategy;
 const expressLayouts = require('express-ejs-layouts')
 const passport = require('passport');
 var fileUpload = require('express-fileupload');
+const authJwt = require('./middlewares/auth.jwt')
+
+var JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
 
 module.exports.setupDB = async function () {
 }
@@ -22,24 +26,6 @@ module.exports.setup = async function (params) {
 
 
   module.exports.staticPaths = [path.join(__dirname, './public')];
-
-  // configure passport.js to use the local strategy
-  passport.use(new LocalStrategy(
-    { usernameField: 'username' },
-    (username, password, done) => {
-      // here is where you make a call to the database
-      // to find the user based on their username or email address
-      // for now, we'll just pretend we found that it was users[0]
-      Users.findOne({ username: username, active: true })
-        .then(user => {
-          if (!user || user == null || !user.validPassword(password)) return done(new Error(i18n.__('Invalid user credentials')))
-
-          delete user.salt;
-          delete user.hash;
-          return done(null, user)
-        })
-    }
-  ));
 
   // tell passport how to serialize the user
   passport.serializeUser((user, done) => {
@@ -98,8 +84,13 @@ module.exports.setup = async function (params) {
     resave: false,
     saveUninitialized: true
   }));
+
+  
+  require('./passport')
+  app.use(authJwt.validateToken)
   app.use(passport.initialize());
   app.use(passport.session());
+  
 
   return app;
 }
