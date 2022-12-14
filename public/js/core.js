@@ -513,7 +513,7 @@
         var tables = $("[data-toggle='table']")
         if (tables) {
             window.actionEvents = {
-                'click .delete': function (e, value, row, index) {
+                'click .delete': function (value, row, index) {
                     e.stopPropagation()
                     core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () {
                         tables.bootstrapTable('remove', {
