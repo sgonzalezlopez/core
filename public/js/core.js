@@ -484,7 +484,7 @@
             $(this).attr('data-minimum-count-columns', '2')
             $(this).attr('data-show-pagination-switch', 'true')
             $(this).attr('data-page-size', '15')
-            $(this).attr('data-pagination', 'true')
+            $(this).attr('data-pagination', 'false')
             $(this).attr('data-show-columns', 'true')
             $(this).attr('data-show-columns-toggle-all', 'true')
             $(this).attr('data-buttons-align', 'left')
