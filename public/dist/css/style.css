@@ -23,7 +23,7 @@
 :root {
    --blue: #2255a4;
    --indigo: #6610f2;
-   --purple: #7460ee;
+   --purple: --primary;
    --pink: #f74d4d;
    --red: #da542e;
    --orange: #fb8c00;
@@ -36,7 +36,7 @@
    --gray-dark: #343a40;
    --blue: #2255a4;
    --indigo: #6610f2;
-   --purple: #7460ee;
+   --purple: --primary;
    --pink: #f74d4d;
    --red: #da542e;
    --orange: #fb8c00;
@@ -46,7 +46,8 @@
    --cyan: #27a9e3;
    --white: #fff;
    --gray: #6c757d;
-   --primary: #7460ee;
+   --primary: #eeac60;
+   /* --primary: #7460ee; */
    --secondary: #6c757d;
    --success: #28b779;
    --info: #2255a4;
@@ -199,7 +200,7 @@ sup {
 }
 
 a {
-   color: #7460ee;
+   color: --primary;
    text-decoration: none;
    background-color: transparent
 }
@@ -3193,8 +3194,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-primary:hover {
@@ -3215,8 +3216,8 @@ fieldset:disabled a.btn {
 .btn-primary.disabled,
 .btn-primary:disabled {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-primary:not(:disabled):not(.disabled).active,
@@ -3623,8 +3624,8 @@ fieldset:disabled a.btn {
 
 .btn-purple {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-purple:hover {
@@ -3645,8 +3646,8 @@ fieldset:disabled a.btn {
 .btn-purple.disabled,
 .btn-purple:disabled {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-purple:not(:disabled):not(.disabled).active,
@@ -3665,14 +3666,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-   color: #7460ee;
-   border-color: #7460ee
+   color: --primary;
+   border-color: --primary
 }
 
 .btn-outline-primary:hover {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-outline-primary.focus,
@@ -3683,7 +3684,7 @@ fieldset:disabled a.btn {
 
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-   color: #7460ee;
+   color: --primary;
    background-color: transparent
 }
 
@@ -3691,8 +3692,8 @@ fieldset:disabled a.btn {
 .btn-outline-primary:not(:disabled):not(.disabled):active,
 .show>.btn-outline-primary.dropdown-toggle {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
@@ -4045,14 +4046,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-purple {
-   color: #7460ee;
-   border-color: #7460ee
+   color: --primary;
+   border-color: --primary
 }
 
 .btn-outline-purple:hover {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-outline-purple.focus,
@@ -4063,7 +4064,7 @@ fieldset:disabled a.btn {
 
 .btn-outline-purple.disabled,
 .btn-outline-purple:disabled {
-   color: #7460ee;
+   color: --primary;
    background-color: transparent
 }
 
@@ -4071,8 +4072,8 @@ fieldset:disabled a.btn {
 .btn-outline-purple:not(:disabled):not(.disabled):active,
 .show>.btn-outline-purple.dropdown-toggle {
    color: #fff;
-   background-color: #7460ee;
-   border-color: #7460ee
+   background-color: --primary;
+   border-color: --primary
 }
 
 .btn-outline-purple:not(:disabled):not(.disabled).active:focus,
@@ -4084,7 +4085,7 @@ fieldset:disabled a.btn {
 
 .btn-link {
    font-weight: 400;
-   color: #7460ee;
+   color: --primary;
    text-decoration: none
 }
 
@@ -6223,7 +6224,7 @@ input[type=submit].btn-block {
    padding: 0.5rem 0.75rem;
    margin-left: -1px;
    line-height: 1.25;
-   color: #7460ee;
+   color: --primary;
    background-color: #fff;
    border: 1px solid #dee2e6
 }
@@ -6348,7 +6349,7 @@ a.badge:hover {
 
 .badge-primary {
    color: #fff;
-   background-color: #7460ee
+   background-color: --primary
 }
 
 a.badge-primary:focus,
@@ -6528,7 +6529,7 @@ a.badge-orange:focus {
 
 .badge-purple {
    color: #fff;
-   background-color: #7460ee
+   background-color: --primary
 }
 
 a.badge-purple:focus,
@@ -6792,7 +6793,7 @@ a.badge-purple:focus {
    color: #fff;
    text-align: center;
    white-space: nowrap;
-   background-color: #7460ee;
+   background-color: --primary;
    -webkit-transition: width 0.6s ease;
    -o-transition: width 0.6s ease;
    transition: width 0.6s ease
@@ -8254,7 +8255,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-   background-color: #7460ee !important
+   background-color: --primary !important
 }
 
 a.bg-primary:focus,
@@ -8364,7 +8365,7 @@ button.bg-orange:hover {
 }
 
 .bg-purple {
-   background-color: #7460ee !important
+   background-color: --primary !important
 }
 
 a.bg-purple:focus,
@@ -8423,7 +8424,7 @@ button.bg-purple:hover {
 }
 
 .border-primary {
-   border-color: #7460ee !important
+   border-color: --primary !important
 }
 
 .border-secondary {
@@ -8463,7 +8464,7 @@ button.bg-purple:hover {
 }
 
 .border-purple {
-   border-color: #7460ee !important
+   border-color: --primary !important
 }
 
 .border-white {
@@ -12347,7 +12348,7 @@ button.bg-purple:hover {
 }
 
 .text-primary {
-   color: #7460ee !important
+   color: --primary !important
 }
 
 a.text-primary:focus,
@@ -12437,7 +12438,7 @@ a.text-orange:hover {
 }
 
 .text-purple {
-   color: #7460ee !important
+   color: --primary !important
 }
 
 a.text-purple:focus,
@@ -13090,7 +13091,7 @@ a.link:hover {
 }
 
 html body blockquote {
-   border-left: 5px solid #7460ee;
+   border-left: 5px solid --primary;
    border: 1px solid #e9ecef;
    padding: 15px
 }
@@ -13207,7 +13208,7 @@ html body .bg-inverse {
 }
 
 html body .bg-purple {
-   background-color: #7460ee
+   background-color: --primary
 }
 
 html body .bg-light {
@@ -13252,7 +13253,7 @@ html body .bg-white {
 }
 
 .round.round-primary {
-   background: #7460ee
+   background: --primary
 }
 
 .round-lg {
@@ -13428,11 +13429,11 @@ ul.list-style-none li a:hover {
 }
 
 .label-primary {
-   background-color: #7460ee
+   background-color: --primary
 }
 
 .label-purple {
-   background-color: #7460ee
+   background-color: --primary
 }
 
 .label-red {
@@ -18288,13 +18289,13 @@ label {
 }
 
 .campaign .ct-series-b .ct-area {
-   fill: #7460ee;
+   fill: --primary;
    fill-opacity: 0.1
 }
 
 .campaign .ct-series-b .ct-line,
 .campaign .ct-series-b .ct-point {
-   stroke: #7460ee;
+   stroke: --primary;
    stroke-width: 2px
 }
 
