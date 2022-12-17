@@ -491,9 +491,6 @@
         // Formatear los SELECT
         $(".select2").select2();
         $(".select2.allow-new ").select2({ tags: true });
-        $(document).on('select2:open', () => {
-            document.querySelector('.select2-search__field').focus();
-          });
     }
 
     function setTablesOptions() {
