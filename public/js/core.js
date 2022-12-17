@@ -421,6 +421,7 @@
             }
         })
         $(object).find(`[data-type="action-buttons"]`).append(`<button id="" type="button" class="btn btn-secondary" data-bs-dismiss="modal">${options.localized['CLOSE']}</button>`)
+        $(object).find(`[data-bs-toggle="modal"]`).hide();
     }
 
     async function setModals() {
