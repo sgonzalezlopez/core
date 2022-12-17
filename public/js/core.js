@@ -204,6 +204,20 @@
         },
         loadSelect: function (select) {
             if (select.attr('data-collection')) {
+                if (select.attr('data-hide-detail-link') != "true") {
+                select.parent().css('display', 'flex')
+                select.after(`<div class="input-group-append">
+                    <button type="button" data-from="${select.attr('id')}" class="to-detail input-group-text h-100"><i class="fa-solid fa-eye"></i></button>
+                    </div>`)
+                $('.to-detail').on('click', function() {
+                    if ($(`#${$(this).attr('data-from')}`).val() == "") return
+                    var url = location.pathname.split('/')[1]
+                    var collection = $(`#${$(this).attr('data-from')}`).attr('data-collection')
+                    location.assign('/' + url + '/' + collection.toLowerCase() + '/' + $(`#${$(this).attr('data-from')}`).val());
+
+                })
+            }
+
                 $.ajax({
                     type: 'GET',
                     url: `/api/${select.attr('data-collection')}`,
@@ -477,6 +491,9 @@
         // Formatear los SELECT
         $(".select2").select2();
         $(".select2.allow-new ").select2({ tags: true });
+        $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+          });
     }
 
     function setTablesOptions() {
@@ -605,8 +622,6 @@
             object.dataDeleteAfter = buttonsGroup.attr('data-delete-after');
             if (object.dataDeleteAfter == '') object.dataDeleteAfter = null;
             if (!object.dataDeleteAfter && object.dataList) object.dataDeleteAfter = `function () {core.goTo('${object.dataList}')}`;
-
-            console.log(object);
 
             if (object.dataNew && object.dataNew != '' && object.permissions.includes('C')) buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataNew}')" id="${object.dataForm}_new_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
             if (object.dataSearch && object.dataSearch != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataSearch}')" id="${object.dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
