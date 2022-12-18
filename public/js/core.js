@@ -225,7 +225,7 @@
         },
         loadSelect: function (select) {
             if (select.attr('data-collection')) {
-                if (select.attr('data-hide-detail-link') != "true") {
+                if (select.attr('data-hide-detail-link') != "true" && !select.attr('multiple')) {
                 select.parent().css('display', 'flex')
                 select.after(`<div class="input-group-append">
                     <button type="button" data-from="${select.attr('id')}" class="to-detail input-group-text h-100"><i class="fa-solid fa-eye"></i></button>
