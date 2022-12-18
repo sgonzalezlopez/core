@@ -102,8 +102,13 @@ module.exports.configureRoutes = (app) => {
 }
 
 module.exports.configureStatic = (app) => {
+  app.use('/toastr', express.static(path.join(__dirname, '../node_modules/toastr')));
+  app.use('/jquery', express.static(path.join(__dirname, '../node_modules/jquery')));
+  app.use('/jquery-ui', express.static(path.join(__dirname, '../node_modules/jquery-ui')));
   app.use('/inputmask', express.static(path.join(__dirname, '../node_modules/inputmask')));
+  app.use('/bootbox', express.static(path.join(__dirname, '../node_modules/bootbox')));
   app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap')));
+  app.use('/bootstrap-datepicker', express.static(path.join(__dirname, '../node_modules/bootstrap-datepicker')));
   app.use('/bootstrap-icons', express.static(path.join(__dirname, '../node_modules/bootstrap-icons')));
   app.use('/bootstrap-table', express.static(path.join(__dirname, '../node_modules/bootstrap-table/dist')));
   app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
