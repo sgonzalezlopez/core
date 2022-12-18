@@ -57,7 +57,7 @@
         'data-search-accent-neutralise': 'true',
         'data-height': '650',
         'data-show-export': 'true',
-        'data-export-types': '["csv", "excel", "txt", "pdf", "xlsx"]',
+        'data-export-types': '["csv", "txt", "excel", "xlsx"]',
     }
 
     var options = {}
@@ -249,6 +249,22 @@
                             })
                             data = unique;
                         }
+                        if (select.attr('data-filter')) data = data.filter(v => {
+                            var filter = JSON.parse(select.attr('data-filter'))
+                            var resp = true;
+                            for (const key in filter) {
+                                if (Object.hasOwnProperty.call(filter, key)) {
+                                    const element = filter[key];
+                                    if (v[key] != element) resp = false;
+                                }
+                            }
+                            if (!resp) {
+                                // if (Array.isArray(select.attr('data-value')) && select.attr('data-value').includes(v._id)) resp = true;
+                                // else if (select.attr('data-value') == v._id) resp = true
+                                if (select.attr('data-value').includes(v._id)) resp = true
+                            }
+                            return resp;
+                        })
                         if (select.attr('data-sort')) data.sort((a, b) => (a[select.attr('data-sort')] > b[select.attr('data-sort')]) ? 1 : ((b[select.attr('data-sort')] > a[select.attr('data-sort')]) ? -1 : 0));
                         select.empty()
                         select.append('<option value=""></option>')
@@ -288,8 +304,8 @@
             } else if (select.attr('data-value-boolean')) {
                 select.empty()
                 select.append('<option value=""></option>')
-                select.append(`<option value="true">${getText('BOOLEAN_TRUE')}</option>`)
-                select.append(`<option value="false">${getText('BOOLEAN_FALSE')}</option>`)
+                select.append(`<option value="true" ${((select.attr('data-value') && select.attr('data-value') == 'true') ? "selected" : "")}>${getText('BOOLEAN_TRUE')}</option>`)
+                select.append(`<option value="false" ${((select.attr('data-value') && select.attr('data-value') == 'false') ? "selected" : "")}>${getText('BOOLEAN_FALSE')}</option>`)
             }
         },
         save: function (form, api, saveOverride, saveAfter, updateAfter, formParse) {
