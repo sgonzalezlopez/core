@@ -198,6 +198,9 @@
         },
         speed: function (value, row, index) {
             return value + " km/h";
+        },
+        boolean: function (value, row, index) {
+            return value ? options.localized.BOOLEAN_true : options.localized.BOOLEAN_false
         }
     }
 
@@ -259,8 +262,6 @@
                                 }
                             }
                             if (!resp) {
-                                // if (Array.isArray(select.attr('data-value')) && select.attr('data-value').includes(v._id)) resp = true;
-                                // else if (select.attr('data-value') == v._id) resp = true
                                 if (select.attr('data-value').includes(v._id)) resp = true
                             }
                             return resp;
