@@ -43,7 +43,25 @@
         dateFormat: 'L'
     };
 
+    var tableDefaults = {
+        'data-show-fullscreen': 'true',
+        'data-minimum-count-columns': '2',
+        'data-show-pagination-switch': 'true',
+        'data-page-size': '15',
+        'data-pagination': 'false',
+        'data-show-columns': 'true',
+        'data-show-columns-toggle-all': 'true',
+        'data-buttons-align': 'left',
+        'data-search': 'true',
+        'data-search-align': 'left',
+        'data-search-accent-neutralise': 'true',
+        'data-height': '650',
+        'data-show-export': 'true',
+        'data-export-types': '["csv", "excel", "txt", "pdf", "xlsx"]',
+    }
+
     var options = {}
+    options.tableDefaults = tableDefaults
 
     exports.options = options
 
@@ -494,22 +512,15 @@
     }
 
     function setTablesOptions() {
+        options.tableDefaults['data-locale'] = options.locale
         $('table').each(function () {
-            $(this).attr('data-show-fullscreen', 'true')
-            $(this).attr('data-minimum-count-columns', '2')
-            $(this).attr('data-show-pagination-switch', 'true')
-            $(this).attr('data-page-size', '15')
-            $(this).attr('data-pagination', 'false')
-            $(this).attr('data-show-columns', 'true')
-            $(this).attr('data-show-columns-toggle-all', 'true')
-            $(this).attr('data-buttons-align', 'left')
-            $(this).attr('data-search', 'true')
-            $(this).attr('data-search-align', 'left')
-            $(this).attr('data-search-accent-neutralise', 'true')
-            $(this).attr('data-height', '650')
-            $(this).attr('data-show-export', 'true')
-            $(this).attr('data-export-types', '["csv", "excel", "txt", "pdf", "xlsx"]')
-            $(this).attr('data-locale', options.locale)
+            for (const key in options.tableDefaults) {
+                if (Object.hasOwnProperty.call(options.tableDefaults, key)) {
+                    const value = options.tableDefaults[key];
+                    var attr = $(this).attr(key);
+                    if (typeof attr === 'undefined') $(this).attr(key, value)
+                }
+            }
         })
 
         // Tablas abren el elemento con un click
