@@ -1,0 +1,7 @@
+MONGODB_URI='<%=mongoServer%>'
+ADMIN_EMAIL =''
+EMAIL_ACCOUNT =''
+EMAIL_PASS=''
+JWT_SECRET='<%=jwtToken%>'   
+COOKIE_SECRET='<%=cookieSecret%>' 
+COOKIE_NAME='<%=app.toUpperCase()%>_cookie'

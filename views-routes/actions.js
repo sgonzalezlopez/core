@@ -24,7 +24,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.moment = moment
     if (config.getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
     else {
-        data.apps =  (req.session.hasOwnProperty('apps') && req.session.apps[0].hasOwnProperty('child')) ? req.session.apps : await apps.getApplications(req.user)
+        data.apps =  (typeof req.session !== 'undefined' && req.session.hasOwnProperty('apps') &&  req.session.apps.length > 0 && req.session.apps[0].hasOwnProperty('child')) ? req.session.apps : await apps.getApplications(req.user)
     }
 
     req.session.apps = data.apps

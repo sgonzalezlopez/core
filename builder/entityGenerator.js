@@ -33,7 +33,7 @@ module.exports.processEntities = function processEntities(argv) {
    if (fs.existsSync(routes_file)) routes = fs.readFileSync(routes_file, 'utf-8').split('\r\n')
 
    entities.map(entity => {
-      processEntity(entity)
+      processEntity(entity, argv)
    })
    fs.writeFile(routes_file, routes.join('\r\n'), (err) => { if (err) throw err; })
 
@@ -67,6 +67,8 @@ function processEntity(entityName, argv) {
    if (params.fullForm) params.generateFullForm = argv.fullForm
 
    console.log('   Parametros de entidad:', JSON.stringify(params));
+
+   if (!fs.existsSync(`${basedir}/views/${params.view}`))fs.mkdirSync(`${basedir}/views/${params.view}`);
 
    if (!apis.includes(`${entityName}.route.js`) || argv.force) generateRouteFile(model, params)
 
