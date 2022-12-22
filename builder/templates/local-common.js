@@ -1,0 +1,1 @@
+core.setOptions({ locale: '<%=locale%>', appName: '<%=app%>' })
