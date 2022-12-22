@@ -31,7 +31,7 @@ const requiredFiles = [
    {p : "./.gitignore", content : ".gitignore" },
    {p : "./api/routes.js", content : "routes.js" },
    {p : "./views-routes/routes.js", content : "routes.js" },
-   {p : "./.env", content : ".env" },
+   {p : "./.env", content : "env" },
    {p : "./config/app.config.js", content : "app.config.js" },
    {p : "./config/initialize.js", content : "initialize.js" },
    {p : "./public/css/local-common.css", content : "local-common.css" },
