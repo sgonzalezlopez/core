@@ -58,7 +58,7 @@
 				<% } %>
 				<div class="border-top">
 					<div class="card-body">
-						<button id="<%=model.modelName%>Form_search_btn" type="button" class="btn btn-primary">
+						<button id="<%=model.modelName%>Form_search_btn" type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#searchpanel">
 							<%%= __('SEARCH') %>
 						</button>
 						<%% if (locals.permissions.includes('C')) { %%>

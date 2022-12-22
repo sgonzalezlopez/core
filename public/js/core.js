@@ -55,7 +55,7 @@
         'data-search': 'true',
         'data-search-align': 'left',
         'data-search-accent-neutralise': 'true',
-        'data-height': '650',
+        // 'data-height': '650',
         'data-show-export': 'true',
         'data-export-types': '["csv", "txt", "excel", "xlsx"]',
     }
