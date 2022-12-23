@@ -23,6 +23,14 @@ const core_values = [
     {type: 'role', value: 'user', text: 'user', order : 1},
     {type: 'role', value: 'reader', text: 'reader', order : 2},
     {type: 'role', value: 'public', text: 'public', order : 3},
+    {type: 'appPosition', value: 'side', text: 'Menu lateral', order : 1},
+    {type: 'appPosition', value: 'action', text: 'Menu superior', order : 2},
+    {type: 'appPosition', value: 'user', text: 'Menu de usuario', order : 3},
+    {type: 'appPosition', value: 'main', text: 'Menu principal', order : 4},
+    {type: 'permission', value: 'C', text: 'Create', order : 1},
+    {type: 'permission', value: 'R', text: 'Read', order : 2},
+    {type: 'permission', value: 'U', text: 'Update', order : 3},
+    {type: 'permission', value: 'D', text: 'Delete', order : 4},
 ]
 
 const core_features = appConfigs.FEATURES
