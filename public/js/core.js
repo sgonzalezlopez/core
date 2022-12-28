@@ -492,7 +492,7 @@
                 format: getText('DATE_FORMAT'),
                 todayHighlight: true,
             });
-            if (element.attr('date-value')) element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
+            if (element.attr('date-value') && element.attr('date-value') != 'Invalid date') element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
             element.attr('autocomplete', 'off')
         })
     }
