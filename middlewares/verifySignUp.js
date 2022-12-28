@@ -51,7 +51,7 @@ validateNewPassword = async (req, res, next) => {
   try {
 
     var regexpText = await config.getConfig('PASSWORD_COMPLEXITY');
-
+    var regexp = null;
     if (regexpText || regexpText != '') regexp = RegExp(regexpText)
 
     if (req.user && req.user.id != req.body.id) throw new Error(res.__('Invalid operation'))
