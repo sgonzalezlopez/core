@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router();
-const authentication = require('../core/middlewares/authentication')
-const authorization = require('../core/middlewares/authorization')
+const path = require('path')
+const authentication = require(path.join(__corePath, '/middlewares/authentication'))
+const authorization = require(path.join(__corePath, '/middlewares/authorization'))
 
 
 // Routes
