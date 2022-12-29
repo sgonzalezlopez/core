@@ -5,6 +5,7 @@ const authorization = require('../middlewares/authorization')
 const apps = require('../controllers/app.controller')
 const i18n = require('../i18n/i18n.config')
 const fs = require('fs');
+const path = require('path')
 const config = require('../config/config');
 const moment = require('moment')
 
@@ -38,8 +39,18 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     data.view = view
 
     try {
-        var model_path = fs.existsSync(`./models/${modelName}.model.js`) ? `../../models/${modelName}.model` : `../models/${modelName}.model`
-        var controller_path = fs.existsSync(`./controllers/${modelName}.controller.js`) ? `../../controllers/${modelName}.controller` : `../controllers/${modelName}.controller`
+        var model_path = null;
+        for (let i = 0; i < __modelsPath.length; i++) {
+            const modelPath = __modelsPath[i];
+            if (fs.existsSync(path.join(modelPath, `${modelName}.model.js`))) {
+                model_path = path.join(modelPath, `${modelName}.model`)
+                controller_path = path.join(modelPath.replace('models', 'controllers'), `${modelName}.controller`)
+                break;
+            }
+        }
+        if (model_path == null) return res.render(view, data);
+        // var model_path = fs.existsSync(`./models/${modelName}.model.js`) ? `../../models/${modelName}.model` : `../models/${modelName}.model`
+        // var controller_path = fs.existsSync(`./controllers/${modelName}.controller.js`) ? `../../controllers/${modelName}.controller` : `../controllers/${modelName}.controller`
         var model = await require(model_path)
         var controller = await require(controller_path)
 

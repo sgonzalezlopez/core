@@ -1,6 +1,9 @@
 const path = require('path');
 if (typeof __modulesPath === 'undefined') global.__modulesPath = path.join(__dirname, "../node_modules")
 
+if (typeof __modelsPath === 'undefined') global.__modelsPath = []
+__modelsPath.push(path.join(__dirname, "./models"))
+
 const express = require("express");
 const { v4: uuidv4 } = require('uuid');
 const cors = require("cors");
@@ -33,7 +36,7 @@ module.exports.setup = async function (params) {
   });
 
   if (params && params.hasOwnProperty('deserializeUser') && params.deserializeUser) {
-    passport.deserializeUser((id, done) => {params.deserializeUser(id, done)})
+    passport.deserializeUser((id, done) => { params.deserializeUser(id, done) })
   } else {
     passport.deserializeUser((id, done) => {
       Users.findOne({ _id: id })
@@ -85,12 +88,12 @@ module.exports.setup = async function (params) {
     saveUninitialized: true
   }));
 
-  
+
   require('./passport')
   app.use(authJwt.validateToken)
   app.use(passport.initialize());
   app.use(passport.session());
-  
+
 
   return app;
 }
@@ -119,7 +122,7 @@ module.exports.configureStatic = (app) => {
     const element = this.staticPaths[i];
     app.use(express.static(element));
   }
-  
+
 
   return app;
 }
