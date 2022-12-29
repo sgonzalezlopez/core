@@ -1,22 +1,22 @@
+const path = require('path');
+if (typeof __modulesPath === 'undefined') global.__modulesPath = path.join(__dirname, "../node_modules")
+
 const express = require("express");
 const { v4: uuidv4 } = require('uuid');
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const { config, forceSSL } = require('./config/config')
 const localeMiddleware = require('express-locale')
-const path = require('path');
 const session = require('express-session');
 const Users = require('./models/user.model')
-const i18n = require('./i18n/i18n.config')
 var LokiStore = require('connect-loki')(session);
 const LocalStrategy = require('passport-local').Strategy;
 const expressLayouts = require('express-ejs-layouts')
 const passport = require('passport');
 var fileUpload = require('express-fileupload');
 const authJwt = require('./middlewares/auth.jwt')
+const i18n = require('./i18n/i18n.config')
 
-var JwtStrategy = require('passport-jwt').Strategy,
-    ExtractJwt = require('passport-jwt').ExtractJwt;
 
 module.exports.setupDB = async function () {
 }
@@ -102,18 +102,18 @@ module.exports.configureRoutes = (app) => {
 }
 
 module.exports.configureStatic = (app) => {
-  app.use('/toastr', express.static(path.join(__dirname, '../node_modules/toastr')));
-  app.use('/jquery', express.static(path.join(__dirname, '../node_modules/jquery')));
-  app.use('/jquery-ui', express.static(path.join(__dirname, '../node_modules/jquery-ui')));
-  app.use('/inputmask', express.static(path.join(__dirname, '../node_modules/inputmask')));
-  app.use('/bootbox', express.static(path.join(__dirname, '../node_modules/bootbox')));
-  app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap')));
-  app.use('/bootstrap-datepicker', express.static(path.join(__dirname, '../node_modules/bootstrap-datepicker')));
-  app.use('/bootstrap-icons', express.static(path.join(__dirname, '../node_modules/bootstrap-icons')));
-  app.use('/bootstrap-table', express.static(path.join(__dirname, '../node_modules/bootstrap-table/dist')));
-  app.use('/mdi', express.static(path.join(__dirname, '../node_modules/@mdi/font')));
-  app.use('/fortawesome', express.static(path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free')));
-  app.use('/moment', express.static(path.join(__dirname, '../node_modules/moment')));
+  app.use('/toastr', express.static(path.join(__modulesPath, '/toastr')));
+  app.use('/jquery', express.static(path.join(__modulesPath, '/jquery')));
+  app.use('/jquery-ui', express.static(path.join(__modulesPath, '/jquery-ui')));
+  app.use('/inputmask', express.static(path.join(__modulesPath, '/inputmask')));
+  app.use('/bootbox', express.static(path.join(__modulesPath, '/bootbox')));
+  app.use('/bootstrap', express.static(path.join(__modulesPath, '/bootstrap')));
+  app.use('/bootstrap-datepicker', express.static(path.join(__modulesPath, '/bootstrap-datepicker')));
+  app.use('/bootstrap-icons', express.static(path.join(__modulesPath, '/bootstrap-icons')));
+  app.use('/bootstrap-table', express.static(path.join(__modulesPath, '/bootstrap-table/dist')));
+  app.use('/mdi', express.static(path.join(__modulesPath, '/@mdi/font')));
+  app.use('/fortawesome', express.static(path.join(__modulesPath, '/@fortawesome/fontawesome-free')));
+  app.use('/moment', express.static(path.join(__modulesPath, '/moment')));
   app.use('/locales', express.static(path.join(__dirname, '../locales')));
   for (let i = 0; i < this.staticPaths.length; i++) {
     const element = this.staticPaths[i];
