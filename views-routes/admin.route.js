@@ -7,14 +7,7 @@ const viewRoute = 'admin/';
 router.get('/', function (req, res, next) {
 
     if (!req.isAuthenticated()) return res.redirect("/login")
-
-    var data = {};
-    data.actions = [
-        {name : 'users', href: '/admin/user-list'},
-        {name : 'applications', href: '/admin/app-list'}, b
-    ]
-
-    actions.renderWithApps(req, res, next, viewRoute + 'index', data)
+    actions.renderWithApps(req, res, next, 'subindex', {parentApp : '/' + viewRoute})
 });
 
 router.get('/:page', function (req, res, next) {

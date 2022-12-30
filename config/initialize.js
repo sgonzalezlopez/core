@@ -1,4 +1,5 @@
 const Users = require("../models/user.model");
+const path = require("path")
 const Apps = require("../models/app.model");
 const { initializeDB } = require("./db.config");
 const valueModel = require("../models/value.model");
@@ -7,7 +8,8 @@ const featureModel = require("../models/feature.model");
 const configModel = require("../models/config.model");
 
 const core_applications = [
-    {name: 'home', type: ['side'], roles:['admin', 'user', 'public'], level:-1, link:'/', icon:'mdi mdi-home', parent:'admin'},
+    {name: 'home', type: ['side'], roles:['admin', 'user', 'public'], level:-1, link:'/', icon:'mdi mdi-home'},
+    {name: 'admin', type: ['action'], roles:['admin'], level:-1, link:'/admin/app-list', icon:'mdi mdi-hexagon-multiple'},
     {name: 'apps', type: ['action'], roles:['admin'], level:-1, link:'/admin/app-list', icon:'mdi mdi-apps', parent:'admin'},
     {name: 'users', type: ['action'], roles:['admin'], level:-1, link:'/admin/user-list', icon:'fas fa-users', parent:'admin'},
     {name: 'configs', type: ['action'], roles:['admin'], level:-1, link:'/admin/config-list', icon:'mdi mdi-pencil', parent:'admin'},
@@ -87,7 +89,7 @@ async function loadDefaultValues() {
         // Inicializar aplicaciones
         var admin = await Apps.findOne({name : 'admin'})
         if (!admin) {
-            admin = await Apps.create({name:'admin', type:['action'], roles:['admin'], level:-1, link:'/admin', icon:'mdi mdi-hexagon-multiple'})
+            admin = await Apps.create({name:'admin', type:['action'], roles:['admin'], level:-1, link:'/admin/', icon:'mdi mdi-hexagon-multiple'})
         }
         
         applications.forEach(a => {
