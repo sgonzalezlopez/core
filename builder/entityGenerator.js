@@ -70,9 +70,9 @@ function processEntity(entityName, argv) {
 
    if (!fs.existsSync(`${basedir}/views/${params.view}`))fs.mkdirSync(`${basedir}/views/${params.view}`);
 
-   if (!apis.includes(`${entityName}.route.js`) || argv.force) generateRouteFile(model, params)
+   if (!apis.includes(`${entityName}.route.js`) || argv.force || argv.forceAPI) generateRouteFile(model, params)
 
-   if (!controllers.includes(`${entityName}.controller.js`) || argv.force) generateControllerFile(model, params)
+   if (!controllers.includes(`${entityName}.controller.js`) || argv.force || argv.forceController) generateControllerFile(model, params)
 
    if (!routes.some(element => {
       return (element.search('require') >= 0 && element.search(`'./${entityName}.route'`) >= 0)

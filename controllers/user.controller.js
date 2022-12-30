@@ -1,4 +1,3 @@
-const { sendTemplatedEmail } = require("../config/email.config");
 const Users = require("../models/user.model");
 
 exports.getAll = (req, res) => {
@@ -68,4 +67,21 @@ exports.delete = (req, res) => {
     .then(users => {
         res.send({message : 'OK'})
     })
+}
+
+exports.find = (req, res) => {
+    try {
+        for (const key in req.body) {
+            if (Object.hasOwnProperty.call(req.body, key)) {
+                if (req.body[key] == '') delete req.body[key]                
+            }
+        }
+        Users.find(req.body).select('-salt -hash')
+        .then(items => {
+            res.send(items)
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }

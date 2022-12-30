@@ -3,40 +3,93 @@ const { sendTestEmail, sendTemplatedEmail } = require("../config/email.config");
 const Model = require("../models/feature.model");
 
 exports.getAll = (req, res) => {
-    Model.find()
-    .then(items => {
-        res.send(items)
-    })
+    try {
+        Model.find()
+        .then(items => {
+            res.send(items)
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
-
+    
 exports.get = (req, res) => {
-    Model.findById(req.params.id)
-    .then(item => {
-        res.send(item)
-    })
+    try {
+        Model.findById(req.params.id)
+        .then(item => {
+            res.send(item)
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.create = (req, res) => {
-    Model.create(req.body)
-    .then(item => {
+    try {
+        Model.create(parseBody(req.body))
+        .then(item => {
         loadFeatures()
-        res.send(item)
-    })
+            res.send(item)
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.update = (req, res) => {
-    Model.findOneAndUpdate({_id:req.params.id}, req.body)
-    .then(item => {
+    try {
+        Model.findOneAndUpdate({_id:req.params.id}, parseBody(req.body))
+        .then(item => {
         loadFeatures()
-        if (item) res.send(item)
-        else res.status(400).send({message: res.__('ITEM_NOT_FOUND')})
-    })
+            if (item) res.send(item)
+            else res.status(400).send({message: res.__('ITEM_NOT_FOUND')})
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.delete = (req, res) => {
-    Model.deleteOne({_id:req.params.id})
-    .then(users => {
+    try {
+        Model.deleteOne({_id:req.params.id})
+    .then(items => {
         loadFeatures()
-        res.send({message : 'OK'})
-    })
+            res.send({message : 'OK'})
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
+}
+
+exports.find = (req, res) => {
+    try {
+        for (const key in req.body) {
+            if (Object.hasOwnProperty.call(req.body, key)) {
+                if (req.body[key] == '') delete req.body[key]                
+            }
+        }
+        Model.find(req.body)
+        .then(items => {
+            res.send(items)
+        })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
+}
+
+function parseBody(body) {
+    var values = body
+    for (const key in body) {
+        if (Object.hasOwnProperty.call(body, key)) {
+            values[key] = body[key] == "" ? null : body[key];
+        }
+    }
+
+    return values;
 }

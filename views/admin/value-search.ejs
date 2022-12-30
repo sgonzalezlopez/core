@@ -1,84 +1,91 @@
 <link rel="stylesheet" type="text/css" href="/assets/libs/select2/dist/css/select2.min.css" />
-<link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"/>        
+<link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
 <link rel="stylesheet" href="/bootstrap-table/bootstrap-table.min.css">
 <div class="card">
-    <form id="ValueForm" class="form-horizontal">
-        <div class="card-body">
-            <h4 class="card-title"><%= __('MODEL_Value') %></h4>
-                <div class="row">
-                    <div class="form-group row col-md-6">
-                        <label for="type" class="col-sm-3 text-end control-label col-form-label"><%= __('MODEL_Value_type')%></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="type" name="type" placeholder=""  value="<%= locals.object ? object['type'] : '' %>"/>
-                        </div>
-                    </div>
-                    <div class="form-group row col-md-6">
-                        <label for="value" class="col-sm-3 text-end control-label col-form-label"><%= __('MODEL_Value_value')%></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="value" name="value" placeholder=""  value="<%= locals.object ? object['value'] : '' %>"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group row col-md-6">
-                        <label for="text" class="col-sm-3 text-end control-label col-form-label"><%= __('MODEL_Value_text')%></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="text" name="text" placeholder=""  value="<%= locals.object ? object['text'] : '' %>"/>
-                        </div>
-                    </div>
-                    <div class="form-group row col-md-6">
-                        <label for="order" class="col-sm-3 text-end control-label col-form-label"><%= __('MODEL_Value_order')%></label>
-                        <div class="col-sm-9">
-                            <input type="number" class="form-control" id="order" name="order" placeholder=""  value='<%= locals.object ? object['order'] : '' %>'/>
-                        </div>
-                    </div>
-                </div>
-            <div class="border-top">
-                <div class="card-body">
-                    <button id="ValueForm_search_btn" type="button" class="btn btn-primary"><%= __('SEARCH') %></button>
-                </div>
-            </div>
-        </div>
-    </form>
+	<form id="ValueForm" class="form-horizontal">
+		<div class="card-body">
+			<div type="button" data-bs-toggle="collapse" data-bs-target="#searchpanel" aria-expanded="false" aria-controls="searchpanel">
+				<h4 class="card-title"><i class="fas fa-angle-double-up"></i>
+					<%= __('Search Criteria') %>
+				</h4>
+			</div>
+			<div class="show" id="searchpanel">
+				<div class="row">
+					<div class="form-group row col-md-6">
+						<label for="type" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_Value_type')%>
+						</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="type" name="type" placeholder=""  value="<%= locals.object ? object['type'] : '' %>" />
+						</div>
+					</div>
+					<div class="form-group row col-md-6">
+						<label for="value" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_Value_value')%>
+						</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="value" name="value" placeholder=""  value="<%= locals.object ? object['value'] : '' %>" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group row col-md-6">
+						<label for="text" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_Value_text')%>
+						</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="text" name="text" placeholder=""  value="<%= locals.object ? object['text'] : '' %>" />
+						</div>
+					</div>
+					<div class="form-group row col-md-6">
+						<label for="order" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_Value_order')%>
+						</label>
+						<div class="col-sm-9">
+							<input type="number" class="form-control" id="order" name="order" placeholder=""  value='<%= locals.object ? object[' order'] : '' %>'/>
+						</div>
+					</div>
+				</div>
+				<div data-type="search-buttons" data-api="/api/value" data-table="#table" <%=locals.permissions.includes('C') ? 'data-new' : ''%> data-panel="#searchpanel" data-form="ValueForm"></div>
+			</div>
+		</div>
+	</form>
 </div>
 <div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Value</h5>
-        <div class="table-responsive">
-            <table id="table" 
-                data-toggle="table"
-                class="table table-striped table-bordered clickable"
-                detail-url="/admin/value/"
-                data-api="/api/value"
-                >
-                <thead>
-                    <tr>
-                        <th data-field="type"><%= __('COL_type') %></th>
-                        <th data-field="value"><%= __('COL_value') %></th>
-                        <th data-field="text"><%= __('COL_text') %></th>
-                        <th data-field="order"><%= __('COL_order') %></th>
-                        <th data-field="id" data-formatter="actionFormatter" data-align="center" data-events="actionEvents"><%= __('COL_actions') %></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
+	<div class="card-body">
+		<h5 class="card-title">Value</h5>
+		<div class="table-responsive">
+			<table id="table" data-toggle="table" data-api="/api/value" class="table table-striped table-bordered clickable" detail-url="/admin/value/">
+				<thead>
+					<tr>
+						<th data-field="type">
+							<%= __('COL_type') %>
+						</th>
+						<th data-field="value">
+							<%= __('COL_value') %>
+						</th>
+						<th data-field="text">
+							<%= __('COL_text') %>
+						</th>
+						<th data-field="order">
+							<%= __('COL_order') %>
+						</th>
+						<th data-field="id" data-formatter="actionFormatter" data-align="center" data-events="actionEvents">
+							<%= __('COL_actions') %>
+						</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
 </div>
-
 <script>
-
-function actionFormatter(value, row, index) {
-  return [
-    '<a class="view" href="/admin/value/' + row._id + '" title="">',
-    '<i class="fa fa-eye"></i>',
-    '</a> ',
-    '<a class="delete" href="javascript:void(0)" title="">',
-        '<i class="fa fa-trash"></i>',
-        '</a> ',        
-  ].join('');
-}
-$('#ValueForm_search_btn').click(() => {
-    values = core.forms.parse('ValueForm')
-    core.api.find('/api/value', values, (data) => { $('#table').bootstrapTable('load', data)})
-})
+	function actionFormatter(value, row, index) {
+		return [
+			'<a class="view" href="/admin/value/' + row._id + '" title="">',
+			'<i class="fa fa-eye"></i>',
+			"</a> ",
+			'<%-permissions.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%>'
+		].join("");
+	}
 </script>

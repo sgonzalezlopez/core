@@ -1,53 +1,83 @@
 const Model = require("../models/value.model");
 
 exports.getAll = (req, res) => {
-    Model.find()
+    try {
+        Model.find()
         .sort({ type: 1, order: 1 })
         .then(items => {
             res.send(items)
         })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
-
+    
 exports.get = (req, res) => {
-    Model.findById(req.params.id)
+    try {
+        Model.findById(req.params.id)
         .then(item => {
             res.send(item)
         })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.create = (req, res) => {
-    Model.create(parseBody(req.body))
+    try {
+        Model.create(parseBody(req.body))
         .then(item => {
             res.send(item)
         })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.update = (req, res) => {
-    Model.findOneAndUpdate({ _id: req.params.id }, parseBody(req.body))
+    try {
+        Model.findOneAndUpdate({_id:req.params.id}, parseBody(req.body))
         .then(item => {
             if (item) res.send(item)
-            else res.status(400).send({ message: res.__('ITEM_NOT_FOUND') })
+            else res.status(400).send({message: res.__('ITEM_NOT_FOUND')})
         })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.delete = (req, res) => {
-    Model.deleteOne({ _id: req.params.id })
+    try {
+        Model.deleteOne({_id:req.params.id})
         .then(item => {
-            res.send({ message: 'OK' })
+            res.send({message : 'OK'})
         })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.find = (req, res) => {
-    for (const key in req.body) {
-        if (Object.hasOwnProperty.call(req.body, key)) {
-            if (req.body[key] == '') delete req.body[key]
+    try {
+        for (const key in req.body) {
+            if (Object.hasOwnProperty.call(req.body, key)) {
+                if (req.body[key] == '') delete req.body[key]                
+            }
         }
-    }
-    Model.find(req.body)
+        Model.find(req.body)
         .sort({ type: 1, order: 1 })
         .then(items => {
             res.send(items)
         })
+    } catch (err) {
+        console.error(err);
+        throw err
+    }
 }
 
 exports.getValues = (key) => {

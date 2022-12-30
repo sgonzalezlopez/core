@@ -59,8 +59,8 @@
         'data-show-export': 'true',
         'data-export-types': '["csv", "txt", "excel", "xlsx"]',
         'data-sticky-header': 'true',
-        'data-mobile-responsive':"true",
-        'data-check-on-init':"true",
+        'data-mobile-responsive': "true",
+        'data-check-on-init': "true",
     }
 
     var options = {}
@@ -147,18 +147,21 @@
     // Core dialog function
     exports.setup = async function (new_options) {
         addActionEvent();
+
         await setTablesOptions();
 
         options = sanitize(new_options);
-        await getLocales();
 
+        await getLocales();
 
         setDatePickers();
 
-
         setSelect2()
 
+        createSearchButtons();
+
         await createActionButton();
+
         await setModals();
 
         setInputMasks();
@@ -229,18 +232,18 @@
         loadSelect: function (select) {
             if (select.attr('data-collection')) {
                 if (select.attr('data-hide-detail-link') != "true" && !select.attr('multiple')) {
-                select.parent().css('display', 'flex')
-                select.after(`<div class="input-group-append">
+                    select.parent().css('display', 'flex')
+                    select.after(`<div class="input-group-append">
                     <button type="button" data-from="${select.attr('id')}" class="to-detail input-group-text h-100"><i class="fa-solid fa-eye"></i></button>
                     </div>`)
-                $('.to-detail').on('click', function() {
-                    if ($(`#${$(this).attr('data-from')}`).val() == "") return
-                    var url = location.pathname.split('/')[1]
-                    var collection = $(`#${$(this).attr('data-from')}`).attr('data-collection')
-                    location.assign('/' + url + '/' + collection.toLowerCase() + '/' + $(`#${$(this).attr('data-from')}`).val());
+                    $('.to-detail').on('click', function () {
+                        if ($(`#${$(this).attr('data-from')}`).val() == "") return
+                        var url = location.pathname.split('/')[1]
+                        var collection = $(`#${$(this).attr('data-from')}`).attr('data-collection')
+                        location.assign('/' + url + '/' + collection.toLowerCase() + '/' + $(`#${$(this).attr('data-from')}`).val());
 
-                })
-            }
+                    })
+                }
 
                 $.ajax({
                     type: 'GET',
@@ -578,30 +581,62 @@
         $(".registry-time-inputmask").inputmask("99:99:99.999")
     }
 
+    function createSearchButtons() {
+        $('[data-type="search-buttons"]').each(function () {
+            var buttonsGroup = $(this);
+            var prevContent = buttonsGroup.html();
+            var form = buttonsGroup.attr('data-form')
+            buttonsGroup.empty();
+            var newHtml = [];
+            newHtml.push(`<div class="row">
+                <div class="border-top">
+                    <div class="card-body">`)
+            newHtml.push(`<button id="${form}_search_btn" type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="${buttonsGroup.attr('data-panel')}">${options.localized.SEARCH}</button>`)
+            if (typeof buttonsGroup.attr('data-new') !== 'undefined' && buttonsGroup.attr('data-new') !== false) newHtml.push(`<button id="${form}_new_btn" type="button" class="btn btn-warning">${options.localized.CREATE_NEW}</button>`)
+            if (prevContent != '') newHtml.push(prevContent)
+            newHtml.push(`</div>
+                </div>
+            </div>`)
+            buttonsGroup.append(newHtml.join('\n'))
+            $(`#${form}_search_btn`).on('click', function () {
+                $(buttonsGroup.attr('data-table')).bootstrapTable('showLoading')
+                var values = exports.forms.parse(form)
+                exports.api.find(buttonsGroup.attr('data-api'), values, (data) => {
+                    $(buttonsGroup.attr('data-table')).bootstrapTable('load', data)
+                    $(buttonsGroup.attr('data-table')).bootstrapTable('hideLoading')
+                })
+            })
+            $(`#${form}_new_btn`).on('click', function () {
+                window.location.assign(window.location.href.replace('-search', ''))
+            })
+        })
+
+    }
+
+    // Creación de botonera en detalle de elementos
+    // REQUIERE
+    // data-type="action-buttons" 
+    // data-api="url-api"
+    // data-form="nombre-de-formulario"
+    // data-permissions="<%=locals.permissions.join('')%>"
+
+    // Si existe una función refreshView se va a llamar después de guardar o borrar
+
+    // OPCIONES
+    // data-save="true"         --> Mostrar el boton de GUARDAR
+    // data-save-override=""    --> Función que sobreescribe comportamiento de GUARDAR
+    // data-save-after=""       --> Función a ejecutar después de crear un nuevo registro
+    // data-update-after=""     --> Función a ejecutar después de actualizar un registro existente
+    // data-savenew="true"      --> Mostrar el botón de GUARDAR Y NUEVO
+    // data-savenew-override="" --> Función que sobreescribe comportamiento de GUARDAR Y NUEVO
+    // data-savenew-after=""    --> Función a ejecutar después de pulsar el botón GUARDAR Y NUEVO (se ejecuta después de data-save-after o data-update-after)
+    // data-delete="true"       --> Mostrar el botón de ELIMINAR
+    // data-delete-override=""  --> Función que sobreescribe comportamiento de ELIMINAR
+    // data-delete-after=""     --> Función a ejecutar después de eliminar un registro
+    // data-new="link"          --> Si no es vacío muestra el botón NUEVO y navega a la dirección especificada en el atributo al pulsarlo
+    // data-list"link"          --> Si no es vacío muestra el botón LISTADO y navega a la dirección especificada en el atributo al pulsarlo
+    // data-search"link"        --> Si no es vacío muestra el botón BUSCAR y navega a la dirección especificada en el atributo al pulsarlo
     async function createActionButton() {
-        // Creación de botonera en detalle de elementos
-        // REQUIERE
-        // data-type="action-buttons" 
-        // data-api="url-api"
-        // data-form="nombre-de-formulario"
-        // data-permissions="<%=locals.permissions.join('')%>"
-
-        // Si existe una función refreshView se va a llamar después de guardar o borrar
-
-        // OPCIONES
-        // data-save="true"         --> Mostrar el boton de GUARDAR
-        // data-save-override=""    --> Función que sobreescribe comportamiento de GUARDAR
-        // data-save-after=""       --> Función a ejecutar después de crear un nuevo registro
-        // data-update-after=""     --> Función a ejecutar después de actualizar un registro existente
-        // data-savenew="true"      --> Mostrar el botón de GUARDAR Y NUEVO
-        // data-savenew-override="" --> Función que sobreescribe comportamiento de GUARDAR Y NUEVO
-        // data-savenew-after=""    --> Función a ejecutar después de pulsar el botón GUARDAR Y NUEVO (se ejecuta después de data-save-after o data-update-after)
-        // data-delete="true"       --> Mostrar el botón de ELIMINAR
-        // data-delete-override=""  --> Función que sobreescribe comportamiento de ELIMINAR
-        // data-delete-after=""     --> Función a ejecutar después de eliminar un registro
-        // data-new="link"          --> Si no es vacío muestra el botón NUEVO y navega a la dirección especificada en el atributo al pulsarlo
-        // data-list"link"          --> Si no es vacío muestra el botón LISTADO y navega a la dirección especificada en el atributo al pulsarlo
-        // data-search"link"        --> Si no es vacío muestra el botón BUSCAR y navega a la dirección especificada en el atributo al pulsarlo
         await $('[data-type="action-buttons"]').each(function () {
             var buttonsGroup = $(this);
 

@@ -37,18 +37,7 @@
 							<select id="type" name="type" multiple="multiple" class="select2 form-select shadow-none" style="width:100%; height: 36px" data-value-list="permission" data-value="<%=locals.object && locals.object.type ? object.type : '' %>"></select>
 						</div>
 					</div>
-				<div class="border-top">
-					<div class="card-body">
-						<button id="PermissionForm_search_btn" type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#searchpanel">
-							<%= __('SEARCH') %>
-						</button>
-						<% if (locals.permissions.includes('C')) { %>
-							<button id="PermissionForm_new_btn" type="button" class="btn btn-warning">
-								<%= __('CREATE_NEW') %>
-							</button>
-							<% } %>
-					</div>
-				</div>
+				<div data-type="search-buttons" data-api="/api/permission" data-table="#table" <%=locals.permissions.includes('C') ? 'data-new' : ''%> data-panel="#searchpanel" data-form="PermissionForm"></div>
 			</div>
 		</div>
 	</form>
@@ -87,17 +76,4 @@
 			'<%-permissions.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%>'
 		].join("");
 	}
-	$('#PermissionForm_search_btn').click(() => {
-		values = core.forms.parse('PermissionForm')
-		core.api.find('/api/permission', values, (data) => {
-			$('#table').bootstrapTable('load', data)
-		})
-	})
 </script>
-<% if(locals.permissions.includes('C')) { %>
-	<script>
-		$("#PermissionForm_new_btn").click(() => {
-			window.location.href = '/<%= locals.detail%>'
-		})
-	</script>
-	<% } %>

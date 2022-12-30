@@ -15,6 +15,8 @@ build()
 // -p : Root path to find models folder
 // -e : List of models to process
 // -force : Force changes in all objects
+// -forceController : Force changes in controller
+// -forceAPI : Force changes in API
 // -forceUI : Force changes in UI objects
 // -forceForm : Force generation of forms page
 // -forceList : Force generation of list page

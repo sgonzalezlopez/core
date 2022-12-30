@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
 <link rel="stylesheet" href="/bootstrap-table/bootstrap-table.min.css">
 <div class="card">
-	<form id="UserForm" class="form-horizontal">
+	<form id="FeatureForm" class="form-horizontal">
 		<div class="card-body">
 			<div type="button" data-bs-toggle="collapse" data-bs-target="#searchpanel" aria-expanded="false" aria-controls="searchpanel">
 				<h4 class="card-title"><i class="fas fa-angle-double-up"></i>
@@ -12,34 +12,26 @@
 			<div class="show" id="searchpanel">
 				<div class="row">
 					<div class="form-group row col-md-6">
-						<label for="username" class="col-sm-3 text-end control-label col-form-label">
-							<%= __('MODEL_User_username')%>
+						<label for="key" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_Feature_key')%>
 						</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" id="username" name="username" placeholder=""  value="<%= locals.object ? object['username'] : '' %>" />
+							<input type="text" class="form-control" id="key" name="key" placeholder=""  value="<%= locals.object ? object['key'] : '' %>" />
 						</div>
 					</div>
 					<div class="form-group row col-md-6">
-						<label for="email" class="col-sm-3 text-end control-label col-form-label">
-							<%= __('MODEL_User_email')%>
+						<label for="description" class="col-sm-3 text-end control-label col-form-label">
+							<%= __('MODEL_Feature_description')%>
 						</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" id="email" name="email" placeholder=""  value="<%= locals.object ? object['email'] : '' %>" />
+							<input type="text" class="form-control" id="description" name="description" placeholder=""  value="<%= locals.object ? object['description'] : '' %>" />
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="form-group row col-md-6">
-						<label for="roles" class="col-sm-3 text-end control-label col-form-label">
-							<%= __('MODEL_User_roles')%>
-						</label>
-						<div class="col-sm-9">
-							<select id="roles" name="roles" multiple="multiple" class="select2 form-select shadow-none" style="width:100%; height: 36px" data-value-list="role" data-value="<%=locals.object && locals.object.roles ? object.roles : '' %>"></select>
-						</div>
-					</div>
-					<div class="form-group row col-md-6">
 						<label for="active" class="col-sm-3 text-end control-label col-form-label">
-							<%= __('MODEL_User_active')%>
+							<%= __('MODEL_Feature_active')%>
 						</label>
 						<div class="col-sm-9">
 							<select id="active" name="active" class="select2 form-select shadow-none" style="width: 100%; height: 36px" >
@@ -50,27 +42,23 @@
 							</select>
 						</div>
 					</div>
-				</div>
-				<div data-type="search-buttons" data-api="/api/user" data-table="#table" <%=locals.permissions.includes('C') ? 'data-new' : ''%> data-panel="#searchpanel" data-form="UserForm"></div>
+				<div data-type="search-buttons" data-api="/api/feature" data-table="#table" <%=locals.permissions.includes('C') ? 'data-new' : ''%> data-panel="#searchpanel" data-form="FeatureForm"></div>
 			</div>
 		</div>
 	</form>
 </div>
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title">User</h5>
+		<h5 class="card-title">Feature</h5>
 		<div class="table-responsive">
-			<table id="table" data-toggle="table" data-api="/api/user" class="table table-striped table-bordered clickable" detail-url="/admin/user/">
+			<table id="table" data-toggle="table" data-api="/api/feature" class="table table-striped table-bordered clickable" detail-url="/admin/feature/">
 				<thead>
 					<tr>
-						<th data-field="username">
-							<%= __('COL_username') %>
+						<th data-field="key">
+							<%= __('COL_key') %>
 						</th>
-						<th data-field="email">
-							<%= __('COL_email') %>
-						</th>
-						<th data-field="roles">
-							<%= __('COL_roles') %>
+						<th data-field="description">
+							<%= __('COL_description') %>
 						</th>
 						<th data-field="active">
 							<%= __('COL_active') %>
@@ -87,7 +75,7 @@
 <script>
 	function actionFormatter(value, row, index) {
 		return [
-			'<a class="view" href="/admin/user/' + row._id + '" title="">',
+			'<a class="view" href="/admin/feature/' + row._id + '" title="">',
 			'<i class="fa fa-eye"></i>',
 			"</a> ",
 			'<%-permissions.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%>'

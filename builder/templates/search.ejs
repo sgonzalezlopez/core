@@ -58,18 +58,7 @@
 				</div>
 				<% } %>
 				<% } %>
-				<div class="border-top">
-					<div class="card-body">
-						<button id="<%=model.modelName%>Form_search_btn" type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#searchpanel">
-							<%%= __('SEARCH') %>
-						</button>
-						<%% if (locals.permissions.includes('C')) { %%>
-							<button id="<%=model.modelName%>Form_new_btn" type="button" class="btn btn-warning">
-								<%%= __('CREATE_NEW') %%>
-							</button>
-							<%% } %%>
-					</div>
-				</div>
+				<div data-type="search-buttons" data-api="/api/<%=model.modelName.toLowerCase()%>" data-table="#table" <%%=locals.permissions.includes('C') ? 'data-new' : ''%%> data-panel="#searchpanel" data-form="<%=model.modelName%>Form"></div>
 			</div>
 		</div>
 	</form>
@@ -107,18 +96,4 @@
 			'<%%-permissions.includes("D") ? `<a class="delete" href="javascript:void(0)" title=""><i class="fa fa-trash"></i></a>`: ``%%>'
 		].join("");
 	}
-
-	$('#<%=model.modelName%>Form_search_btn').click(() => {
-		values = core.forms.parse('<%=model.modelName%>Form')
-		core.api.find('/api/<%=model.modelName.toLowerCase()%>', values, (data) => {
-			$('#table').bootstrapTable('load', data)
-		})
-	})
 </script>
-<%% if(locals.permissions.includes('C')) { %%>
-	<script>
-		$("#<%=model.modelName%>Form_new_btn").click(() => {
-			window.location.href = '/<%%= locals.detail%%>'
-		})
-	</script>
-	<%% } %%>
