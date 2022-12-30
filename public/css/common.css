@@ -85,3 +85,18 @@ table.clickable tbody tr {
 div[data-type="action-buttons"] .btn {
     margin-left: 2px;
 }
+
+.select2-container--classic .select2-selection--single, .select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-selection__arrow, .select2-container--default .select2-selection--single .select2-selection__rendered {
+    border-color: #e9ecef;
+    height: 36px;
+    color: var(--bs-body);
+    line-height: 36px;
+}
+
+.select2-selection--multiple {
+    height: 36px !important;
+}
+
+.to-detail {
+    height: 36px !important;
+}
