@@ -43,11 +43,15 @@ var local_values = []
 var local_features = []
 var local_configs = []
 try {
-    const local_config = require('../../config/initialize')
-    local_apps = local_config.applications || []
-    local_values = local_config.values || []
-    local_features = local_config.features || []
-    local_configs = local_config.configs || []
+    if (__initialization) {
+        __initialization.forEach(init => {
+            const local_config = require(init)
+            local_apps = [...local_apps, ...local_config.applications || []]
+            local_values = [...local_values, ...local_config.values || []]
+            local_features = [...local_features, ...local_config.features || []]
+            local_configs = [...local_configs, ...local_config.configs || []]
+        });
+    }
 }
 catch {}
 
