@@ -140,7 +140,7 @@
 
     function getLocales() {
         return $.getJSON(`/locales/${options.locale}.json`, function (data) {
-            options.localized = data;
+            exports.options.localized = data;
         });
     }
 
@@ -207,7 +207,7 @@
             return value + " km/h";
         },
         boolean: function (value, row, index) {
-            return value ? options.localized.BOOLEAN_true : options.localized.BOOLEAN_false
+            return value ? exports.options.localized.BOOLEAN_true : exports.options.localized.BOOLEAN_false
         }
     }
 
@@ -476,7 +476,7 @@
                 $(this).attr('onclick', `core.modalCallback("${entity}", "${$(object).find('form').attr('id')}", "${$(object).attr('data-api')}", "${$(object).attr('id')}")`)
             }
         })
-        $(object).find(`[data-type="action-buttons"]`).append(`<button id="" type="button" class="btn btn-secondary" data-bs-dismiss="modal">${options.localized['CLOSE']}</button>`)
+        $(object).find(`[data-type="action-buttons"]`).append(`<button id="" type="button" class="btn btn-secondary" data-bs-dismiss="modal">${exports.options.localized['CLOSE']}</button>`)
         $(object).find(`[data-bs-toggle="modal"]`).hide();
     }
 
@@ -592,8 +592,8 @@
             newHtml.push(`<div class="row">
                 <div class="border-top">
                     <div class="card-body">`)
-            newHtml.push(`<button id="${form}_search_btn" type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="${buttonsGroup.attr('data-panel')}">${options.localized.SEARCH}</button>`)
-            if (typeof buttonsGroup.attr('data-new') !== 'undefined' && buttonsGroup.attr('data-new') !== false) newHtml.push(`<button id="${form}_new_btn" type="button" class="btn btn-warning">${options.localized.CREATE_NEW}</button>`)
+            newHtml.push(`<button id="${form}_search_btn" type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="${buttonsGroup.attr('data-panel')}">${exports.options.localized.SEARCH}</button>`)
+            if (typeof buttonsGroup.attr('data-new') !== 'undefined' && buttonsGroup.attr('data-new') !== false) newHtml.push(`<button id="${form}_new_btn" type="button" class="btn btn-warning">${exports.options.localized.CREATE_NEW}</button>`)
             if (prevContent != '') newHtml.push(prevContent)
             newHtml.push(`</div>
                 </div>
@@ -687,12 +687,12 @@
             if (object.dataDeleteAfter == '') object.dataDeleteAfter = null;
             if (!object.dataDeleteAfter && object.dataList) object.dataDeleteAfter = `function () {core.goTo('${object.dataList}')}`;
 
-            if (object.dataNew && object.dataNew != '' && object.permissions.includes('C')) buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataNew}')" id="${object.dataForm}_new_btn" type="button" class="btn btn-success onlyId">${options.localized['NEW']}</button>\n`)
-            if (object.dataSearch && object.dataSearch != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataSearch}')" id="${object.dataForm}_search_btn" type="button" class="btn btn-warning">${options.localized['SEARCH']}</button>\n`)
-            if (object.dataList && object.dataList != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataList}')" id="${object.dataForm}_list_btn" type="button" class="btn btn-info">${options.localized['LIST']}</button>\n`)
-            if (object.dataDelete && object.permissions.includes('D')) buttonsGroup.prepend(`<button onclick="core.forms.delete('${object.dataForm}', '${object.dataApi}', ${object.dataDeleteOverride}, ${object.dataDeleteAfter});" id="${object.dataForm}_delete_btn" type="button" class="btn btn-danger onlyId">${options.localized['DELETE']}</button>\n`)
-            if (object.dataSaveNew && object.permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.saveNew('${object.dataForm}', '${object.dataApi}', ${object.dataSaveNewOverride}, ${object.dataNewAfter}, ${object.dataSaveAfter}, ${object.dataUpdateAfter}, ${object.dataFormParse});" id="${object.dataForm}_savenew_btn" type="button" class="btn btn-primary">${options.localized['SAVE&NEW']}</button>\n`)
-            if (object.dataSave && object.permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.save('${object.dataForm}', '${object.dataApi}', ${object.dataSaveOverride}, ${object.dataSaveAfter}, ${object.dataUpdateAfter}, ${object.dataFormParse});" id="${object.dataForm}_save_btn" type="button" class="btn btn-primary">${options.localized['SAVE']}</button>\n`)
+            if (object.dataNew && object.dataNew != '' && object.permissions.includes('C')) buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataNew}')" id="${object.dataForm}_new_btn" type="button" class="btn btn-success onlyId">${exports.options.localized['NEW']}</button>\n`)
+            if (object.dataSearch && object.dataSearch != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataSearch}')" id="${object.dataForm}_search_btn" type="button" class="btn btn-warning">${exports.options.localized['SEARCH']}</button>\n`)
+            if (object.dataList && object.dataList != '') buttonsGroup.prepend(`<button onclick="core.goTo('${object.dataList}')" id="${object.dataForm}_list_btn" type="button" class="btn btn-info">${exports.options.localized['LIST']}</button>\n`)
+            if (object.dataDelete && object.permissions.includes('D')) buttonsGroup.prepend(`<button onclick="core.forms.delete('${object.dataForm}', '${object.dataApi}', ${object.dataDeleteOverride}, ${object.dataDeleteAfter});" id="${object.dataForm}_delete_btn" type="button" class="btn btn-danger onlyId">${exports.options.localized['DELETE']}</button>\n`)
+            if (object.dataSaveNew && object.permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.saveNew('${object.dataForm}', '${object.dataApi}', ${object.dataSaveNewOverride}, ${object.dataNewAfter}, ${object.dataSaveAfter}, ${object.dataUpdateAfter}, ${object.dataFormParse});" id="${object.dataForm}_savenew_btn" type="button" class="btn btn-primary">${exports.options.localized['SAVE&NEW']}</button>\n`)
+            if (object.dataSave && object.permissions.includes('U')) buttonsGroup.prepend(`<button onclick="core.forms.save('${object.dataForm}', '${object.dataApi}', ${object.dataSaveOverride}, ${object.dataSaveAfter}, ${object.dataUpdateAfter}, ${object.dataFormParse});" id="${object.dataForm}_save_btn" type="button" class="btn btn-primary">${exports.options.localized['SAVE']}</button>\n`)
 
 
             refreshViewCore()
