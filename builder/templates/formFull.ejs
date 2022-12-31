@@ -36,7 +36,7 @@
 							</div>
 
 							<% } else if (path.options.type.name == 'Number') { %>
-							<input type="number" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value='<%%= locals.object ? object['<%=path.path%>'] : '' %%>'/>
+							<input type="number" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value='<%%= locals.object ? object[' <%=path.path%>'] : '' %%>'/>
 							<% } else if (path.options.password) { %>
 							<input type="password" class="form-control" id="<%= path.path %>" name="<%= path.path%>" placeholder="" <%= path.options.readOnly ? 'disabled' : ''%> value="<%%= locals.object ? object['<%=path.path%>'] : '' %%>" />
 							<% } else if (path.options.fileUpload) { %>
@@ -50,23 +50,12 @@
 					</div>
 					<% } %>
 					<% }) %>
+					<input type="hidden" id="id" name="id" value="<%%= locals.object ? locals.object.id : ''%%>" />
 					<div class="border-top">
-						<div class="card-body">
-							<%% if (locals.permissions.includes('U')) { %>
-							<button id="<%=model.modelName%>Form_submit_btn" type="button" class="btn btn-primary">
-								<%%= __('SAVE') %>
-							</button>
-							<%% } %>
-                            <input type="hidden" class="custom-file-input" id="id" name="id" value="<%%= locals.object ? locals.object.id : ''%>" />
-                            <button id="<%=model.modelName%>Form_list_btn" type="button" class="btn btn-info">
-                                <%%= __('LIST') %>
-                            </button>
-                            <button id="<%=model.modelName%>Form_search_btn" type="button" class="btn btn-warning">
-                                <%%= __('SEARCH') %>
-                            </button>
+						<div class="card-body" data-type="action-buttons" data-entity="<%=model.modelName%>" data-permissions="<%%=locals.permissions.join('')%%>" data-new="/<%%=locals.view%%>">
 						</div>
 					</div>
-                </div>
+				</div>
 			</form>
 		</div>
 	</div>
