@@ -191,6 +191,7 @@
 
     exports.formatters = {
         date: function (value, row, index) {
+            if (value == null || vlaue =='') return '-'
             return moment.utc(value).locale(options.locale).format(options.dateFormat)
         },
         datetime: function (value, row, index) {

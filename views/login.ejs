@@ -15,6 +15,7 @@
 	<link href="/css/common.css" rel="stylesheet" />
 	<%- include('./partials/styles.ejs')%>
 </head>
+
 <body>
 	<div class="main-wrapper">
 		<div class="preloader">
@@ -32,7 +33,7 @@
 					<div id="loginform">
 						<!-- Form -->
 						<% if (locals.message) { %>
-							<div class="text-center"><span class="text-white"><%= message %></span></div>
+						<div class="text-center"><span class="text-white"><%= message %></span></div>
 						<% } %>
 						<form class="form-horizontal mt-3" id="loginform" method="POST" action="/login">
 							<div class="col-12">
@@ -53,6 +54,7 @@
 								<div class="col-12">
 									<div class="form-group">
 										<div class="row">
+											<input type="hidden" id="url" name="url" />
 											<button class="btn btn-success text-white btn-block btn-lg" type="submit"><%= __('Login') %></button>
 											<% if (locals.selfRegister) { %>
 											<button class="btn btn-secondary text-white btn-block btn-lg" type="button" onclick="location.assign('/register')"><%= __('Register') %></button>
@@ -74,7 +76,7 @@
 							</div>
 						</form>
 						<% if (!locals.selfRegister) { %>
-							<div class="text-center"><span class="text-white"><%= __('ONLY_ADMIN_REGISTRATION') %></span></div>
+						<div class="text-center"><span class="text-white"><%= __('ONLY_ADMIN_REGISTRATION') %></span></div>
 						<% } %>
 					</div>
 					<div id="recoverform">
@@ -135,6 +137,11 @@
 				},
 			})
 		})
+
+		const params = new Proxy(new URLSearchParams(window.location.search), {
+			get: (searchParams, prop) => searchParams.get(prop),
+		});
+		$('#url').val(params.url)
 	</script>
 </body>
 

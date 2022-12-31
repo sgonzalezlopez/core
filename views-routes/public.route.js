@@ -37,7 +37,7 @@ router.post('/login', function (req, res, next) {
     req.login(user, (err) => {
       if (err) res.render('login', {layout: false, error : res.__('User/password incorrect')})
       else {
-        res.redirect(req.query.url || "/")
+        res.redirect(req.query.url || req.body.url || "/")
       }
     })
   })(req, res, next);
