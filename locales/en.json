@@ -4,5 +4,7 @@
   "APP_Skater Registry": "APP_Skater Registry",
   "APP_Stats": "APP_Stats",
   "APP_login": "APP_login",
-  "GUEST": "GUEST"
+  "GUEST": "GUEST",
+  "UPDATE_SUCCESS_MESSAGE" : "Se ha actualizado correctamente.",
+  "UPDATE_ERROR_MESSAGE" : "Se ha producido un error."
 }

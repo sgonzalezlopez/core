@@ -161,5 +161,8 @@
   "permissions": "Permisos",
   "profile": "Perfil",
   "users": "Usuarios",
-  "values": "Valores"
+  "values": "Valores",
+  "UPDATE_SUCCESS_MESSAGE" : "Se ha actualizado correctamente.",
+  "UPDATE_ERROR_MESSAGE" : "Se ha producido un error.",
+  "UPDATE": "Actualizar"
 }

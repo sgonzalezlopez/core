@@ -38,7 +38,7 @@ exports.create = (req, res) => {
 
 exports.update = (req, res) => {
     try {
-        Model.findOneAndUpdate({_id:req.params.id}, parseBody(req.body))
+        Model.findOneAndUpdate({_id:req.params.id}, parseBody(req.body), {new: true})
         .then(item => {
             if (item) res.send(item)
             else res.status(400).send({message: res.__('ITEM_NOT_FOUND')})
