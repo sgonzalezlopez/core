@@ -23,6 +23,9 @@ const UserSchema = mongoose.Schema({
         type : Boolean,
         default : true
     },
+    lastLogin : {
+        type : Date
+    },
     hash : {
         type:String,
         hideInForm : true

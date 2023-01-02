@@ -17,6 +17,8 @@ passport.use(new LocalStrategy({
                if (!user || user == null || !user.validPassword(password)) {
                    return cb(null, false, {message: i18n.__('Invalid user credentials')});
                }
+               user.lastLogin = new Date()
+               user.save();
                delete user.salt;
                delete user.hash;
                return cb(null, user, {message: 'Logged In Successfully'});

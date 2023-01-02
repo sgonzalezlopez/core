@@ -9,7 +9,8 @@
                     <th data-field="username"><%= __('COL_Username') %></th>
                     <th data-field="email"><%= __('COL_Email') %></th>
                     <th data-field="roles"><%= __('COL_Roles') %></th>
-                    <th data-field="active"><%= __('COL_Active') %></th>
+                    <th data-field="active" data-formatter="core.formatters.boolean"><%= __('COL_Active') %></th>
+                    <th data-field="lastLogin" data-formatter="core.formatters.datetime"><%= __('COL_lastLogin') %></th>
                     <th data-field="id" data-formatter="actionFormatter" data-align="center" data-events="actionEvents"><%= __('COL_actions') %></th>
                 </tr>
             </thead>

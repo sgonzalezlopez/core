@@ -195,7 +195,8 @@
             return moment.utc(value).locale(options.locale).format(options.dateFormat)
         },
         datetime: function (value, row, index) {
-            return moment(value).locale(options.locale).format()
+            if (!value || value == '') return '-'
+            return moment.utc(value).locale(options.locale).format('DD/MM/yyyy HH:mm:ss')
         },
         milliseconds: function (value, row, index) {
             return moment.utc(value).format('HH:mm:ss.SSS')

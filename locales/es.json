@@ -164,5 +164,6 @@
   "values": "Valores",
   "UPDATE_SUCCESS_MESSAGE" : "Se ha actualizado correctamente.",
   "UPDATE_ERROR_MESSAGE" : "Se ha producido un error.",
-  "UPDATE": "Actualizar"
+  "UPDATE": "Actualizar",
+  "COL_lastLogin": "Último Login"
 }

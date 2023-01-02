@@ -33,7 +33,6 @@ exports.register = async function (req, res, next) {
 			if (err) return next(err, null)
 		});
 
-		console.log(config.config.app.ENV);
 		to = (config.config.app.ENV == 'development' ? (config.getConfig('ADMIN_EMAIL')) : user.email)
 
 		if (twoSteps) await Email.sendTemplatedEmail('registration-twosteps', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
@@ -218,6 +217,9 @@ exports.signin = (req, res) => {
 				var token = jwt.sign({ id: user.id, username: user.username, roles: user.roles }, config.config.auth.JWT_SECRET, {
 					expiresIn: 86400 // 24 hours
 				});
+
+				user.lastLogin = new Date()
+				user.save();
 
 				var authorities = [];
 
