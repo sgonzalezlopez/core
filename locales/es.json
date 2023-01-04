@@ -165,5 +165,7 @@
   "UPDATE_SUCCESS_MESSAGE" : "Se ha actualizado correctamente.",
   "UPDATE_ERROR_MESSAGE" : "Se ha producido un error.",
   "UPDATE": "Actualizar",
-  "COL_lastLogin": "Último Login"
+  "COL_lastLogin": "Último Login",
+  "APP_Login": "Acceso",
+	"user-list": "Listado de usuarios"
 }
