@@ -8,7 +8,7 @@
 					<tr>
 						<%  Object.keys(model.schema.paths).forEach(element => { var path = model.schema.paths[element] %>
 						<% if (!path.options.hideInForm) { %>
-						<th data-field="<%=path.path%>">
+						<th data-field="<%=path.path%>" data-sortable="true">
 							<%%= __('COL_<%=path.path%>') %%>
 						</th>
 						<% }})%>
