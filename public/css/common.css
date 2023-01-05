@@ -30,8 +30,10 @@ table.clickable tbody tr {
     width: 95%;
 }
 
-.auth-box #loginform, .auth-box #recoverform, .auth-box #signinFrm {
-    margin : 1rem !important;
+.auth-box #loginform,
+.auth-box #recoverform,
+.auth-box #signinFrm {
+    margin: 1rem !important;
 }
 
 .auth-box .btn {
@@ -65,9 +67,10 @@ table.clickable tbody tr {
     align-items: center;
 }
 
-.side-navbar-buttons .nav-item a{
+.side-navbar-buttons .nav-item a {
     color: white !important;
 }
+
 .side-navbar-buttons .nav-item {
     width: max-content;
 }
@@ -77,7 +80,7 @@ table.clickable tbody tr {
     position: relative;
 }
 
-.select2-selection--multiple{
+.select2-selection--multiple {
     overflow: hidden !important;
     height: auto !important;
 }
@@ -86,7 +89,11 @@ div[data-type="action-buttons"] .btn {
     margin-left: 2px;
 }
 
-.select2-container--classic .select2-selection--single, .select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-selection__arrow, .select2-container--default .select2-selection--single .select2-selection__rendered {
+.select2-container--classic .select2-selection--single,
+.select2-container--default .select2-selection--multiple,
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--single .select2-selection__arrow,
+.select2-container--default .select2-selection--single .select2-selection__rendered {
     border-color: #e9ecef;
     height: 36px;
     color: var(--bs-body);
@@ -99,4 +106,8 @@ div[data-type="action-buttons"] .btn {
 
 .to-detail {
     height: 36px !important;
+}
+
+.fixed-table-container {
+    min-height: 340px !important;
 }
