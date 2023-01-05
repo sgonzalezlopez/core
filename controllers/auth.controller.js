@@ -162,6 +162,28 @@ exports.signup = async (req, res) => {
 	}
 };
 
+exports.setPassword = async (req, res) => {
+	try {
+		Users.findById(req.params.id)
+		.then(async user => {
+			await user.setPassword(req.body.password)
+			user.save((err, user) => {
+				if (err) {
+					res.status(500).send({ message: err });
+					return;
+				}
+				res.send({ message: 'OK' })
+			});
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(400).send()
+		})
+	} catch (err) {
+		console.error(err);
+		throw err;
+	}
+};
 exports.changepassword = async (req, res) => {
 	try {
 		const user = new Users({
@@ -177,8 +199,8 @@ exports.changepassword = async (req, res) => {
 				res.status(500).send({ message: err });
 				return;
 			}
+			res.send({ message: 'OK' })
 		});
-		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);
 		throw err;

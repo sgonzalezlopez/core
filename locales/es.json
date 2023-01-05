@@ -167,5 +167,7 @@
   "UPDATE": "Actualizar",
   "COL_lastLogin": "Último Login",
   "APP_Login": "Acceso",
-	"user-list": "Listado de usuarios"
+	"user-list": "Listado de usuarios",
+  "SET_PASSWORD" : "Introduce la nueva contraseña",
+  "RESET_PASSWORD": "Resetear contraseña"
 }

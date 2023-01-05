@@ -50,6 +50,8 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
 validateNewPassword = async (req, res, next) => {
   try {
 
+    if (req.user.roles.includes('admin')) return next();
+
     var regexpText = await config.getConfig('PASSWORD_COMPLEXITY');
     var regexp = null;
     if (regexpText || regexpText != '') regexp = RegExp(regexpText)

@@ -15,12 +15,22 @@ module.exports.isRole = function isRole(role) {
 function validateRole(req, res, next, profile) {
     if (!req.user) return res.status(400).send({message : res.__('ERR004')})
 
+    if (!Array.isArray(profile)) profile = [profile]
 
-    if (req.user.roles.includes('admin') || req.user.roles.includes(profile)) return next()
+    profile.push('admin');
+
+    if (req.user.roles.some(r=> profile.includes(r))) return next()
     else {
         console.log('Acceso denegado para', req.originalUrl, " al usuario ", req.user.username);
         return res.status(400).send({message : res.__('ERR005')})
     }
+
+
+    // if (req.user.roles.includes('admin') || req.user.roles.includes(profile)) return next()
+    // else {
+    //     console.log('Acceso denegado para', req.originalUrl, " al usuario ", req.user.username);
+    //     return res.status(400).send({message : res.__('ERR005')})
+    // }
 }
 
 module.exports.checkPermision = function checkPermision(entity, access) {
