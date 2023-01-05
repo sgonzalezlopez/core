@@ -569,8 +569,8 @@
                     e.stopPropagation()
                     core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () {
                         tables.bootstrapTable('remove', {
-                            field: 'id',
-                            values: [row._id]
+                            field: '$index',
+                            values: [index]
                         })
                     })
                 }
