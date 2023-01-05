@@ -85,7 +85,7 @@
 							<button id="UserForm_search_btn" type="button" class="btn btn-warning">
 								<%= __('SEARCH') %>
 							</button>
-							<% if (locals.permissions.includes('U')) { %>
+							<% if (locals.object && locals.permissions.includes('U')) { %>
 							<button id="UserForm_resetPassword_btn" type="button" class="btn btn-info">
 								<%= __('RESET_PASSWORD') %>
 							</button>
@@ -112,7 +112,9 @@
 	$('#UserForm_search_btn').click(() => {
 		window.location.replace('/admin/user-search')
 	})
-
+	</script>
+	<% if (locals.object && locals.permissions.includes('U')) { %>
+	<script>
 	$('#UserForm_setPassword_btn').click(() => {
 		bootbox.prompt({
 			title: core.options.localized.SET_PASSWORD,
@@ -158,3 +160,4 @@
 		})
 	})
 </script>
+<%}%>
