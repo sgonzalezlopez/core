@@ -16,6 +16,7 @@ module.exports.CONFIGS = {...BASE_CONFIG, ...LOCAL_CONFIG};
 
 module.exports.connectDB = async function() {
     console.log(this.CONFIGS.MONGODB_URI);
+    mongoose.set('strictQuery', true);
     await mongoose.connect(this.CONFIGS.MONGODB_URI, {useNewUrlParser : true, useUnifiedTopology: true}, function(err) {
     //     // mongoose.db.command({ buildInfo :1 }, function (err, info) {
     //     //     console.log(info.version);
