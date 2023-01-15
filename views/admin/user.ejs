@@ -120,7 +120,6 @@
 			title: core.options.localized.SET_PASSWORD,
 			centerVertical: true,
 			callback: function(result) {
-				console.log(result);
 				if (result != null) {
 					$.ajax({
 						method: "POST",
@@ -134,7 +133,7 @@
 						},
 						error: function(error) {
 							console.error(error);
-							toastr.error(error, core.getOptions().appName)
+							toastr.error(error.responseJSON.detail, core.getOptions().appName)
 						},
 					})
 				}
@@ -155,7 +154,7 @@
 			},
 			error: function(error) {
 				console.error(error);
-				toastr.error(error, core.getOptions().appName)
+				toastr.error(error.responseJSON.detail, core.getOptions().appName)
 			},
 		})
 	})

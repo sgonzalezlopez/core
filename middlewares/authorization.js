@@ -13,7 +13,7 @@ module.exports.isRole = function isRole(role) {
 }
 
 function validateRole(req, res, next, profile) {
-    if (!req.user) return res.status(400).send({message : res.__('ERR004')})
+    if (!req.user) return res.redirect('/login?url=' + req.originalUrl)
 
     if (!Array.isArray(profile)) profile = [profile]
 

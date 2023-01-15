@@ -177,7 +177,7 @@ exports.setPassword = async (req, res) => {
 		})
 		.catch(err => {
 			console.error(err);
-			res.status(400).send()
+			res.status(400).send(err)
 		})
 	} catch (err) {
 		console.error(err);
