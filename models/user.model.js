@@ -46,7 +46,7 @@ UserSchema.methods.setPassword = async function(password) {
 
     var regText = await config.getConfig('PASSWORD_COMPLEXITY');
     var regexp = new RegExp(regText)
-    if ( regexp != null && regexp != '' && !regexp.test(password)) {
+    if ( regexp != "/null/" && regexp != null && regexp != '' && !regexp.test(password)) {
         const error = new Error(i18n.__('Password does not match complexity'))
         error.detail = i18n.__(regText)
         throw (error);
