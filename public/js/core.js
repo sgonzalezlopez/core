@@ -540,7 +540,7 @@
 
         // Mete línea de depurador//
         console.log('core.js cargado');
-        
+
         options.tableDefaults['data-locale'] = options.locale
         $('table').each(function () {
             for (const key in options.tableDefaults) {
@@ -552,16 +552,33 @@
             }
         })
 
-         // Tablas abren el elemento con un click (OPCIÓN B)
+        // Tablas abren el elemento con un click (SOLUCIÓN FINAL)
         $('table.clickable').each(function () {
             const $table = $(this);
 
-           $table.on('click-row.bs.table', function (e, row) {
-               window.location.href = $table.attr('detail-url') + row._id;
-          });
+            // Eliminar CUALQUIER handler previo
+            $table.off('click-row.bs.table');
+            $table.off('click-cell.bs.table');
+
+            // Usar SOLO click-row
+            $table.on('click-row.bs.table', function (e, row) {
+
+                // Ignorar clicks en acciones o detalle
+             if ($(e.target).closest('.detail-icon, .view, .delete').length) {
+               return;
+              }
+
+              if (!row || !row._id) {
+               console.error('Row inválida', row);
+               return;
+             }
+
+             window.location.href = $table.attr('detail-url') + row._id;
+            });
         });
 
         // Evitar que iconos y detalle disparen navegación
+        $(document).off('click', '.detail-icon, .view, .delete');
         $(document).on('click', '.detail-icon, .view, .delete', function (e) {
             e.stopPropagation();
         });
