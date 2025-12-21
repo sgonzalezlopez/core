@@ -552,48 +552,36 @@
             }
         })
 
-        // Tablas abren el elemento con un click (SOLUCIÓN FINAL)
-        $('table.clickable').each(function () {
-            const table = this;
+       // Tablas abren el elemento con un click (SOLUCIÓN FINAL)
+$('table.clickable').each(function () {
+    const $table = $(this);
 
-            // Eliminar CUALQUIER binding previo
-            $table.off('click-row.bs.table');
-            $table.off('click-cell.bs.table');
+    // 🔴 Eliminar CUALQUIER handler previo
+    $table.off('click-row.bs.table');
+    $table.off('click-cell.bs.table');
 
-            // Usar SOLO click-row
-            $table.on('click-row.bs.table', function (e, row) {
+    // ✅ Usar SOLO click-row
+    $table.on('click-row.bs.table', function (e, row) {
 
-             // CORTAR TODO (clave)
-             e.preventDefault();
-             e.stopPropagation();
-             e.stopImmediatePropagation();
+        // Ignorar clicks en acciones o detalle
+        if ($(e.target).closest('.detail-icon, .view, .delete').length) {
+            return;
+        }
 
-                // Ignorar clicks en acciones o detalle
-             if ($(e.target).closest('.detail-icon, .view, .delete').length) {
-               return false;
-              }
+        if (!row || !row._id) {
+            console.error('Row inválida', row);
+            return;
+        }
 
-              if (!row || !row._id) {
-               console.error('Row inválida', row);
-               return false;
-             }
+        window.location.href = $table.attr('detail-url') + row._id;
+    });
+});
 
-             const url = this.getAttribute('detail-url');
-
-             console.log('NAVEGANDO (row):', row._id);
-             window.location.href = url + row._id;
-
-             return false;
-            });
-        });
-
-        // Evitar que iconos y detalle disparen navegación
-        $(document).off('click', '.detail-icon, .view, .delete');
-        $(document).on('click', '.detail-icon, .view, .delete', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-         e.stopImmediatePropagation();
-        });
+// Evitar que iconos y detalle disparen navegación
+$(document).off('click', '.detail-icon, .view, .delete');
+$(document).on('click', '.detail-icon, .view, .delete', function (e) {
+    e.stopPropagation();
+});
 
     }
 
