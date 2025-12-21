@@ -488,19 +488,44 @@
         })
     }
 
-    function setDatePickers() {
-        // Establecer el valor de datepickers
-        $(".mydatepicker").each(function () {
-            var element = $(this)
-            element.datepicker({
-                language: options.locale,
-                format: getText('DATE_FORMAT'),
-                todayHighlight: true,
-            });
-            if (element.attr('date-value') && element.attr('date-value') != 'Invalid date') element.datepicker('setDate', moment.utc(element.attr('date-value')).format(getText('DATE_FORMAT').toUpperCase()))
-            element.attr('autocomplete', 'off')
-        })
-    }
+function setDatePickers() {
+    // Establecer el valor de datepickers
+    $(".mydatepicker").each(function () {
+        const element = $(this);
+
+        element.datepicker({
+            language: options.locale,
+            format: getText('DATE_FORMAT'),
+            todayHighlight: true,
+        });
+
+        const rawDate = element.attr('date-value');
+
+        if (rawDate && rawDate !== 'Invalid date') {
+            let date;
+
+            // Si ya es un Date (caso raro, pero posible)
+            if (rawDate instanceof Date) {
+                date = rawDate;
+            } else {
+                date = new Date(rawDate);
+            }
+
+            // Validar fecha antes de usarla
+            if (!isNaN(date.getTime())) {
+                element.datepicker(
+                    'setDate',
+                    moment(date)
+                        .utc()
+                        .format(getText('DATE_FORMAT').toUpperCase())
+                );
+            }
+        }
+
+        element.attr('autocomplete', 'off');
+    });
+}
+
 
     function setCollapse() {
         // Comportamiento de collapse
@@ -570,7 +595,7 @@
 
     }
 
-    
+
     function addActionEvent() {
         // Establecer las acciones de BORRADO en las tablas
         var tables = $("[data-toggle='table']")
