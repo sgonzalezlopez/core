@@ -539,7 +539,7 @@
     function setTablesOptions() {
 
         // Mete línea de depurador//
-        console.log('core.js cargado');
+        //console.log('core.js cargado');//
 
         options.tableDefaults['data-locale'] = options.locale
         $('table').each(function () {
@@ -552,39 +552,25 @@
             }
         })
 
-       // Tablas abren el elemento con un click (SOLUCIÓN FINAL)
-$('table.clickable').each(function () {
-    const $table = $(this);
+       // Navegación al hacer click en la fila
+        $('table.clickable').each(function () {
+            const $table = $(this);
 
-    // 🔴 Eliminar CUALQUIER handler previo
-    $table.off('click-row.bs.table');
-    $table.off('click-cell.bs.table');
+            $table.on('click-row.bs.table', function (e, row) {
+                if (!row || !row._id) return;
 
-    // ✅ Usar SOLO click-row
-    $table.on('click-row.bs.table', function (e, row) {
+               window.location.href = $table.attr('detail-url') + row._id;
+         });
+        });
 
-        // Ignorar clicks en acciones o detalle
-        if ($(e.target).closest('.detail-icon, .view, .delete').length) {
-            return;
-        }
-
-        if (!row || !row._id) {
-            console.error('Row inválida', row);
-            return;
-        }
-
-        window.location.href = $table.attr('detail-url') + row._id;
-    });
-});
-
-// Evitar que iconos y detalle disparen navegación
-$(document).off('click', '.detail-icon, .view, .delete');
-$(document).on('click', '.detail-icon, .view, .delete', function (e) {
-    e.stopPropagation();
-});
+        // Evitar navegación al pulsar en iconos, enlaces y detalle (+)
+        $(document).on('click', '.detail-icon, .view, .delete, a', function (e) {
+          e.stopPropagation();
+        });
 
     }
 
+    
     function addActionEvent() {
         // Establecer las acciones de BORRADO en las tablas
         var tables = $("[data-toggle='table']")
