@@ -548,16 +548,20 @@
             }
         })
 
-        // Tablas abren el elemento con un click
-        $('table.clickable').each(function (index, value) {
-            var a = $(`#${value.id}`)
-            $(a).on('click-cell.bs.table', function (e, field, row, $element) {
-                if (field != 'id' && !e.sender.columns.find(a => a.field == field).hasOwnProperty('detailFormatter')) {
-                    e.stopPropagation();
-                    window.location.href = $(a).attr('detail-url') + $element._id
-                }
-            })
+         // Tablas abren el elemento con un click (OPCIÓN B)
+        $('table.clickable').each(function () {
+            const $table = $(this);
+
+           $table.on('click-row.bs.table', function (e, row) {
+               window.location.href = $table.attr('detail-url') + row._id;
+          });
         });
+
+        // Evitar que iconos y detalle disparen navegación
+        $(document).on('click', '.detail-icon, .view, .delete', function (e) {
+            e.stopPropagation();
+        });
+
     }
 
     function addActionEvent() {
