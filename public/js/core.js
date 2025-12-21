@@ -537,6 +537,10 @@
     }
 
     function setTablesOptions() {
+
+        // Mete línea de depurador//
+        console.log('core.js cargado');
+        
         options.tableDefaults['data-locale'] = options.locale
         $('table').each(function () {
             for (const key in options.tableDefaults) {
