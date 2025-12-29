@@ -595,24 +595,31 @@ function setDatePickers() {
 
     }
 
+function addActionEvent() {
+    var tables = $("[data-toggle='table']").filter(function () {
+        return $(this).data('bootstrap.table');
+    });
 
-    function addActionEvent() {
-        // Establecer las acciones de BORRADO en las tablas
-        var tables = $("[data-toggle='table']")
-        if (tables) {
-            window.actionEvents = {
-                'click .delete': function (e, value, row, index) {
-                    e.stopPropagation()
-                    core.api.delete(tables.attr('data-url') || tables.attr('data-api'), row._id, function () {
-                        tables.bootstrapTable('remove', {
-                            field: '$index',
-                            values: [index]
-                        })
-                    })
+    if (!tables.length) return;
+
+    window.actionEvents = {
+        'click .delete': function (e, value, row, index) {
+            e.stopPropagation();
+
+            core.api.delete(
+                tables.attr('data-url') || tables.attr('data-api'),
+                row._id,
+                function () {
+                    tables.bootstrapTable('remove', {
+                        field: '$index',
+                        values: [index]
+                    });
                 }
-            }
+            );
         }
-    }
+    };
+}
+
 
     function setInputMasks() {
         // Establecer las máscaras de formato
