@@ -1,3 +1,25 @@
+window.actionEvents = {
+    'click .delete': function (e, value, row, index) {
+        e.stopPropagation();
+
+        const $table = $(e.currentTarget).closest('table');
+        const api = $table.attr('data-url') || $table.attr('data-api');
+
+        if (!api) {
+            console.error('No data-api definido en la tabla');
+            return;
+        }
+
+        core.api.delete(api, row._id, function () {
+            $table.bootstrapTable('remove', {
+                field: '_id',
+                values: [row._id]
+            });
+        });
+    }
+};
+
+
 (function (root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
@@ -146,7 +168,7 @@
 
     // Core dialog function
     exports.setup = async function (new_options) {
-        addActionEvent();
+        // addActionEvent();
 
         await setTablesOptions();
 
@@ -595,30 +617,7 @@ function setDatePickers() {
 
     }
 
-function addActionEvent() {
-    var tables = $("[data-toggle='table']").filter(function () {
-        return $(this).data('bootstrap.table');
-    });
 
-    if (!tables.length) return;
-
-    window.actionEvents = {
-        'click .delete': function (e, value, row, index) {
-            e.stopPropagation();
-
-            core.api.delete(
-                tables.attr('data-url') || tables.attr('data-api'),
-                row._id,
-                function () {
-                    tables.bootstrapTable('remove', {
-                        field: '$index',
-                        values: [index]
-                    });
-                }
-            );
-        }
-    };
-}
 
 
     function setInputMasks() {
