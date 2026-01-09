@@ -213,12 +213,11 @@ window.actionEvents = {
 
     exports.formatters = {
 
-        date: function (value) {
-            if (!value) return '-';
-            return moment(value)
-                .locale(options.locale)
-                .format(options.dateFormat);
-        }
+        date: function (value, row, index) {
+            if (value == null || value =='') return '-'
+            return moment.utc(value).locale(options.locale).format(options.dateFormat)
+        },
+
 
         datetime: function (value, row, index) {
             if (!value || value == '') return '-'
