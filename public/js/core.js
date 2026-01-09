@@ -215,15 +215,14 @@ window.actionEvents = {
         date: function (value, row, index) {
             if (!value) return '-';
 
-            // 🔴 Google Calendar usa end exclusivo en eventos all-day
-            if (row?.allDay && index === 1) { // index 1 = columna "end"
-                return moment(value)
-                    .subtract(1, 'day')
-                    .locale(options.locale)
-                    .format(options.dateFormat);
+            let m = moment(value);
+
+            // 🟡 Caso eventos all-day (end exclusivo)
+            if (row?.allDay && index === 1) {
+                m = m.subtract(1, 'day');
             }
 
-            return moment(value)
+            return m
                 .locale(options.locale)
                 .format(options.dateFormat);
         },
