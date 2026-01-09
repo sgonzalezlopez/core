@@ -213,18 +213,16 @@ window.actionEvents = {
 
     exports.formatters = {
         date: function (value, row, index) {
+            console.log('📅 FORMATTER DATE EJECUTADO', {
+                value,
+                index,
+                allDay: row?.allDay,
+                rawRow: row
+            });
+
             if (!value) return '-';
 
-            let m = moment(value);
-
-            // 🟡 Caso eventos all-day (end exclusivo)
-            if (row?.allDay && index === 1) {
-                m = m.subtract(1, 'day');
-            }
-
-            return m
-                .locale(options.locale)
-                .format(options.dateFormat);
+            return value;
         },
         datetime: function (value, row, index) {
             if (!value || value == '') return '-'
