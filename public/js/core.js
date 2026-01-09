@@ -212,18 +212,12 @@ window.actionEvents = {
     }
 
     exports.formatters = {
+
         date: function (value, row, index) {
-            console.log('📅 FORMATTER DATE EJECUTADO', {
-                value,
-                index,
-                allDay: row?.allDay,
-                rawRow: row
-            });
-
-            if (!value) return '-';
-
-            return value;
+            if (value == null || value =='') return '-'
+            return moment.utc(value).locale(options.locale).format(options.dateFormat)
         },
+
         datetime: function (value, row, index) {
             if (!value || value == '') return '-'
             return moment.utc(value).locale(options.locale).format('DD/MM/yyyy HH:mm:ss')
