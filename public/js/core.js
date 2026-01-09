@@ -213,8 +213,19 @@ window.actionEvents = {
 
     exports.formatters = {
         date: function (value, row, index) {
-            if (value == null || value =='') return '-'
-            return moment.utc(value).locale(options.locale).format(options.dateFormat)
+            if (!value) return '-';
+
+            // 🔴 Google Calendar usa end exclusivo en eventos all-day
+            if (row?.allDay && index === 1) { // index 1 = columna "end"
+                return moment(value)
+                    .subtract(1, 'day')
+                    .locale(options.locale)
+                    .format(options.dateFormat);
+            }
+
+            return moment(value)
+                .locale(options.locale)
+                .format(options.dateFormat);
         },
         datetime: function (value, row, index) {
             if (!value || value == '') return '-'
