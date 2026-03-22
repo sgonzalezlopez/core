@@ -3,6 +3,7 @@ const defaults_config = {
     EMAIL_ACCOUNT : process.env.EMAIL_ACCOUNT,
     EMAIL_PASS : process.env.EMAIL_PASS,
     ENABLE_EMAIL_SEND : process.env.ENABLE_EMAIL_SEND,
+    HIDDEN_APPS : process.env.HIDDEN_APPS || '',
 }
 
 const defaults_features = {

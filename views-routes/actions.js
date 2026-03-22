@@ -9,6 +9,45 @@ const path = require('path')
 const config = require('../config/config');
 const moment = require('moment')
 
+function getHiddenAppNames() {
+    const hiddenApps = config.getConfig('HIDDEN_APPS')
+
+    if (Array.isArray(hiddenApps)) return hiddenApps.filter(Boolean)
+    if (!hiddenApps) return []
+
+    if (typeof hiddenApps === 'string') {
+        const trimmedValue = hiddenApps.trim()
+
+        if (trimmedValue.startsWith('[')) {
+            try {
+                const parsedValue = JSON.parse(trimmedValue)
+                return Array.isArray(parsedValue) ? parsedValue.filter(Boolean) : []
+            }
+            catch {
+                return []
+            }
+        }
+
+        return trimmedValue.split(',').map(appName => appName.trim()).filter(Boolean)
+    }
+
+    return []
+}
+
+function filterHiddenApps(apps) {
+    const hiddenAppNames = getHiddenAppNames()
+
+    if (hiddenAppNames.length === 0) return apps || []
+
+    return (apps || [])
+        .filter(app => !hiddenAppNames.includes(app.name))
+        .map(app => {
+            const visibleApp = typeof app.toObject === 'function' ? app.toObject() : { ...app }
+            visibleApp.child = filterHiddenApps(visibleApp.child)
+            return visibleApp
+        })
+}
+
 module.exports.renderWithApps = function (req, res, next, view, data) {
     this.renderWithApps(req, res, next, view, data, id)
 }
@@ -27,6 +66,8 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
     else {
         data.apps =  (typeof req.session !== 'undefined' && req.session.hasOwnProperty('apps') &&  req.session.apps.length > 0 && req.session.apps[0].hasOwnProperty('child')) ? req.session.apps : await apps.getApplications(req.user)
     }
+
+    data.apps = filterHiddenApps(data.apps)
 
     req.session.apps = data.apps
 
