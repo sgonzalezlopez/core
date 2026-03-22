@@ -13,12 +13,26 @@ const localeMiddleware = require('express-locale')
 const session = require('express-session');
 const Users = require('./models/user.model')
 var LokiStore = require('connect-loki')(session);
+const MongoStore = require('connect-mongo');
 const LocalStrategy = require('passport-local').Strategy;
 const expressLayouts = require('express-ejs-layouts')
 const passport = require('passport');
 var fileUpload = require('express-fileupload');
 const authJwt = require('./middlewares/auth.jwt')
 const i18n = require('./i18n/i18n.config')
+
+function createSessionStore() {
+  if (config.app.ENV === 'development') {
+    return new LokiStore({ path: path.join(__dirname, '../sessions/session-store.db') })
+  }
+
+  if (!config.db.CONFIGS.MONGODB_URI) return null
+
+  return MongoStore.create({
+    mongoUrl: config.db.CONFIGS.MONGODB_URI,
+    collectionName: 'sessions'
+  })
+}
 
 
 module.exports.setupDB = async function () {
@@ -78,15 +92,19 @@ module.exports.setup = async function (params) {
 
   app.use(i18n.init)
 
-  app.use(session({
+  const sessionConfig = {
     genid: (req) => {
       return uuidv4() // use UUIDs for session IDs
     },
-    store: (config.app.ENV == 'development' ? new LokiStore({ path: path.join(__dirname, '../sessions/session-store.db') }) : ''),
     secret: config.app.COOKIE_SECRET,
     resave: false,
     saveUninitialized: true
-  }));
+  }
+
+  const sessionStore = createSessionStore()
+  if (sessionStore) sessionConfig.store = sessionStore
+
+  app.use(session(sessionConfig));
 
 
   require('./passport')
