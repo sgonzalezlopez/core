@@ -606,11 +606,23 @@ function setDatePickers() {
         $('table.clickable').each(function () {
             const $table = $(this);
 
-            $table.on('click-row.bs.table', function (e, row) {
-                if (!row || !row._id) return;
+            $table.off('click-row.bs.table.coreDetail');
+            $table.on('click-row.bs.table.coreDetail', function (e, row, $element) {
+                const detailUrl = $table.attr('detail-url');
+                if (!detailUrl) return;
 
-               window.location.href = $table.attr('detail-url') + row._id;
-         });
+                const detailHref = $element && $element.length ? $element.find('a.view').attr('href') : null;
+                const rowId = row && (row._id || row.id);
+
+                if (detailHref) {
+                    window.location.href = detailHref;
+                    return;
+                }
+
+                if (!rowId) return;
+
+                window.location.href = detailUrl + rowId;
+            });
         });
 
         // Evitar navegación al pulsar en iconos, enlaces y detalle (+)
