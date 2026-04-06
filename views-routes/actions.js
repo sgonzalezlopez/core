@@ -48,6 +48,34 @@ function filterHiddenApps(apps) {
         })
 }
 
+function flattenApps(apps) {
+    return (apps || []).flatMap(app => [app, ...flattenApps(app.child)])
+}
+
+function resolveNavigationLink(app, allApps) {
+    if (!app) return null
+
+    const candidates = flattenApps(allApps).filter(candidate => (
+        candidate.name === app.name
+        && candidate.link
+        && candidate.link !== '#'
+        && candidate.link !== app.link
+        && (candidate.type.includes('side') || candidate.type.includes('main'))
+    ))
+
+    return candidates[0]?.link || app.link
+}
+
+function attachNavigationLinks(apps) {
+    const allApps = flattenApps(apps)
+
+    return (apps || []).map(app => ({
+        ...app,
+        navigationLink: resolveNavigationLink(app, allApps),
+        child: attachNavigationLinks(app.child)
+    }))
+}
+
 module.exports.renderWithApps = function (req, res, next, view, data) {
     this.renderWithApps(req, res, next, view, data, id)
 }
@@ -67,7 +95,7 @@ module.exports.renderWithApps = async function renderWithApps(req, res, next, vi
         data.apps =  (typeof req.session !== 'undefined' && req.session.hasOwnProperty('apps') &&  req.session.apps.length > 0 && req.session.apps[0].hasOwnProperty('child')) ? req.session.apps : await apps.getApplications(req.user)
     }
 
-    data.apps = filterHiddenApps(data.apps)
+    data.apps = attachNavigationLinks(filterHiddenApps(data.apps))
 
     req.session.apps = data.apps
 
