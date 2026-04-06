@@ -9,6 +9,29 @@ const router = express.Router();
 const viewRoute = '';
 const jwt = require('../middlewares/auth.jwt')
 const config = require('../config/config')
+const fs = require('fs')
+const path = require('path')
+
+function getViewPaths(req) {
+  const configuredViews = req.app.get('views')
+
+  if (Array.isArray(configuredViews)) return configuredViews
+  if (!configuredViews) return []
+
+  return [configuredViews]
+}
+
+function viewExists(req, view) {
+  return getViewPaths(req).some(viewPath => fs.existsSync(path.join(viewPath, `${view}.ejs`)))
+}
+
+function getPrivateFallbackPath(req, page, id) {
+  const privateView = `private/${page}`
+
+  if (!viewExists(req, privateView)) return null
+
+  return id ? `/private/${page}/${id}` : `/private/${page}`
+}
 
 router.get('/login', function (req, res) {
   var data =  { layout: false, selfRegister: getFeature('SELF_REGISTER') }
@@ -63,11 +86,23 @@ router.get('/', function (req, res, next) {
 
 router.get('/:page', function (req, res, next) {
   var page = req.params.page;
+  const privateFallbackPath = getPrivateFallbackPath(req, page)
+
+  if (!viewExists(req, page) && privateFallbackPath) {
+    return res.redirect(privateFallbackPath)
+  }
+
   actions.renderWithApps(req, res, next, viewRoute + page, { title: req.params.page })
 });
 
 router.get('/:page/:id', function (req, res, next) {
   var page = req.params.page;
+  const privateFallbackPath = getPrivateFallbackPath(req, page, req.params.id)
+
+  if (!viewExists(req, page) && privateFallbackPath) {
+    return res.redirect(privateFallbackPath)
+  }
+
   actions.renderWithApps(req, res, next, viewRoute + page, null, req.params.id)
 });
 
