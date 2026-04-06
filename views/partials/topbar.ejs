@@ -60,31 +60,18 @@
               </li>
               <% } %>
               <% level0 = locals.actionApps; %>
-              <% level0.forEach((element, index) => { %>
+              <% level0.forEach(element => { %>
                 <% level1 = element.child ||[];%>
-                <% const dropdownId = `topbarDropdown${index}` %>
-                <li class="nav-item dropdown d-flex align-items-center">
-                  <% if (level1.length > 0) { %>
-                    <a class="nav-link d-none d-md-block" href="<%=element.navigationLink || element.link%>">
-                      <span><%= __('APP_' + element.name) %></span>
-                    </a>
-                    <a class="nav-link dropdown-toggle d-none d-md-block px-2" href="#" id="<%=dropdownId%>" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fa fa-angle-down"></i>
-                    </a>
-                    <a class="nav-link dropdown-toggle d-block d-md-none" href="#" id="<%=dropdownId%>-mobile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <span class="d-block d-md-none"><i class="fa fa-plus"></i></span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="<%=dropdownId%>">
-                      <% level1.forEach(child => { %>
-                        <li><a class="dropdown-item" href="<%=child.link%>"><%= __('APP_' + child.name) %></a></li>
-                      <% }) %>
-                    </ul>
-                  <% } else { %>
-                    <a class="nav-link" href="<%=element.navigationLink || element.link%>">
-                      <span class="d-none d-md-block"><%= __('APP_' + element.name) %></span>
-                      <span class="d-block d-md-none"><i class="fa fa-plus"></i></span>
-                    </a>
-                  <% } %>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="d-none d-md-block"><%= __('APP_' + element.name) %> <i class="fa fa-angle-down"></i></span>
+                    <span class="d-block d-md-none"><i class="fa fa-plus"></i></span>
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">  
+                    <% level1.forEach(element => { %>
+                      <li><a class="dropdown-item" href="<%=element.link%>"><%= __('APP_' + element.name) %></a></li>
+                  <% }) %>
+                  </ul>
                 </li>
               <% }) %>
 
