@@ -79,7 +79,7 @@ window.actionEvents = {
         'data-search-accent-neutralise': 'true',
         // 'data-height': '650',
         'data-show-export': 'true',
-        'data-export-types': '["csv", "txt", "excel", "xlsx"]',
+            'data-export-types': '["csv", "txt", "xlsx"]',
         'data-sticky-header': 'true',
         'data-mobile-responsive': "true",
         'data-check-on-init': "true",
