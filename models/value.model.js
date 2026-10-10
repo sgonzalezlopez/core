@@ -20,7 +20,12 @@ const ValueSchema = mongoose.Schema({
         type : Number,
 
     },
-},{ timestamps: true });
+},{
+    timestamps: true,
+    // El formulario necesita `id` en la respuesta para identificar el nuevo valor en guardados posteriores.
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+});
 
 
 // exporting module to allow it to be imported in other files
