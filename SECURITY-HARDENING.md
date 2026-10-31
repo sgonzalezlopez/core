@@ -1,8 +1,8 @@
 ﻿# Correcciones de seguridad de core
 
-Rama del submódulo: `security/auth-hardening`. El repositorio principal es `repos/core`; la implementación del consumidor se preparó originalmente en `security/core-auth-hardening`.
+Rama del módulo principal: `main`. Las correcciones se prepararon en `security/auth-hardening`. El repositorio principal es `repos/core`; la implementación del consumidor se preparó originalmente en `security/core-auth-hardening`.
 
-Los cambios se dejan en el repositorio principal repos/core, sin commit ni publicación para revisión. El código de los repositorios hermanos se ha leído, pero no se ha modificado ni desplegado.
+Las correcciones están integradas en main del repositorio principal repos/core. El código de los repositorios hermanos se ha leído, pero no se ha modificado ni desplegado.
 
 ## Alcance y orden de la revisión
 
@@ -127,9 +127,9 @@ Los casos de seguridad de la antigua prueba del consumidor se trasladan a `core/
 
 | Ejecución | Resultado |
 | --- | --- |
-| npm test, entorno local Node 26.13.0 | 64 de 64 correctas |
-| npm run test:integration, MongoDB 8.0 temporal | 19 de 19 correctas |
-| Ejecución conjunta con Node 24.22.2 temporal | 83 de 83 correctas, sin pruebas omitidas |
+| Unitarias y HTTP del principal, Node 24.22.2 | 47 de 47 correctas |
+| Integración del principal, MongoDB 8.0 temporal y Node 24.22.2 | 20 de 20 correctas |
+| Ejecución conjunta desde repos/core, Node 24.22.2 | 67 de 67 correctas, sin pruebas omitidas |
 | JavaScript y EJS | Comprobación de sintaxis incluida en la suite local |
 
 El ejecutable temporal de Node 24 se obtuvo para las pruebas sin sustituir el Node del equipo ni modificar las dependencias de la aplicación. Los logs completos se conservan en la carpeta security-review del consumidor.
@@ -138,7 +138,7 @@ El ejecutable temporal de Node 24 se obtuvo para las pruebas sin sustituir el No
 
 1. Revisar los cambios en estas ramas. Configurar `PUBLIC_ORIGIN`, secretos de sesión/JWT, MongoDB y CORS antes de actualizar producción. Las credenciales de bootstrap solo son necesarias para bases nuevas.
 2. Se han probado Node 24.22.2 (línea declarada por el consumidor) y el entorno local Node 26.13.0. Confirmar entrega SMTP y la URL pública en staging.
-3. Confirmar y publicar primero el commit de core en su rama remota. Solo después actualizar el gitlink de cada consumidor a un commit alcanzable y publicar/desplegar cada consumidor. No se han hecho commits ni pushes automáticamente.
+3. Confirmar y publicar primero el commit de core en su rama remota. Solo después actualizar el gitlink de cada consumidor a un commit alcanzable y publicar/desplegar cada consumidor. La integración del módulo principal se publica en main; la actualización de referencias de consumidores se realiza por separado.
 4. Los enlaces basados en salt no deben reactivarse al revertir: una reversión a core antiguo restaura el fallo original. Preferir una corrección hacia delante si aparece una incompatibilidad.
 
 Esto cubre los siete hallazgos solicitados y los fallos de inicialización vinculados. No es una certificación de toda la aplicación: quedan fuera de esta entrega el cambio de KDF legado (PBKDF2 de 1000 iteraciones), una política de rate limiting/brute force, la unicidad transaccional de username/email, los callbacks no retornados de repositorios hermanos y una auditoría de las restantes consultas genéricas. Las actualizaciones de dependencias requieren una revisión separada.
@@ -152,6 +152,6 @@ Esto cubre los siete hallazgos solicitados y los fallos de inicialización vincu
 
 ## Traslado al módulo principal
 
-Las correcciones se han aplicado sobre HEAD 4c4566f de repos/core en la rama security/auth-hardening. Se conservan sus cambios de autorización y los alias newPassword/newPasswordVerify, incluida la salida req.newPassword. Las carpetas core dentro de consumidores se tratan como referencias del módulo principal; el desarrollo debe continuar aquí.
+Las correcciones se prepararon sobre HEAD 4c4566f de repos/core en security/auth-hardening y se integraron en main. Se conservan sus cambios de autorización y los alias newPassword/newPasswordVerify, incluida la salida req.newPassword. Las carpetas core dentro de consumidores se tratan como referencias del módulo principal; el desarrollo debe continuar aquí.
 
 La verificación del módulo principal usa Node 24.22.2 y las dependencias ya instaladas y bloqueadas por new-cpvrivas mediante NODE_PATH, sin instalar ni actualizar paquetes en repos/core. Los resultados del traslado se guardan en new-cpvrivas/security-review/principal-core-results.txt.
