@@ -10,14 +10,6 @@ const config = require('./config.route')
 const features = require('./feature.route')
 const values = require('./value.route')
 
-router.use(function(req, res, next) {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
-    );
-    next();
-  });
-
 // Routes
 router.use('/permission', [authentication.isAuthenticated, authorization.isAdmin], require('./permission.route'))
 router.use('/auth', auth)
@@ -28,4 +20,3 @@ router.use('/feature', [authentication.isAuthenticated, authorization.isAdmin], 
 router.use('/value', [authentication.isAuthenticated], values)
 
 module.exports = router;
-

@@ -1,52 +1,22 @@
-//passport.js
+'use strict';
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('./models/user.model')
-const i18n = require('./i18n/i18n.config')
-const config = require('./config/config')
-
-
-passport.use(new LocalStrategy({
-        usernameField: 'username',
-        passwordField: 'password'
-    }, 
-    function (username, password, cb) {
-        //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
-        return User.findOne({ username: username, active: true })
-           .then(user => {
-               if (!user || user == null || !user.validPassword(password)) {
-                   return cb(null, false, {message: i18n.__('Invalid user credentials')});
-               }
-               user.lastLogin = new Date()
-               user.save();
-               delete user.salt;
-               delete user.hash;
-               return cb(null, user, {message: 'Logged In Successfully'});
-          })
-          .catch(err => cb(err));
-    }
-));
-
-//passport.js
-const passportJWT = require("passport-jwt");
-const JWTStrategy   = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
-
-passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromUrlQueryParameter('token') || ExtractJWT.fromBodyField('token') || ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey   : process.env.JWT_SECRET
-    },
-    function (jwtPayload, cb) {
-
-        //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-        return User.findOne({_id: jwtPayload.id, active : true})
-            .then(user => {
-               delete user.salt;
-               delete user.hash;
-                return cb(null, user);
-            })
-            .catch(err => {
-                return cb(err);
-            });
-    }
-));
+const User = require('./models/user.model');
+const i18n = require('./i18n/i18n.config');
+const {config} = require('./config/config');
+const {Strategy: JWTStrategy, ExtractJwt} = require('passport-jwt');
+passport.use(new LocalStrategy({usernameField: 'username', passwordField: 'password'}, (username, password, cb) => {
+    if (typeof username !== 'string' || typeof password !== 'string') return cb(null, false);
+    return User.findOne({username, active: true}).then(async user => {
+        if (!user || !user.validPassword(password)) return cb(null, false, {message: i18n.__('Invalid user credentials')});
+        user.lastLogin = new Date();
+        await user.save();
+        return cb(null, user);
+    }).catch(cb);
+}));
+passport.use(new JWTStrategy({jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromUrlQueryParameter('token'), ExtractJwt.fromBodyField('token'), ExtractJwt.fromAuthHeaderAsBearerToken(), ExtractJwt.fromHeader('x-access-token')]), secretOrKey: config.auth.JWT_SECRET, algorithms: ['HS256']}, (payload, cb) => {
+    return User.findOne({_id: payload.id, active: true}).then(user => {
+        if (!user || (payload.passwordVersion || 0) !== (user.passwordVersion || 0)) return cb(null, false);
+        return cb(null, user);
+    }).catch(cb);
+}));

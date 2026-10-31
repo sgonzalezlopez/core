@@ -5,16 +5,13 @@ if (typeof __modelsPath === 'undefined') global.__modelsPath = []
 __modelsPath.push(path.join(__dirname, "./models"))
 
 const express = require("express");
-const { v4: uuidv4 } = require('uuid');
-const cors = require("cors");
-const bodyParser = require('body-parser');
-const { config, forceSSL } = require('./config/config')
+const security = require('./security/http');
+const { config, forceSSL, loadConfigs, loadFeatures } = require('./config/config')
 const localeMiddleware = require('express-locale')
 const session = require('express-session');
 const Users = require('./models/user.model')
 var LokiStore = require('connect-loki')(session);
 const MongoStore = require('connect-mongo');
-const LocalStrategy = require('passport-local').Strategy;
 const expressLayouts = require('express-ejs-layouts')
 const passport = require('passport');
 var fileUpload = require('express-fileupload');
@@ -40,6 +37,7 @@ module.exports.setupDB = async function () {
 
 module.exports.setup = async function (params) {
   await config.db.connectDB()
+  await Promise.all([loadConfigs(), loadFeatures()]);
 
 
   module.exports.staticPaths = [path.join(__dirname, './public')];
@@ -49,27 +47,35 @@ module.exports.setup = async function (params) {
     done(null, user._id);
   });
 
-  if (params && params.hasOwnProperty('deserializeUser') && params.deserializeUser) {
-    passport.deserializeUser((id, done) => { params.deserializeUser(id, done) })
-  } else {
-    passport.deserializeUser((id, done) => {
-      Users.findOne({ _id: id })
-        .then(user => {
-          if (!user || user == null) return done(new Error(i18n.__('Invalid session user')))
-          delete user.salt;
-          delete user.hash;
-          return done(null, user)
-        })
-    });
-  }
+  passport.deserializeUser((req, id, done) => {
+    let completed = false;
+    const finish = (err, user) => {
+      if (completed) return;
+      completed = true;
+      if (err) return done(err);
+      if (!user || !user.active || (req.session.authPasswordVersion || 0) !== (user.passwordVersion || 0)) return done(null, false);
+      return done(null, user);
+    };
+    if (params && typeof params.deserializeUser === 'function') {
+      try { Promise.resolve(params.deserializeUser(id, finish)).catch(finish); } catch (err) { finish(err); }
+    } else {
+      Users.findOne({_id: id, active: true}).then(user => finish(null, user)).catch(finish);
+    }
+  });
 
   const app = express();
 
   // set the view engine to ejs
 
-  if (config.app.ENV === 'production') app.use(forceSSL);
+  app.disable('x-powered-by');
+  if (config.app.ENV === 'production') {
+    const hops = Number(process.env.TRUST_PROXY_HOPS || 1);
+    if (!Number.isInteger(hops) || hops < 0 || hops > 5) throw new Error('Invalid TRUST_PROXY_HOPS');
+    app.set('trust proxy', hops);
+    app.use(forceSSL);
+  }
 
-  app.use(cors());
+  app.use(security.corsPolicy());
 
   //
   app.use(fileUpload());
@@ -82,7 +88,6 @@ module.exports.setup = async function (params) {
 
 
   app.use(localeMiddleware({ "priority": ["accept-language", "default"], "default": "es_ES" }))
-  enableMultipleViewFolders(express);
   app.use(expressLayouts)
   app.set('layout', 'layouts/full');
   app.set('layout extractScripts', true)
@@ -92,25 +97,19 @@ module.exports.setup = async function (params) {
 
   app.use(i18n.init)
 
-  const sessionConfig = {
-    genid: (req) => {
-      return uuidv4() // use UUIDs for session IDs
-    },
-    secret: config.app.COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: true
-  }
-
-  const sessionStore = createSessionStore()
-  if (sessionStore) sessionConfig.store = sessionStore
-
-  app.use(session(sessionConfig));
-
-
-  require('./passport')
-  app.use(authJwt.validateToken)
+  const sessionStore = createSessionStore();
+  app.use(session(security.sessionOptions(config, sessionStore)));
+  require('./passport');
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(authJwt.validateToken);
+  app.use(security.csrfProtection);
+  app.get('/api/csrf', security.csrfEndpoint);
+  app.use((req, res, next) => {
+    if (req.authenticationSource === 'query-token' && !req.path.startsWith('/api/')) return res.render('token-login', {layout: false, token: req.query.token, url: require('./security/validation').safeRedirect(req.query.url || req.path)});
+    next();
+  });
+  app.post('/token-login', authJwt.confirmLogin);
 
 
   return app;
@@ -153,34 +152,22 @@ module.exports.configureErrorHandling = (app) => {
   return app;
 }
 
-function enableMultipleViewFolders(express) {
-  var renderProxy = express.response.render;
-  express.render = function () {
-    app.set('views', 'path/to/custom/views');
-    try {
-      return renderProxy.apply(this, arguments);
-    }
-    catch (e) { }
-    app.set('views', 'path/to/default/views');
-    return renderProxy.apply(this, arguments);
-  };
-}
-
-
 function logErrors(err, req, res, next) {
-  console.error(err.stack)
+  if (!err.status || err.status >= 500) console.error(err.stack)
   next(err)
 }
 
 function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
-    res.status(500).send({ error: 'Something failed!' })
+  if (res.headersSent) return next(err);
+  if (req.xhr || req.originalUrl.startsWith('/api/')) {
+    res.status(err.status || 500).send({ error: err.status && err.status < 500 ? err.message : 'Something failed!' })
   } else {
     next(err)
   }
 }
 
 function errorHandler(err, req, res, next) {
-  res.status(500)
+  if (res.headersSent) return next(err);
+  res.status(err.status || 500)
   res.render('error', { layout: false, error: err, env: config.app.ENV })
 }

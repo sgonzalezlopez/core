@@ -60,60 +60,26 @@ const values = [...core_values, ...local_values]
 const features = {...core_features, ...local_features}
 const configs = {...core_configs, ...local_configs}
 
-module.exports =  async function initalize () {
-    await initializeDB()
-
-    await loadDefaultValues()
-
-
-    // Features
-    for (const key in features) {
-        if (Object.hasOwnProperty.call(features, key)) {
-            const element = features[key];
-            featureModel.findOne({key : key})
-            .then(item => {
-                if (!item) featureModel.create({key:key, active:element})
-            })
-        }
+module.exports = async function initialize() {
+    await initializeDB();
+    await loadDefaultValues();
+    for (const [key, active] of Object.entries(features)) {
+        if (!await featureModel.findOne({key})) await featureModel.create({key, active});
     }
-
-    // Configs
-    for (const key in configs) {
-        if (Object.hasOwnProperty.call(configs, key)) {
-            const element = configs[key];
-            configModel.findOne({key : key})
-            .then(item => {
-                if (!item) configModel.create({key:key, value:element})
-            })
-        }
+    for (const [key, value] of Object.entries(configs)) {
+        if (!await configModel.findOne({key})) await configModel.create({key, value});
     }
-}
+    const {loadConfigs, loadFeatures} = require('./config');
+    await Promise.all([loadConfigs(), loadFeatures()]);
+};
 
 async function loadDefaultValues() {
-        // Inicializar aplicaciones
-        var admin = await Apps.findOne({name : 'admin'})
-        if (!admin) {
-            admin = await Apps.create({name:'admin', type:['action'], roles:['admin'], level:-1, link:'/admin/', icon:'mdi mdi-hexagon-multiple'})
-        }
-        
-        applications.forEach(a => {
-            Apps.findOne({name : a.name})
-            .then(async app => {
-                if (!app) {
-                    if (a.parent && a.parent == 'admin') a.parent = admin._id
-                    await Apps.create(a)
-                }
-            })
-        })
-    
-    
-        // Inicializar valores
-        values.forEach(v => {
-            valueModel.findOne(v)
-            .then(async value =>{
-                if(!value) {
-                    await valueModel.create(v)
-                }
-            } )
-        })
+    let admin = await Apps.findOne({name: 'admin'});
+    if (!admin) admin = await Apps.create({name: 'admin', type: ['action'], roles: ['admin'], level: -1, link: '/admin/', icon: 'mdi mdi-hexagon-multiple'});
+    for (const application of applications) {
+        if (!await Apps.findOne({name: application.name})) await Apps.create({...application, ...(application.parent === 'admin' ? {parent: admin._id} : {})});
+    }
+    for (const value of values) {
+        if (!await valueModel.findOne(value)) await valueModel.create(value);
+    }
 }

@@ -15,19 +15,9 @@ module.exports.CONFIGS = {...BASE_CONFIG, ...LOCAL_CONFIG};
 
 
 module.exports.connectDB = async function() {
-    console.log(this.CONFIGS.MONGODB_URI);
     mongoose.set('strictQuery', true);
-    await mongoose.connect(this.CONFIGS.MONGODB_URI, {useNewUrlParser : true, useUnifiedTopology: true}, function(err) {
-    //     // mongoose.db.command({ buildInfo :1 }, function (err, info) {
-    //     //     console.log(info.version);
-    //     // })
+    await mongoose.connect(this.CONFIGS.MONGODB_URI);
 
-    // var admin = new mongoose.mongo.Admin(mongoose.connection.db);
-    // admin.buildInfo(function (err, info) {
-    //    console.log('DB version:', info.version);
-    // });
-  });
-  
   // Get Mongoose to use the global promise library
   mongoose.Promise = global.Promise;
   //Get the default connection
@@ -37,17 +27,12 @@ module.exports.connectDB = async function() {
   db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 }
 
-module.exports.initializeDB = function () {
-    Users.estimatedDocumentCount(async (err, count) => {
-        if (!err && count === 0) {
-            var user = new Users({
-                username : 'admin',
-                email : 'admin@localhost',
-                roles : ['admin'],
-                salt : 'b22aed538e76b1a70b2b8b20b57de4ae',
-                hash : '4b1623733433161b53b3e39975cd7d3344e3e1de06e2dbb14c5a74089fff5a81b3eb49c18dc2079ce9a86390d35567d1949b4e8453c35b95d79d305fbf1fd24e'
-            })
-            await user.save();
-        }
-    })
-}
+// Existing databases are untouched. Empty databases require explicit bootstrap credentials.
+module.exports.initializeDB = async function () {
+    if (await Users.estimatedDocumentCount() !== 0) return;
+    const validation = require('../security/validation');
+    if (!process.env.INITIAL_ADMIN_PASSWORD || !process.env.INITIAL_ADMIN_EMAIL) throw new Error('INITIAL_ADMIN_EMAIL and INITIAL_ADMIN_PASSWORD are required for an empty database');
+    const user = new Users({username: validation.text(process.env.INITIAL_ADMIN_USERNAME || 'admin', 'username', 128), email: validation.email(process.env.INITIAL_ADMIN_EMAIL), roles: ['admin'], active: true});
+    await user.setPassword(validation.password(process.env.INITIAL_ADMIN_PASSWORD));
+    await user.save();
+};

@@ -1,63 +1,40 @@
-const jwt = require("jsonwebtoken");
-const config = require("../config/config");
-const Users = require("../models/user.model");
-
-function getToken(req) {
-  return req.headers["x-access-token"] || req.query.token;
+'use strict';
+const jwt = require('jsonwebtoken');
+const {config} = require('../config/config');
+const Users = require('../models/user.model');
+const {safeRedirect} = require('../security/validation');
+function headerToken(req) {
+    const bearer = req.headers.authorization;
+    return req.headers['x-access-token'] || (typeof bearer === 'string' && /^Bearer /i.test(bearer) ? bearer.slice(7) : undefined);
 }
-
-function getJwtSecret() {
-  return config.config.auth.JWT_SECRET;
+function verifyToken(req, res, next) {
+    const token = headerToken(req) || (req.method === 'GET' ? req.query.token : (req.path === '/token-login' ? req.body.token : undefined));
+    if (typeof token !== 'string' || token.length > 8192) return res.status(401).send({message: res.__('ERR003')});
+    jwt.verify(token, config.auth.JWT_SECRET, {algorithms: ['HS256']}, (err, decoded) => {
+        if (err || !decoded || typeof decoded.id !== 'string') return res.status(401).send({message: res.__('ERR003')});
+        Promise.resolve().then(() => Users.findOne({_id: decoded.id, active: true})).then(user => {
+            if (!user || (decoded.passwordVersion || 0) !== (user.passwordVersion || 0)) return res.status(401).send({message: res.__('ERR003')});
+            req.userId = user.id;
+            req.user = user;
+            req.authenticationSource = headerToken(req) ? 'token' : 'query-token';
+            return next();
+        }).catch(next);
+    });
 }
-
-async function loadAuthenticatedUser(token) {
-  const decoded = jwt.verify(token, getJwtSecret());
-  const user = await Users.findOne({ _id: decoded.id, active: true });
-
-  if (!user) throw new Error('Invalid authenticated user');
-
-  return user;
+function validateToken(req, res, next) {
+    if (headerToken(req)) return verifyToken(req, res, next);
+    if (req.method !== 'GET' || !req.query.token) return next();
+    return verifyToken(req, res, next);
 }
-
-async function verifyToken(req, res, next) {
-  const token = getToken(req);
-  if (!token) return res.status(403).send({ message: res.__('ERR003') });
-
-  try {
-    const user = await loadAuthenticatedUser(token);
-    req.userId = user.id;
-    req.user = user;
-    return next();
-  }
-  catch (err) {
-    return res.status(401).send({ message: res.__('ERR003') });
-  }
-}
-
-async function validateToken(req, res, next) {
-  const token = getToken(req);
-  if (!token) return next();
-
-  try {
-    const user = await loadAuthenticatedUser(token);
-    req.userId = user.id;
-    req.user = user;
-  }
-  catch (err) {
-    // This middleware is global and optional; protected routes report token errors.
-  }
-  return next();
+function confirmLogin(req, res, next) {
+    return verifyToken(req, res, () => req.login(req.user, err => {
+        if (err) return next(err);
+        req.session.authPasswordVersion = req.user.passwordVersion || 0;
+        req.session.save(err => err ? next(err) : res.redirect(safeRedirect(req.body.url)));
+    }));
 }
 
 function generateToken(user) {
-  return jwt.sign({ id: user.id, username: user.username, roles: user.roles }, getJwtSecret(), {
-    expiresIn: 86400 // 24 hours
-  });
+    return jwt.sign({id: String(user.id || user._id), username: user.username, roles: user.roles, passwordVersion: user.passwordVersion || 0}, config.auth.JWT_SECRET, {expiresIn: 86400, algorithm: 'HS256'});
 }
-const authJwt = { 
-    verifyToken,
-    validateToken,
-    generateToken
-};
-
-module.exports = authJwt;
+module.exports = {verifyToken, validateToken, generateToken, headerToken, confirmLogin};

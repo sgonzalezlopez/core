@@ -48,39 +48,36 @@ function filterHiddenApps(apps) {
         })
 }
 
-module.exports.renderWithApps = function (req, res, next, view, data) {
-    this.renderWithApps(req, res, next, view, data, id)
-}
-
 module.exports.renderWithApps = async function renderWithApps(req, res, next, view, data, id) {
-    var modelName = view.split('/').pop().split('-')[0]
-    var viewBase = view.split('-')[0]
-
-
-    if (!data || data == null) data = { actions: null };
-    data.user = req.user;
-
-    data.config = config.getConfig()
-    data.moment = moment
-    if (config.getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
-    else {
-        data.apps =  (typeof req.session !== 'undefined' && req.session.hasOwnProperty('apps') &&  req.session.apps.length > 0 && req.session.apps[0].hasOwnProperty('child')) ? req.session.apps : await apps.getApplications(req.user)
-    }
-
-    data.apps = filterHiddenApps(data.apps)
-
-    req.session.apps = data.apps
-
-    data.sideApps = data.apps.filter(a => a.type.includes('side'))
-    data.actionApps = data.apps.filter(a => a.type.includes('action'))
-    data.userApps = data.apps.filter(a => a.type.includes('user'))
-    data.mainApps = data.apps.filter(a => a.type.includes('main'))
-    data.permissions = data.permissions || await authorization.getPermissionsForEntity(modelName, data.user)
-    data.currentApp = data.apps.filter(a => a.link == ("/" + view))[0]
-    data.view = view
-
     try {
+        var modelName = view.split('/').pop().split('-')[0]
+        var viewBase = view.split('-')[0]
+
+
+        if (!data || data == null) data = { actions: null };
+        data.user = req.user;
+
+        data.config = config.getConfig()
+        data.moment = moment
+        if (config.getFeature('ALWAYS_REFRESH_MENU')) data.apps = await apps.getApplications(req.user)
+        else {
+            data.apps =  (typeof req.session !== 'undefined' && req.session.hasOwnProperty('apps') &&  req.session.apps.length > 0 && req.session.apps[0].hasOwnProperty('child')) ? req.session.apps : await apps.getApplications(req.user)
+        }
+
+        data.apps = filterHiddenApps(data.apps)
+
+        req.session.apps = data.apps
+
+        data.sideApps = data.apps.filter(a => a.type.includes('side'))
+        data.actionApps = data.apps.filter(a => a.type.includes('action'))
+        data.userApps = data.apps.filter(a => a.type.includes('user'))
+        data.mainApps = data.apps.filter(a => a.type.includes('main'))
+        data.permissions = data.permissions || await authorization.getPermissionsForEntity(modelName, data.user)
+        data.currentApp = data.apps.filter(a => a.link == ("/" + view))[0]
+        data.view = view
+
         var model_path = null;
+        let controller_path = null;
         for (let i = 0; i < __modelsPath.length; i++) {
             const modelPath = __modelsPath[i];
             if (fs.existsSync(path.join(modelPath, `${modelName}.model.js`))) {

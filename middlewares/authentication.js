@@ -1,19 +1,13 @@
-const authJwt = require('./auth.jwt')
-
-module.exports.isAuthenticated = function isAuthenticated(req, res, next) {
-
-    if (req.headers["x-access-token"] || req.query.token) return authJwt.verifyToken(req, res, next);    
-
-    
-    if (!req.isAuthenticated || !req.isAuthenticated() || !req.user) return res.status(400).send({ message : res.__('ERR004')})
-    else return next();
-}
-
-module.exports.isAuthenticatedWeb = function isAuthenticatedWeb(req, res, next) {
-
-    if (req.headers["x-access-token"] || req.query.token) return authJwt.verifyToken(req, res, next);    
-
-    
-    if (!req.isAuthenticated || !req.isAuthenticated() || !req.user) return res.redirect('/login?url=' + req.originalUrl)
-    else return next();
-}
+'use strict';
+const authJwt = require('./auth.jwt');
+function authenticated(req) { return !!req.user && (req.authenticationSource || (typeof req.isAuthenticated === 'function' && req.isAuthenticated())); }
+exports.isAuthenticated = (req, res, next) => {
+    if (authenticated(req)) return next();
+    if (authJwt.headerToken(req) || (req.method === 'GET' && req.query.token)) return authJwt.verifyToken(req, res, next);
+    return res.status(401).send({message: res.__('ERR004')});
+};
+exports.isAuthenticatedWeb = (req, res, next) => {
+    if (authenticated(req)) return next();
+    if (authJwt.headerToken(req) || (req.method === 'GET' && req.query.token)) return authJwt.verifyToken(req, res, next);
+    return res.redirect('/login?url=' + encodeURIComponent(req.originalUrl));
+};

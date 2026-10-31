@@ -6,82 +6,76 @@ const applications = [
     { name: "Test", title: 'APP_Test', link: '/admin/test', roles: ['admin'], icon: 'fas fa-bullseye' },
 ]
 
-exports.getAll = (req, res) => {
+exports.getAll = async (req, res, next) => {
     try {
-        Model.find()
-            .then(items => {
+        await Model.find()
+            .then(async items => {
                 res.send(items)
             })
     } catch (err) {
-        console.error(err);
-        throw err
+        return next(err)
     }
 }
 
-exports.get = (req, res) => {
+exports.get = async (req, res, next) => {
     try {
-        Model.findById(req.params.id)
-            .then(item => {
+        await Model.findById(req.params.id)
+            .then(async item => {
                 res.send(item)
             })
     } catch (err) {
-        console.error(err);
-        throw err
+        return next(err)
     }
 }
 
-exports.create = (req, res) => {
+exports.create = async (req, res, next) => {
     try {
-        Model.create(parseBody(req.body))
-            .then(item => {
+        await Model.create(parseBody(req.body))
+            .then(async item => {
                 res.send(item)
             })
     } catch (err) {
-        console.error(err);
-        throw err
+        return next(err)
     }
 }
 
-exports.update = (req, res) => {
+exports.update = async (req, res, next) => {
     try {
-        Model.findOneAndUpdate({ _id: req.params.id }, parseBody(req.body))
-            .then(item => {
+        await Model.findOneAndUpdate({ _id: req.params.id }, parseBody(req.body))
+            .then(async item => {
                 if (item) res.send(item)
                 else res.status(400).send({ message: res.__('ITEM_NOT_FOUND') })
             })
     } catch (err) {
-        console.error(err);
-        throw err
+        return next(err)
     }
 }
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res, next) => {
     try {
-        Model.deleteOne({ _id: req.params.id })
-            .then(item => {
+        await Model.deleteOne({ _id: req.params.id })
+            .then(async item => {
                 res.send({ message: 'OK' })
             })
     } catch (err) {
-        console.error(err);
-        throw err
+        return next(err)
     }
 }
 
-exports.find = (req, res) => {
+exports.find = async (req, res, next) => {
     try {
         for (const key in req.body) {
             if (Object.hasOwnProperty.call(req.body, key)) {
-                if (req.body[key] == '') delete req.body[key]
+                if (req.body[key] === '') delete req.body[key]
             }
         }
-        Model.find(req.body)
+        await Model.find(req.body)
             .populate('parent')
-            .then(items => {
+            .then(async items => {
                 res.send(items)
             })
     } catch (err) {
-        console.error(err);
-        throw err
+        return next(err)
     }
 }
 
@@ -92,7 +86,7 @@ exports.getApplications = (user) => {
     return Model.find()
         .populate('parent')
         .sort('level')
-        .then(items => {
+        .then(async items => {
             var filtered = items.filter(a => a.roles.some(r => user.roles.includes(r)))
             var tree = filtered.filter(a => a.parent == null);
             tree.map(t => {
@@ -117,7 +111,7 @@ function parseBody(body) {
     var values = body
     for (const key in body) {
         if (Object.hasOwnProperty.call(body, key)) {
-            values[key] = body[key] == "" ? null : body[key];
+            values[key] = body[key] === "" ? null : body[key];
         }
     }
 

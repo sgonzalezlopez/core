@@ -7,12 +7,11 @@ const db = require ('./db.config')
 var configs = app.CONFIGS;
 var features = app.FEATURES;
 
-loadConfigs();
-loadFeatures();
+// Database-backed configuration is awaited by app.setup after connecting.
 
 module.exports.loadConfigs = loadConfigs;
 function loadConfigs() {
-    config_model.find()
+    return config_model.find()
     .then( items => {
         items.forEach(item => {
             configs[item.key] = item.value
@@ -22,7 +21,7 @@ function loadConfigs() {
 
 module.exports.loadFeatures = loadFeatures;
 function loadFeatures() {
-    feature_model.find()
+    return feature_model.find()
     .then( items => {
         items.forEach(item => {
             features[item.key] = item.active
@@ -37,7 +36,7 @@ module.exports.config = {
 }
 
 module.exports.forceSSL = function (req, res, next){
-    if (req.headers['x-forwarded-proto'] !== 'https') {
+    if (!req.secure) {
         return res.redirect(['https://', req.get('Host'), req.url].join(''));
     }
     return next();

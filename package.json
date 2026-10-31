@@ -39,12 +39,14 @@
     "passport-local": "^1.0.0",
     "toastr": "^2.1.4",
     "uuid": "^9.0.0",
-    "yargs": "^17.6.2"
+    "yargs": "^17.6.2",
+    "jsonwebtoken": "^9.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test test/unit.test.cjs test/http.test.cjs",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test:integration": "node --test test/mongo.test.cjs"
   },
   "author": "",
   "license": "ISC"
