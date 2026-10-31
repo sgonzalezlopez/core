@@ -1,6 +1,6 @@
 ﻿# Correcciones de seguridad de core
 
-Rama del submódulo: `security/auth-hardening`. Rama del consumidor: `security/core-auth-hardening`.
+Rama del submódulo: `security/auth-hardening`. El repositorio principal es `repos/core`; la implementación del consumidor se preparó originalmente en `security/core-auth-hardening`.
 
 Los cambios se dejan en el repositorio principal repos/core, sin commit ni publicación para revisión. El código de los repositorios hermanos se ha leído, pero no se ha modificado ni desplegado.
 
@@ -149,3 +149,9 @@ Esto cubre los siete hallazgos solicitados y los fallos de inicialización vincu
 - [MongoDB: atomicidad de escritura](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/): actualización de un documento con condiciones sobre el estado esperado.
 - [OWASP: prevención CSRF](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html): token sincronizado y SameSite como defensa adicional.
 - [Express: sesiones](https://expressjs.com/en/resources/middleware/session/): cookie segura, confianza del proxy, `saveUninitialized` y almacenamiento persistente.
+
+## Traslado al módulo principal
+
+Las correcciones se han aplicado sobre HEAD 4c4566f de repos/core en la rama security/auth-hardening. Se conservan sus cambios de autorización y los alias newPassword/newPasswordVerify, incluida la salida req.newPassword. Las carpetas core dentro de consumidores se tratan como referencias del módulo principal; el desarrollo debe continuar aquí.
+
+La verificación del módulo principal usa Node 24.22.2 y las dependencias ya instaladas y bloqueadas por new-cpvrivas mediante NODE_PATH, sin instalar ni actualizar paquetes en repos/core. Los resultados del traslado se guardan en new-cpvrivas/security-review/principal-core-results.txt.
