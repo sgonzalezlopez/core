@@ -1,56 +1,56 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 const Users = require("../models/user.model");
-const passport = require('passport');
 
-verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+function getToken(req) {
+  return req.headers["x-access-token"] || req.query.token;
+}
 
-  if (!token) {
-    return res.status(403).send({ message: res.__('ERR003')});
-  }
+function getJwtSecret() {
+  return config.config.auth.JWT_SECRET;
+}
 
-  jwt.verify(token, config.auth.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ message: res.__('ERR003') });
-    }
-    req.userId = decoded.id;
-    req.user = decoded;
-    next();
-  });
-};
+async function loadAuthenticatedUser(token) {
+  const decoded = jwt.verify(token, getJwtSecret());
+  const user = await Users.findOne({ _id: decoded.id, active: true });
 
- validateToken = (req, res, next) => {
-  let token = req.headers["x-access-token"] || req.query.token
-  if (!token) return next()
+  if (!user) throw new Error('Invalid authenticated user');
+
+  return user;
+}
+
+async function verifyToken(req, res, next) {
+  const token = getToken(req);
+  if (!token) return res.status(403).send({ message: res.__('ERR003') });
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) return next()
-  
-      
-      // req.body.username = user.username;
-      
-      jwtPayload = decoded;
-      passport.authenticate('jwt', (err, user, info) => {
-        req.login(user, (err) => {
-          if (err) throw err
-          res.redirect(req.query.url || "/")
-        })
-      })(req, res, next);
-      // next();
-    });
-
+    const user = await loadAuthenticatedUser(token);
+    req.userId = user.id;
+    req.user = user;
+    return next();
   }
   catch (err) {
-    console.error(err);
-    
+    return res.status(401).send({ message: res.__('ERR003') });
   }
-};
+}
 
+async function validateToken(req, res, next) {
+  const token = getToken(req);
+  if (!token) return next();
 
-generateToken = (user) => {
-  return jwt.sign({ id: user.id, username: user.username}, process.env.JWT_SECRET, {
+  try {
+    const user = await loadAuthenticatedUser(token);
+    req.userId = user.id;
+    req.user = user;
+  }
+  catch (err) {
+    // This middleware is global and optional; protected routes report token errors.
+  }
+  return next();
+}
+
+function generateToken(user) {
+  return jwt.sign({ id: user.id, username: user.username, roles: user.roles }, getJwtSecret(), {
     expiresIn: 86400 // 24 hours
   });
 }

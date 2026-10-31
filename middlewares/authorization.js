@@ -15,11 +15,11 @@ module.exports.isRole = function isRole(role) {
 function validateRole(req, res, next, profile) {
     if (!req.user) return res.redirect('/login?url=' + req.originalUrl)
 
-    if (!Array.isArray(profile)) profile = [profile]
+    profile = Array.isArray(profile) ? [...profile] : [profile]
 
     profile.push('admin');
 
-    if (req.user.roles.some(r=> profile.includes(r))) return next()
+    if (Array.isArray(req.user.roles) && req.user.roles.some(r=> profile.includes(r))) return next()
     else {
         console.log('Acceso denegado para', req.originalUrl, " al usuario ", req.user.username);
         return res.status(400).send({message : res.__('ERR005')})
@@ -35,11 +35,11 @@ function validateRole(req, res, next, profile) {
 
 module.exports.checkPermision = function checkPermision(entity, access) {
     return function (req, res, next) {
-        if (!req.user) jwt.verifyToken(req, res, next)
-        
+        if (!req.user) return jwt.verifyToken(req, res, () => checkPermision(entity, access)(req, res, next))
+
         if (!req.user) return res.status(400).send({message : res.__('ERR004')})
 
-        if (req.user.roles.includes('admin')) return next();
+        if (Array.isArray(req.user.roles) && req.user.roles.includes('admin')) return next();
 
         Permission.find({entity : entity, roles : {$in : req.user.roles}, $expr : { $in : [access, "$type"]}})
         // Permission.find({entity : entity, roles : {$in : req.user.roles}})
@@ -50,7 +50,8 @@ module.exports.checkPermision = function checkPermision(entity, access) {
                 console.log('Acceso denegado para', req.originalUrl, " al usuario ", req.user.username);
                 return res.status(400).send({message : res.__('ERR005')})
             }
-        })  
+        })
+        .catch(next)
     }
 }
 

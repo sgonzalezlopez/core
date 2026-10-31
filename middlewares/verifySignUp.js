@@ -3,7 +3,7 @@ const config = require('../config/config')
 
 
 
-checkInputData = (req, res, next) => {
+const checkInputData = (req, res, next) => {
   try {
     if (!req.body.username || !req.body.email) throw (new Error(res.__('Missing username or email')));
     if (req.body.email && !String(req.body.email).toLowerCase().match(
@@ -20,7 +20,7 @@ checkInputData = (req, res, next) => {
 }
 
 
-checkDuplicateUsernameOrEmail = (req, res, next) => {
+const checkDuplicateUsernameOrEmail = (req, res, next) => {
   // Username
   Users.findOne({
     username: req.body.username
@@ -39,7 +39,10 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     Users.findOne({
       email: req.body.email
     }).exec((err, user) => {
-      if (err) { req.error = err; next();}
+      if (err) {
+        req.error = err;
+        return next();
+      }
 
       if (user) req.error = (new Error(res.__('Failed! Email is already in use!')));
       return next();
@@ -47,32 +50,37 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
   });
 };
 
-validateNewPassword = async (req, res, next) => {
+const validateNewPassword = async (req, res, next) => {
   try {
+    const password = req.body.newPassword || req.body.password;
+    const passwordVerify = req.body.newPasswordVerify || req.body.passwordVerify;
+    const targetUserId = req.params.id || req.body.id;
 
-    if (req.user.roles.includes('admin')) return next();
+    if (!password) throw new Error(res.__('Password does not match complexity'));
 
     var regexpText = await config.getConfig('PASSWORD_COMPLEXITY');
     var regexp = null;
-    if (regexpText || regexpText != '') regexp = RegExp(regexpText)
+    if (regexpText) regexp = RegExp(regexpText)
 
-    if (req.user && req.user.id != req.body.id) throw new Error(res.__('Invalid operation'))
-    else if (req.body.password != req.body.passwordVerify) throw new Error(res.__('Password does not match'))
-    else if (regexp != null && regexp != '' && !regexp.test(req.body.password)) {
-      err = new Error(res.__('Password does not match complexity'))
+    if (passwordVerify && password !== passwordVerify) throw new Error(res.__('Password does not match'))
+    if (regexp && !regexp.test(password)) {
+      const err = new Error(res.__('Password does not match complexity'))
       err.detail = res.__(regexpText)
       throw err
     }
-    else if (req.user) {
-      Users.findById(req.user.id)
-        .then(user => {
-          if (!user || user == null) req.error = new Error(res.__('Invalid user'))
-          else if (user.validPassword(req.body.oldPassword)) return next()
-          req.error = new Error(res.__('Old password is not valid'))
-          next();
-        })
+    if (!req.user || (Array.isArray(req.user.roles) && req.user.roles.includes('admin'))) {
+      req.newPassword = password;
+      return next();
     }
-    else return next()
+
+    if (req.user.id !== targetUserId) throw new Error(res.__('Invalid operation'))
+
+    const user = await Users.findById(req.user.id);
+    if (!user) throw new Error(res.__('Invalid user'));
+    if (!user.validPassword(req.body.oldPassword)) throw new Error(res.__('Old password is not valid'));
+
+    req.newPassword = password;
+    return next();
   }
   catch (err) {
     console.error(err);

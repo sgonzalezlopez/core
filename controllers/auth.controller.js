@@ -13,11 +13,9 @@ const passport = require('passport');
 // }
 exports.register = async function (req, res, next) {
 	try {
-		twoSteps = config.getFeature('TWO_STEPS_REGISTRY')
+		const twoSteps = config.getFeature('TWO_STEPS_REGISTRY')
 		if (req.error) {
-			error = req.error;
-			delete req.error;
-			return res.render('register', { layout: false, twoSteps: twoSteps, username: req.body.username, email: req.body.email, error: error })
+			return res.render('register', { layout: false, twoSteps, username: req.body.username, email: req.body.email, error: req.error })
 		}
 
 		const user = new Users({
@@ -27,47 +25,44 @@ exports.register = async function (req, res, next) {
 			active: !twoSteps,
 		});
 
-		if (!twoSteps) user.setPassword(req.body.password)
+		if (!twoSteps) await user.setPassword(req.newPassword || req.body.password)
 
-		user.save((err, user) => {
-			if (err) return next(err, null)
-		});
+		await user.save();
 
-		to = (config.config.app.ENV == 'development' ? (config.getConfig('ADMIN_EMAIL')) : user.email)
+		const to = config.config.app.ENV === 'development' ? config.getConfig('ADMIN_EMAIL') : user.email;
 
 		if (twoSteps) await Email.sendTemplatedEmail('registration-twosteps', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
 		else await Email.sendTemplatedEmail('registration-completed', to, { user: user, link: req.protocol + '://' + req.get('host') + '/login' })
 		await Email.sendTemplatedEmail('new-registration', (config.getConfig('ADMIN_EMAIL')), { user: user })
 		// res.render('login', { layout: false, message : res.__('Registration complete. You can now access.') })
-		if (!twoSteps) q = 'registerSucceed'
-		else q = 'registerPending'
+		const q = twoSteps ? 'registerPending' : 'registerSucceed';
 		res.redirect('/login?' + q)
 	} catch (err) {
-		console.error(err);
-		throw err;
+		next(err);
 	}
 };
 
 exports.completeRegistration = async function (req, res, next) {
 	try {
-		twoSteps = config.getFeature('TWO_STEPS_REGISTRY')
+		const twoSteps = config.getFeature('TWO_STEPS_REGISTRY')
 		if (req.error) {
-			error = req.error;
-			delete req.error;
-			return res.render('complete-registry', { layout: false, token: req.body.token, error: error })
+			return res.render('complete-registry', { layout: false, token: req.body.token, error: req.error })
 		}
 
-		token = req.params.token || req.body.token
-		user = await Users.findOne({ salt: token })
+		const token = req.params.token || req.body.token
+		const user = await Users.findOne({ salt: token })
 		if (!user) return res.redirect('/login?errorNotUser')
 
-		await user.setPassword(req.body.password);
+		await user.setPassword(req.newPassword || req.body.password);
 		user.active = true
 		await user.save();
 
 		req.body.username = user.username;
 		passport.authenticate('local', (err, user, info) => {
-			req.login(user, (err) => {
+			if (err) return next(err);
+			if (!user) return res.redirect('/login?errorNotUser');
+			req.login(user, (loginErr) => {
+				if (loginErr) return next(loginErr);
 				res.redirect(req.query.url || "/")
 			})
 		})(req, res, next);
@@ -79,26 +74,21 @@ exports.completeRegistration = async function (req, res, next) {
 	}
 }
 
-exports.register2 = async (req, res) => {
+exports.register2 = async (req, res, next) => {
 	try {
 		const user = new Users({
 			username: req.body.username,
 			email: req.body.email,
-			roles: [null],
+			roles: ['user'],
 			active: false,
 		});
 
 		//user.setPassword(req.body.password)
 
-		user.save((err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-				return;
-			}
-		});
-		to = (config.config.app.ENV == 'development' ? config.getConfig('ADMIN_EMAIL') : user.email)
+		await user.save();
+		const to = config.config.app.ENV === 'development' ? config.getConfig('ADMIN_EMAIL') : user.email;
 		try {
-			await Email.sendTemplatedEmail('registration', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
+			await Email.sendTemplatedEmail('registration-twosteps', to, { user: user, link: req.protocol + '://' + req.get('host') + '/complete-registry/' + user.salt })
 			await Email.sendTemplatedEmail('new-registration', config.getConfig('ADMIN_EMAIL'), { user: user })
 			res.send({ message: 'OK' })
 		}
@@ -107,8 +97,7 @@ exports.register2 = async (req, res) => {
 		}
 	} catch (err) {
 		console.error(err);
-		res.status(400).send(err.message)
-		throw err;
+		return next(err);
 	}
 };
 
@@ -135,30 +124,25 @@ exports.resetPass = async (req, res) => {
 	}
 };
 
-exports.signup = async (req, res) => {
+exports.signup = async (req, res, next) => {
 	try {
 		const user = new Users({
 			username: req.body.username,
 			email: req.body.email,
-			roles: [null],
+			roles: ['user'],
 			active: false,
 		});
 
-		await user.setPassword(req.body.password)
+		await user.setPassword(req.newPassword || req.body.password)
 
-		user.save((err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-				return;
-			}
-		});
-		to = (config.config.app.ENV == 'development' ? config.getConfig('ADMIN_EMAIL') : user.email)
+		await user.save();
+		const to = config.config.app.ENV === 'development' ? config.getConfig('ADMIN_EMAIL') : user.email;
 		await Email.sendTemplatedEmail('registration-confirmation', to, { user: user, link: req.protocol + '://' + req.get('host') })
 		await Email.sendTemplatedEmail('new-registration', config.getConfig('ADMIN_EMAIL'), { user: user })
 		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);
-		throw err;
+		next(err);
 	}
 };
 
@@ -186,24 +170,16 @@ exports.setPassword = async (req, res) => {
 };
 exports.changepassword = async (req, res) => {
 	try {
-		const user = new Users({
-			username: req.body.username,
-			email: req.body.email,
-			roles: ['user']
-		});
+		const user = await Users.findById(req.params.id);
+		if (!user) return res.status(404).send({ message: res.__('USER_NOT_FOUND') });
 
-		await user.setPassword(req.body.password)
+		await user.setPassword(req.newPassword || req.body.password)
 
-		user.save((err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-				return;
-			}
-			res.send({ message: 'OK' })
-		});
+		await user.save();
+		res.send({ message: 'OK' })
 	} catch (err) {
 		console.error(err);
-		throw err;
+		res.status(500).send({ message: err.message });
 	}
 };
 
@@ -248,7 +224,7 @@ exports.signin = (req, res) => {
 				for (let i = 0; i < user.roles.length; i++) {
 					authorities.push("ROLE_" + user.roles[i].toUpperCase());
 				}
-				req.session.apps = await apps.getApplications(req.user);
+				req.session.apps = await apps.getApplications(user);
 				res.status(200).send({
 					id: user._id,
 					username: user.username,
