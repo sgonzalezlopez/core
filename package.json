@@ -43,7 +43,7 @@
     "jsonwebtoken": "^9.0.0"
   },
   "scripts": {
-    "test": "node --test test/unit.test.cjs test/http.test.cjs",
+    "test": "node --test test/unit.test.cjs test/http.test.cjs test/service-routes.test.cjs",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test:integration": "node --test test/mongo.test.cjs"

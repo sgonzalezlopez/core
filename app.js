@@ -102,6 +102,10 @@ module.exports.setup = async function (params) {
   require('./passport');
   app.use(passport.initialize());
   app.use(passport.session());
+  // Service APIs mount their own authentication before user JWT/session checks.
+  if (params && typeof params.configureServiceRoutes === 'function') {
+    params.configureServiceRoutes(app);
+  }
   app.use(authJwt.validateToken);
   app.use(security.csrfProtection);
   app.get('/api/csrf', security.csrfEndpoint);
