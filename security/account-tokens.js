@@ -13,7 +13,7 @@ async function issue(user, purpose) {
     const token = crypto.randomBytes(32).toString('hex');
     const result = await Users.findOneAndUpdate({_id: user._id, active: purpose === 'reset'}, {$set: {
         actionTokenHash: digest(token), actionTokenPurpose: purpose, actionTokenExpiresAt: new Date(Date.now() + TTL[purpose])
-    }}, {new: true, runValidators: true});
+    }}, {returnDocument: 'after', runValidators: true});
     if (!result) throw new Error('Account state changed');
     return token;
 }
@@ -38,7 +38,7 @@ async function consume(token, newPassword) {
         $set: {hash: user.hash, salt: user.salt, ...(purpose === 'registration' ? {active: true} : {})},
         $inc: {passwordVersion: 1},
         $unset: {actionTokenHash: '', actionTokenPurpose: '', actionTokenExpiresAt: ''}
-    }, {new: true, runValidators: true});
+    }, {returnDocument: 'after', runValidators: true});
 }
 module.exports = {issue, find, consume, digest, TTL};
 

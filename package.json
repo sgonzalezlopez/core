@@ -31,7 +31,7 @@
     "jquery": "^3.6.1",
     "jquery-ui": "^1.13.2",
     "moment": "^2.29.4",
-    "mongoose": "^6.6.3",
+    "mongoose": "^9.11.4",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "passport": "^0.6.0",
@@ -49,5 +49,8 @@
     "test:integration": "node --test test/mongo.test.cjs"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": ">=20.19.0"
+  }
 }
